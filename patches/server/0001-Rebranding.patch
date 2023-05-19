@@ -13,7 +13,7 @@ index dd53b1ffaff8dbaea0cf21c489a90162a496a026..099c95681e2d0fd8efa7a032cc13afe4
  dependencies {
      // Folia start
 -    implementation(project(":folia-api"))
-+    implementation(project(":tenseimc-api")) // TenseiMC
++    implementation(project(":TenseiMC-api")) // TenseiMC
      implementation("io.papermc.paper:paper-mojangapi:1.19.3-R0.1-SNAPSHOT") {
          exclude("io.papermc.paper", "paper-api")
      }
@@ -86,7 +86,7 @@ index e9b6ca3aa25e140467ae866d572483050ea3fa0e..8fc1b839e953ba6cffb7046b8f7cf5e6
          String result = "Unknown-Version";
  
 -        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/dev.folia/folia-api/pom.properties"); // Folia
-+        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/fr.euphilia.tenseimc/tenseimc-api/pom.properties"); // Folia // TenseiMC
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/fr.euphilia.tenseimc/TenseiMC-api/pom.properties"); // Folia // TenseiMC
          Properties properties = new Properties();
  
          if (stream != null) {

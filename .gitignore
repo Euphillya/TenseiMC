@@ -47,10 +47,10 @@ out/
 # other stuff
 run/
 
-tenseimc-server
-tenseimc-api
+TenseiMC-server
+TenseiMC-api
 
 *.sh
-tenseimc.jar
+TenseiMC.jar
 
 !gradle/wrapper/gradle-wrapper.jar

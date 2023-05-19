@@ -53,7 +53,7 @@ subprojects {
 }
 
 paperweight {
-    serverProject.set(project(":tenseimc-server"))
+    serverProject.set(project(":TenseiMC-server"))
 
     remapRepo.set(paperMavenPublicUrl)
     decompileRepo.set(paperMavenPublicUrl)
@@ -66,10 +66,10 @@ paperweight {
             baseName("Folia")
 
             apiPatchDir.set(layout.projectDirectory.dir("patches/api"))
-            apiOutputDir.set(layout.projectDirectory.dir("tenseimc-api"))
+            apiOutputDir.set(layout.projectDirectory.dir("TenseiMC-api"))
 
             serverPatchDir.set(layout.projectDirectory.dir("patches/server"))
-            serverOutputDir.set(layout.projectDirectory.dir("tenseimc-server"))
+            serverOutputDir.set(layout.projectDirectory.dir("TenseiMC-server"))
         }
     }
 }

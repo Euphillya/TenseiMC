@@ -5,6 +5,6 @@ pluginManagement {
     }
 }
 
-rootProject.name = "tenseimc"
+rootProject.name = "TenseiMC"
 
-include("tenseimc-api", "tenseimc-server")
+include("TenseiMC-api", "TenseiMC-server")
