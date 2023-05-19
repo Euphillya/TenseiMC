@@ -1,0 +1,92 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: "Bierque Jason" <bierquejason@gmail.com>
+Date: Fri, 19 May 2023 16:28:46 +0200
+Subject: [PATCH] Rebranding
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index dd53b1ffaff8dbaea0cf21c489a90162a496a026..6dd416f65755ca0542e6661b8716672264120d59 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -8,7 +8,7 @@ plugins {
+ 
+ dependencies {
+     // Folia start
+-    implementation(project(":folia-api"))
++    implementation(project(":tenseimc-api")) // TenseiMC
+     implementation("io.papermc.paper:paper-mojangapi:1.19.3-R0.1-SNAPSHOT") {
+         exclude("io.papermc.paper", "paper-api")
+     }
+@@ -66,7 +66,7 @@ tasks.jar {
+         attributes(
+             "Main-Class" to "org.bukkit.craftbukkit.Main",
+             "Implementation-Title" to "CraftBukkit",
+-            "Implementation-Version" to "git-Folia-$implementationVersion", // Folia
++            "Implementation-Version" to "git-TenseiMC-$implementationVersion", // Folia // TenseiMC
+             "Implementation-Vendor" to date, // Paper
+             "Specification-Title" to "Bukkit",
+             "Specification-Version" to project.version,
+diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
+index 58dc84b7b3b04c2d0b00fc5fac5303d3378b3467..a128b1fabd4aadfe26a8375903c0451d7a65983a 100644
+--- a/src/main/java/com/destroystokyo/paper/Metrics.java
++++ b/src/main/java/com/destroystokyo/paper/Metrics.java
+@@ -612,6 +612,7 @@ public class Metrics {
+                     paperVersion = "unknown";
+                 }
+                 metrics.addCustomChart(new Metrics.SimplePie("folia_version", () -> paperVersion)); // Folia - we have our own bstats page
++                metrics.addCustomChart(new Metrics.SimplePie("tenseimc_version", () -> (org.bukkit.craftbukkit.Main.class.getPackage().getImplementationVersion() != null) ? org.bukkit.craftbukkit.Main.class.getPackage().getImplementationVersion() : "unknown")); // TenseiMC
+ 
+                 metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
+                     Map<String, Map<String, Integer>> map = new HashMap<>();
+diff --git a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
+index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..1c7b5d91e914efbcfb50c6137c7760787e38ad94 100644
+--- a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
++++ b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
+@@ -17,7 +17,7 @@ public final class PaperConsole extends SimpleTerminalConsole {
+     @Override
+     protected LineReader buildReader(LineReaderBuilder builder) {
+         builder
+-                .appName("Paper")
++                .appName("TenseiMC") // TenseiMC
+                 .variable(LineReader.HISTORY_FILE, java.nio.file.Paths.get(".console_history"))
+                 .completer(new ConsoleCommandCompleter(this.server))
+                 .option(LineReader.Option.COMPLETE_IN_WORD, true);
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index f5721f6d719b7055fdccc81d5e67ed758e90cb10..0696ad97437726fd6a13badfe7db0617dfbfb1ad 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -1833,7 +1833,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+ 
+     @DontObfuscate
+     public String getServerModName() {
+-        return "Folia"; // Folia - Folia > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "TenseiMC"; // TenseiMC - TenseiMC > // Folia - Folia > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+     }
+ 
+     public SystemReport fillSystemReport(SystemReport details) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 32c9b38036052649b7b5fb25d7c4a49fdd1ca972..176f3acec268dad80cc90029edd88e7a0c3e8885 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -256,7 +256,7 @@ import javax.annotation.Nullable; // Paper
+ import javax.annotation.Nonnull; // Paper
+ 
+ public final class CraftServer implements Server {
+-    private final String serverName = "Folia"; // Folia // Paper
++    private final String serverName = "TenseiMC"; // TenseiMC // Folia // Paper
+     private final String serverVersion;
+     private final String bukkitVersion = Versioning.getBukkitVersion();
+     private final Logger logger = Logger.getLogger("Minecraft");
+diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+index e9b6ca3aa25e140467ae866d572483050ea3fa0e..5df2b0fceebaaa863f4f143c8f29e808b7f0c49b 100644
+--- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
++++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
+@@ -11,7 +11,7 @@ public final class Versioning {
+     public static String getBukkitVersion() {
+         String result = "Unknown-Version";
+ 
+-        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/dev.folia/folia-api/pom.properties"); // Folia
++        InputStream stream = Bukkit.class.getClassLoader().getResourceAsStream("META-INF/maven/fr.euphilia.tenseimc/tenseimc-api/pom.properties"); // Folia // TenseiMC
+         Properties properties = new Properties();
+ 
+         if (stream != null) {
