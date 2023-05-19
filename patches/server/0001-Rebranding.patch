@@ -1,11 +1,11 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: "Bierque Jason" <bierquejason@gmail.com>
+From: Bierque Jason <bierquejason@gmail.com>
 Date: Fri, 19 May 2023 16:28:46 +0200
 Subject: [PATCH] Rebranding
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index dd53b1ffaff8dbaea0cf21c489a90162a496a026..6dd416f65755ca0542e6661b8716672264120d59 100644
+index dd53b1ffaff8dbaea0cf21c489a90162a496a026..099c95681e2d0fd8efa7a032cc13afe4c2bb9b68 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -8,7 +8,7 @@ plugins {
@@ -27,7 +27,7 @@ index dd53b1ffaff8dbaea0cf21c489a90162a496a026..6dd416f65755ca0542e6661b87166722
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 58dc84b7b3b04c2d0b00fc5fac5303d3378b3467..a128b1fabd4aadfe26a8375903c0451d7a65983a 100644
+index 58dc84b7b3b04c2d0b00fc5fac5303d3378b3467..0a111e37f4070944d059c79960ce3997bf63fd19 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
 @@ -612,6 +612,7 @@ public class Metrics {
@@ -39,7 +39,7 @@ index 58dc84b7b3b04c2d0b00fc5fac5303d3378b3467..a128b1fabd4aadfe26a8375903c0451d
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
-index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..1c7b5d91e914efbcfb50c6137c7760787e38ad94 100644
+index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..e720d7f098a619a65b18f55a785ffbe42f998b62 100644
 --- a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
 +++ b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
 @@ -17,7 +17,7 @@ public final class PaperConsole extends SimpleTerminalConsole {
@@ -52,7 +52,7 @@ index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..1c7b5d91e914efbcfb50c6137c776078
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f5721f6d719b7055fdccc81d5e67ed758e90cb10..0696ad97437726fd6a13badfe7db0617dfbfb1ad 100644
+index f5721f6d719b7055fdccc81d5e67ed758e90cb10..7191dee7f3750e4c95bb08367f414854474f0836 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -1833,7 +1833,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -65,7 +65,7 @@ index f5721f6d719b7055fdccc81d5e67ed758e90cb10..0696ad97437726fd6a13badfe7db0617
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 32c9b38036052649b7b5fb25d7c4a49fdd1ca972..176f3acec268dad80cc90029edd88e7a0c3e8885 100644
+index 32c9b38036052649b7b5fb25d7c4a49fdd1ca972..7b8c2bb04710b79ce8a4962d782d7164cdf83c1f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -256,7 +256,7 @@ import javax.annotation.Nullable; // Paper
@@ -78,7 +78,7 @@ index 32c9b38036052649b7b5fb25d7c4a49fdd1ca972..176f3acec268dad80cc90029edd88e7a
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index e9b6ca3aa25e140467ae866d572483050ea3fa0e..5df2b0fceebaaa863f4f143c8f29e808b7f0c49b 100644
+index e9b6ca3aa25e140467ae866d572483050ea3fa0e..8fc1b839e953ba6cffb7046b8f7cf5e608a6a735 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
