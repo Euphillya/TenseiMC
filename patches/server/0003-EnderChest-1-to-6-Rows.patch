@@ -1,0 +1,186 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sun, 21 May 2023 00:08:44 +0200
+Subject: [PATCH] EnderChest 1 to 6 Rows
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+index 6e5e53a79e4d0621445c520cf28930b6de2c3732..649c75970ceac7b13434b6bc9042f4a42d97a94d 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+@@ -121,4 +121,12 @@ public class TenseiConfig {
+         }
+         return builder.build();
+     }
++
++    public static boolean enderChestSixRows = false;
++    public static boolean enderChestPermissionRows = false;
++    private static void blockSettings() {
++        enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
++        org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
++        enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
++    }
+ }
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 5f13a2f03d7a448d86550d90f105edc5dcde1194..1889a95e62c80792a65c97b7dc769f416f46fb0b 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -1215,6 +1215,27 @@ public abstract class PlayerList {
+         player.getBukkitEntity().recalculatePermissions(); // CraftBukkit
+         this.server.getCommands().sendCommands(player);
+         } // Paper
++
++        // TenseiMC start
++        if (fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows && fr.euphilia.tenseimc.TenseiConfig.enderChestPermissionRows) {
++            org.bukkit.craftbukkit.entity.CraftHumanEntity bukkit = player.getBukkitEntity();
++            if (bukkit.hasPermission("tenseimc.enderchest.rows.six")) {
++                player.sixRowEnderChestSlotCount = 54;
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.five")) {
++                player.sixRowEnderChestSlotCount = 45;
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.four")) {
++                player.sixRowEnderChestSlotCount = 36;
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.three")) {
++                player.sixRowEnderChestSlotCount = 27;
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.two")) {
++                player.sixRowEnderChestSlotCount = 18;
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.one")) {
++                player.sixRowEnderChestSlotCount = 9;
++            }
++        } else {
++            player.sixRowEnderChestSlotCount = -1;
++        }
++        // TenseiMC stop
+     }
+ 
+     public boolean isWhiteListed(GameProfile profile) {
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index 0629c471d38a77c44fc1c86ccdfcb0690f61ca17..2504991c6d2cefc65bd844416567f284b54214b8 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -186,6 +186,7 @@ public abstract class Player extends LivingEntity {
+     public boolean affectsSpawning = true;
+     public net.kyori.adventure.util.TriState flyingFallDamage = net.kyori.adventure.util.TriState.NOT_SET;
+     // Paper end
++    public int sixRowEnderChestSlotCount = -1; // TenseiMC
+ 
+     // CraftBukkit start
+     public boolean fauxSleeping;
+diff --git a/src/main/java/net/minecraft/world/inventory/ChestMenu.java b/src/main/java/net/minecraft/world/inventory/ChestMenu.java
+index 0dbfd23bbfc6ad203f048142f8c90ef741849fe1..07d7634482fc611b72ecbc5b8c280153569bf09c 100644
+--- a/src/main/java/net/minecraft/world/inventory/ChestMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/ChestMenu.java
+@@ -67,10 +67,30 @@ public class ChestMenu extends AbstractContainerMenu {
+         return new ChestMenu(MenuType.GENERIC_9x6, syncId, playerInventory, 6);
+     }
+ 
++    // TenseiMC start
++    public static ChestMenu oneRows(int syncId, Inventory playerInventory, Container inventory) {
++        return new ChestMenu(MenuType.GENERIC_9x1, syncId, playerInventory, inventory, 1);
++    }
++
++    public static ChestMenu twoRows(int syncId, Inventory playerInventory, Container inventory) {
++        return new ChestMenu(MenuType.GENERIC_9x2, syncId, playerInventory, inventory, 2);
++    }
++    // TenseiMC end
++
+     public static ChestMenu threeRows(int syncId, Inventory playerInventory, Container inventory) {
+         return new ChestMenu(MenuType.GENERIC_9x3, syncId, playerInventory, inventory, 3);
+     }
+ 
++    // TenseiMC Start
++    public static ChestMenu fourRows(int syncId, Inventory playerInventory, Container inventory) {
++        return new ChestMenu(MenuType.GENERIC_9x4, syncId, playerInventory, inventory, 4);
++    }
++
++    public static ChestMenu fiveRows(int syncId, Inventory playerInventory, Container inventory) {
++        return new ChestMenu(MenuType.GENERIC_9x5, syncId, playerInventory, inventory, 5);
++    }
++    // TenseiMC Stop
++
+     public static ChestMenu sixRows(int syncId, Inventory playerInventory, Container inventory) {
+         return new ChestMenu(MenuType.GENERIC_9x6, syncId, playerInventory, inventory, 6);
+     }
+diff --git a/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java b/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java
+index 59acb1aab21e2dce0f046942f124b50ac1cb8d0f..1ee1aab6f64c156ef5e05e7a8e593c36bffbd8b6 100644
+--- a/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java
++++ b/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java
+@@ -29,11 +29,18 @@ public class PlayerEnderChestContainer extends SimpleContainer {
+     }
+ 
+     public PlayerEnderChestContainer(Player owner) {
+-        super(27);
++        super(fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows ? 54 : 27); // TenseiMC
+         this.owner = owner;
+         // CraftBukkit end
+     }
+ 
++    // TenseiMC start
++    @Override
++    public int getContainerSize() {
++        return owner.sixRowEnderChestSlotCount < 0 ? super.getContainerSize() : owner.sixRowEnderChestSlotCount;
++    }
++    // TenseiMC end
++
+     public void setActiveChest(EnderChestBlockEntity blockEntity) {
+         this.activeChest = blockEntity;
+     }
+diff --git a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
+index 7385e91f32f070e86a4e0fd3d214f55d832c7979..fb65d6970f707679b4507602c9ed26caeb95fbde 100644
+--- a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
+@@ -85,6 +85,25 @@ public class EnderChestBlock extends AbstractChestBlock<EnderChestBlockEntity> i
+                 EnderChestBlockEntity enderChestBlockEntity = (EnderChestBlockEntity)blockEntity;
+                 playerEnderChestContainer.setActiveChest(enderChestBlockEntity);
+                 player.openMenu(new SimpleMenuProvider((syncId, inventory, playerx) -> {
++                    // TenseiMC start
++                    if (fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows) {
++                        org.bukkit.craftbukkit.entity.CraftHumanEntity bukkitPlayer = player.getBukkitEntity();
++                        if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.six")) {
++                            return ChestMenu.sixRows(syncId, inventory, playerEnderChestContainer);
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.five")) {
++                            return ChestMenu.fiveRows(syncId, inventory, playerEnderChestContainer);
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.four")) {
++                            return ChestMenu.fourRows(syncId, inventory, playerEnderChestContainer);
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.three")) {
++                            return ChestMenu.threeRows(syncId, inventory, playerEnderChestContainer);
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.two")) {
++                            return ChestMenu.twoRows(syncId, inventory, playerEnderChestContainer);
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.one")) {
++                            return ChestMenu.oneRows(syncId, inventory, playerEnderChestContainer);
++                        }
++                        return ChestMenu.sixRows(syncId, inventory, playerEnderChestContainer);
++                    }
++                    // TenseiMC end
+                     return ChestMenu.threeRows(syncId, inventory, playerEnderChestContainer);
+                 }, CONTAINER_TITLE));
+                 player.awardStat(Stats.OPEN_ENDERCHEST);
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
+index 191e8233deaa859d969d54242e297e722f3d947b..0090ba650490c37f88625c6763812ef90a991d6c 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
+@@ -166,6 +166,12 @@ public class CraftContainer extends AbstractContainerMenu {
+             case PLAYER:
+             case CHEST:
+             case ENDER_CHEST:
++                // TenseiMC start
++                this.delegate = new ChestMenu(fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows ?
++                        MenuType.GENERIC_9x6 : MenuType.GENERIC_9x3, windowId, bottom, top, top.getContainerSize() / 9);
++
++                break;
++                // TenseiMC end
+             case BARREL:
+                 this.delegate = new ChestMenu(MenuType.GENERIC_9x3, windowId, bottom, top, top.getContainerSize() / 9);
+                 break;
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+index 092f6843e3b43d4c615d2eee344f5966e96ae850..608bd0f0751a5f00bfbb8174ee26404f0356db5a 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+@@ -83,7 +83,7 @@ public class CraftInventory implements Inventory {
+ 
+     @Override
+     public void setContents(ItemStack[] items) {
+-        if (this.getSize() < items.length) {
++        if (false && this.getSize() < items.length) { // TenseiMC
+             throw new IllegalArgumentException("Invalid inventory size; expected " + this.getSize() + " or less");
+         }
+ 

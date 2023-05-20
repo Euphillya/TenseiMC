@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sun, 21 May 2023 00:07:51 +0200
+Subject: [PATCH] Allow Inventory Resizing
+
+
+diff --git a/src/main/java/org/bukkit/event/inventory/InventoryType.java b/src/main/java/org/bukkit/event/inventory/InventoryType.java
+index 94f127fd6ba69ca48d03acbc9886ee499e9be4f3..72fb984ff34ea4186bf50ffac74de79d5075202a 100644
+--- a/src/main/java/org/bukkit/event/inventory/InventoryType.java
++++ b/src/main/java/org/bukkit/event/inventory/InventoryType.java
+@@ -152,7 +152,7 @@ public enum InventoryType {
+     SMITHING_NEW(4, "Upgrade Gear"),
+     ;
+ 
+-    private final int size;
++    private int size; public void setDefaultSize(int size) { this.size = size; } // TenseiMC
+     private final String title;
+     private final boolean isCreatable;
+ 
