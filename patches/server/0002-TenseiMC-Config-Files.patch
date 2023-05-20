@@ -1,0 +1,310 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Sat, 20 May 2023 13:21:43 +0200
+Subject: [PATCH] TenseiMC Config Files
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..6e5e53a79e4d0621445c520cf28930b6de2c3732
+--- /dev/null
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+@@ -0,0 +1,124 @@
++package fr.euphilia.tenseimc;
++
++import com.google.common.base.Throwables;
++import com.google.common.collect.ImmutableMap;
++import org.bukkit.Bukkit;
++import org.bukkit.configuration.ConfigurationSection;
++import org.bukkit.configuration.InvalidConfigurationException;
++import org.bukkit.configuration.file.YamlConfiguration;
++import org.jetbrains.annotations.NotNull;
++
++import java.io.File;
++import java.io.IOException;
++import java.lang.reflect.InvocationTargetException;
++import java.lang.reflect.Method;
++import java.lang.reflect.Modifier;
++import java.util.List;
++import java.util.Map;
++import java.util.logging.Level;
++
++public class TenseiConfig {
++
++    public static YamlConfiguration config;
++    private static int version;
++    private static boolean verbose;
++    private static File CONFIG_FILE;
++
++    public static void init(File configFile) {
++        CONFIG_FILE = configFile;
++        config = new YamlConfiguration();
++        try {
++            config.load(CONFIG_FILE);
++        } catch (IOException ignore) {
++        } catch (InvalidConfigurationException exception) {
++            Bukkit.getLogger().log(Level.SEVERE, "Could not load tenseimc.yml, please correct your syntax errors", exception);
++            throw Throwables.propagate(exception);
++        }
++        config.options().copyDefaults(true);
++        verbose = getBoolean("verbose", false);
++
++        version = getInt("config-version", 1);
++
++        readConfig(TenseiConfig.class, null);
++    }
++
++    protected static void log(Level level, String message) {
++        if (verbose) {
++            Bukkit.getLogger().log(level, message);
++        }
++    }
++
++    public static void readConfig(@NotNull Class<?> clazz, Object instance) {
++        for (Method method : clazz.getDeclaredMethods()) {
++            if (Modifier.isPrivate(method.getModifiers())
++                    && (method.getParameterTypes().length == 0 && method.getReturnType() == Void.TYPE)) {
++                    try {
++                        method.setAccessible(true);
++                        method.invoke(instance);
++                    } catch (InvocationTargetException ex) {
++                        throw Throwables.propagate(ex.getCause());
++                    } catch (Exception ex) {
++                        Bukkit.getLogger().log(Level.SEVERE, "Error invoking %s".formatted(method), ex);
++                    }
++
++            }
++        }
++
++        try {
++            config.save(CONFIG_FILE);
++        } catch (IOException ex) {
++            Bukkit.getLogger().log(Level.SEVERE, "Could not save %s".formatted(CONFIG_FILE), ex);
++        }
++    }
++
++    private static void set(@NotNull String path, Object val) {
++        config.addDefault(path, val);
++        config.set(path, val);
++    }
++
++    private static String getString(@NotNull String path, String def) {
++        config.addDefault(path, def);
++        return config.getString(path, config.getString(path));
++    }
++
++    private static Boolean getBoolean(@NotNull String path, boolean def) {
++        config.addDefault(path, def);
++        return config.getBoolean(path, config.getBoolean(path));
++    }
++
++    private static Double getDouble(@NotNull String path, Double def) {
++        config.addDefault(path, def);
++        return config.getDouble(path, config.getDouble(path));
++    }
++
++    private static Integer getInt(@NotNull String path, Integer def) {
++        config.addDefault(path, def);
++        return config.getInt(path, config.getInt(path));
++    }
++
++    private static <T> List getList(@NotNull String path, T def) {
++        config.addDefault(path, def);
++        return config.getList(path, config.getList(path));
++    }
++
++    static Map<String, Object> getMap(@NotNull String path, Map<String, Object> def) {
++        if (config.getConfigurationSection(path) == null) {
++            config.addDefault(path, def);
++            return def;
++        }
++        return toMap(config.getConfigurationSection(path));
++    }
++
++    private static Map<String, Object> toMap(ConfigurationSection section) {
++        ImmutableMap.Builder<String, Object> builder = ImmutableMap.builder();
++        if (section != null) {
++            for (String key : section.getKeys(false)) {
++                Object obj = section.get(key);
++                if (obj != null) {
++                    builder.put(key, obj instanceof ConfigurationSection val ? toMap(val) : obj);
++                }
++            }
++        }
++        return builder.build();
++    }
++}
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..88392a19ff87af5966adc2cd54b10ac61b8dde03
+--- /dev/null
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+@@ -0,0 +1,67 @@
++package fr.euphilia.tenseimc;
++
++import org.bukkit.World;
++import org.bukkit.configuration.ConfigurationSection;
++import org.jetbrains.annotations.NotNull;
++
++import java.util.List;
++import java.util.Map;
++import java.util.logging.Level;
++
++public class TenseiWorldConfig {
++
++    private final String worldName;
++    private final World.Environment environment;
++    private String worldSettings = "world-settings.";
++    private String worldSettingsDefault = worldSettings + "default.";
++
++    public TenseiWorldConfig(String worldName, World.Environment environment) {
++        this.worldName = worldName;
++        this.environment = environment;
++        this.init();
++    }
++
++    public void init() {
++        TenseiConfig.log(Level.INFO, "-------- World Settings For [ %s ] --------".formatted(worldName));
++        TenseiConfig.readConfig(TenseiWorldConfig.class, this);
++    }
++
++    private void set(@NotNull String path, Object val) {
++        TenseiConfig.config.addDefault(worldSettingsDefault + path, val);
++        TenseiConfig.config.set(worldSettingsDefault + path, val);
++        if (TenseiConfig.config.get(worldSettings + worldName + "." + path) != null) {
++            TenseiConfig.config.addDefault(worldSettings + worldName + "." + path, val);
++            TenseiConfig.config.set(worldSettings + worldName + "." + path, val);
++        }
++    }
++    private ConfigurationSection getConfigurationSection(@NotNull String path) {
++        ConfigurationSection section = TenseiConfig.config.getConfigurationSection(worldSettings + worldName + "." + path);
++        return section != null ? section : TenseiConfig.config.getConfigurationSection(worldSettingsDefault + path);
++    }
++    private String getString(@NotNull String path, String def) {
++        TenseiConfig.config.addDefault(worldSettingsDefault + path, def);
++        return TenseiConfig.config.getString(worldSettings + worldName + "." + path, TenseiConfig.config.getString(worldSettingsDefault + path));
++    }
++    private boolean getBoolean(@NotNull String path, boolean def) {
++        TenseiConfig.config.addDefault(worldSettingsDefault + path, def);
++        return TenseiConfig.config.getBoolean(worldSettings + worldName + "." + path, TenseiConfig.config.getBoolean(worldSettingsDefault + path));
++    }
++    private double getDouble(@NotNull String path, double def) {
++        TenseiConfig.config.addDefault(worldSettingsDefault + path, def);
++        return TenseiConfig.config.getDouble(worldSettings + worldName + "." + path, TenseiConfig.config.getDouble(worldSettingsDefault + path));
++    }
++    private int getInt(@NotNull String path, int def) {
++        TenseiConfig.config.addDefault(worldSettingsDefault + path, def);
++        return TenseiConfig.config.getInt(worldSettings + worldName + "." + path, TenseiConfig.config.getInt(worldSettingsDefault + path));
++    }
++    private <T> List<?> getList(@NotNull String path, T def) {
++        TenseiConfig.config.addDefault(worldSettingsDefault + path, def);
++        return TenseiConfig.config.getList(worldSettings + worldName + "." + path, TenseiConfig.config.getList(worldSettingsDefault + path));
++    }
++    private Map<String, Object> getMap(@NotNull String path, Map<String, Object> def) {
++        final Map<String, Object> fallback = TenseiConfig.getMap(worldSettingsDefault + path, def);
++        final Map<String, Object> value = TenseiConfig.getMap(worldSettings + worldName + "." + path, null);
++        return value.isEmpty() ? fallback : value;
++    }
++
++}
+diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+index 7abd4f38ae59a6019137345af960fd60a3c7adf0..bc3105fc05c45ac5e8f953b3b4377b1b6a305e89 100644
+--- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
++++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
+@@ -218,6 +218,14 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
+         thread.start(); // Paper - start console thread after MinecraftServer.console & PaperConfig are initialized
+         io.papermc.paper.command.PaperCommands.registerCommands(this);
+         com.destroystokyo.paper.Metrics.PaperMetrics.startMetrics();
++        // TenseiMC start
++        try {
++            fr.euphilia.tenseimc.TenseiConfig.init((java.io.File) options.valueOf("tenseimc-settings"));
++        } catch (Exception exception) {
++            DedicatedServer.LOGGER.error("Unable to load server configuration", exception);
++            return false;
++        }
++        // TenseiMC end
+         com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
+         io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
+         // Paper end
+diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
+index afb3d0fa48b7fd6d273361c6dc32764b5d35c356..640b36d421cb7a45d9a329bb59cf2dd23e8241e8 100644
+--- a/src/main/java/net/minecraft/world/level/Level.java
++++ b/src/main/java/net/minecraft/world/level/Level.java
+@@ -77,6 +77,7 @@ import net.minecraft.world.level.redstone.CollectingNeighborUpdater;
+ import net.minecraft.world.level.redstone.NeighborUpdater;
+ import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
+ import net.minecraft.world.level.storage.LevelData;
++import net.minecraft.world.level.storage.PrimaryLevelData;
+ import net.minecraft.world.level.storage.WritableLevelData;
+ import net.minecraft.world.phys.AABB;
+ import net.minecraft.world.phys.Vec3;
+@@ -167,6 +168,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     // Paper end
+ 
+     public final com.destroystokyo.paper.antixray.ChunkPacketBlockController chunkPacketBlockController; // Paper - Anti-Xray
++    public final fr.euphilia.tenseimc.TenseiWorldConfig tenseiWorldConfig; // TenseiMC
+     public final co.aikar.timings.WorldTimingsHandler timings; // Paper
+     public static BlockPos lastPhysicsProblem; // Spigot
+     private org.spigotmc.TickLimiter entityLimiter;
+@@ -294,6 +296,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
+     protected Level(WritableLevelData worlddatamutable, ResourceKey<Level> resourcekey, RegistryAccess iregistrycustom, Holder<DimensionType> holder, Supplier<ProfilerFiller> supplier, boolean flag, boolean flag1, long i, int j, org.bukkit.generator.ChunkGenerator gen, org.bukkit.generator.BiomeProvider biomeProvider, org.bukkit.World.Environment env, java.util.function.Function<org.spigotmc.SpigotWorldConfig, io.papermc.paper.configuration.WorldConfiguration> paperWorldConfigCreator, java.util.concurrent.Executor executor) { // Paper - Async-Anti-Xray - Pass executor
+         this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName()); // Spigot
+         this.paperConfig = paperWorldConfigCreator.apply(this.spigotConfig); // Paper
++        this.tenseiWorldConfig = new fr.euphilia.tenseimc.TenseiWorldConfig(((PrimaryLevelData) worlddatamutable).getLevelName(), env); // TenseiMC
+         this.generator = gen;
+         this.world = new CraftWorld((ServerLevel) this, gen, biomeProvider, env);
+ 
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 7b8c2bb04710b79ce8a4962d782d7164cdf83c1f..ecf47cb58f1405733320eaf14135512412f554ba 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1067,6 +1067,7 @@ public final class CraftServer implements Server {
+ 
+         org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
+         this.console.paperConfigurations.reloadConfigs(this.console);
++        fr.euphilia.tenseimc.TenseiConfig.init((File) console.options.valueOf("tenseimc-settings")); // TenseiMC
+         for (ServerLevel world : this.console.getAllLevels()) {
+             // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
+             world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
+@@ -1082,6 +1083,7 @@ public final class CraftServer implements Server {
+                 }
+             }
+             world.spigotConfig.init(); // Spigot
++            world.tenseiWorldConfig.init(); // TenseiMC
+         }
+ 
+         Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
+@@ -2857,6 +2859,14 @@ public final class CraftServer implements Server {
+             return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
+         }
+ 
++        // TenseiMC start
++        @Override
++        public YamlConfiguration getTenseiConfig() {
++            return fr.euphilia.tenseimc.TenseiConfig.config;
++        }
++
++        // TenseiMC end
++
+         @Override
+         public void restart() {
+             org.spigotmc.RestartCommand.restart();
+diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
+index 4966a1e3dd35357a8ea6a7d2944c84c9c3e9058e..426c5f23dc8eb1cb6bbff91754119669b194b3f7 100644
+--- a/src/main/java/org/bukkit/craftbukkit/Main.java
++++ b/src/main/java/org/bukkit/craftbukkit/Main.java
+@@ -173,6 +173,14 @@ public class Main {
+                         .describedAs("Jar file");
+                 // Paper end
+ 
++                // Tensei start
++                acceptsAll(asList("tenseimc", "tenseimc-settings"), "File for tenseimc settings")
++                        .withRequiredArg()
++                                .ofType(File.class)
++                                        .defaultsTo(new File("tenseimc.yml"))
++                                                .describedAs("Yml file");
++                // Tensei end
++
+                 // Paper start
+                 acceptsAll(asList("server-name"), "Name of the server")
+                         .withRequiredArg()

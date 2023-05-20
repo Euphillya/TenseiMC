@@ -1,0 +1,24 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Sat, 20 May 2023 13:21:34 +0200
+Subject: [PATCH] TenseiMC Config Files
+
+
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 717635388aa449fd2e24692b14ceccc8a0f762c1..e890915ceeefeecfe2b01a1137218f1526c5bfb2 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -1971,6 +1971,13 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+         }
+         // Paper end
+ 
++        // Tensei start
++        @NotNull
++        public org.bukkit.configuration.file.YamlConfiguration getTenseiConfig()  {
++            throw new UnsupportedOperationException("Not supported yet");
++        }
++        // Tensei end
++
+         /**
+          * Sends the component to the player
+          *
