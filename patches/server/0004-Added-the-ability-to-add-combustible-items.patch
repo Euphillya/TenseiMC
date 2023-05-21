@@ -1,0 +1,118 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Mon, 22 May 2023 00:01:55 +0200
+Subject: [PATCH] Added the ability to add combustible items
+
+
+diff --git a/src/main/java/net/minecraft/world/inventory/AbstractFurnaceMenu.java b/src/main/java/net/minecraft/world/inventory/AbstractFurnaceMenu.java
+index 8ae78ae54d87ea7789df754311fa0e8aade0ce91..8e3219a0fdf4ad86fcca58a8c673e9b68a906308 100644
+--- a/src/main/java/net/minecraft/world/inventory/AbstractFurnaceMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/AbstractFurnaceMenu.java
+@@ -145,7 +145,11 @@ public abstract class AbstractFurnaceMenu extends RecipeBookMenu<Container> {
+             } else if (slot != 1 && slot != 0) {
+                 if (this.canSmelt(itemstack1)) {
+                     if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
+-                        return ItemStack.EMPTY;
++                        // TenseiMC start
++                        if (this.isFuel(itemstack1) && (!this.moveItemStackTo(itemstack1, 1, 2, false))) {
++                            return ItemStack.EMPTY;
++                        }
++                        // TenseiMC end
+                     }
+                 } else if (this.isFuel(itemstack1)) {
+                     if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+index a3f073066f6e2eea8964461ad2b0409ade202f35..1ac8b07e05c6099192da694b7d0bf79a645f8b5b 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
+@@ -207,6 +207,22 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
+         // Paper end
+     }
+ 
++    // TenseiMC start
++    public static void addFuel(ItemStack itemStack, Integer burnTime) {
++        Map<Item, Integer> map = Maps.newLinkedHashMap();
++        map.putAll(getFuel());
++        map.put(itemStack.getItem(), burnTime);
++        cachedBurnDurations = com.google.common.collect.ImmutableMap.copyOf(map);
++    }
++
++    public static void removeFuel(ItemStack itemStack) {
++        Map<Item, Integer> map = Maps.newLinkedHashMap();
++        map.putAll(getFuel());
++        map.remove(itemStack.getItem());
++        cachedBurnDurations = com.google.common.collect.ImmutableMap.copyOf(map);
++    }
++    // TenseiMC end
++
+     // CraftBukkit start - add fields and methods
+     private int maxStack = MAX_STACK;
+     public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index ecf47cb58f1405733320eaf14135512412f554ba..35673d4bf8ead96e3d05ae4645e4a825dd8eee2f 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -111,23 +111,9 @@ import net.minecraft.world.level.storage.WorldData;
+ import net.minecraft.world.level.storage.loot.LootTables;
+ import net.minecraft.world.phys.Vec3;
+ import org.apache.commons.lang.Validate;
+-import org.bukkit.BanList;
+-import org.bukkit.Bukkit;
+-import org.bukkit.ChatColor;
+-import org.bukkit.GameMode;
+-import org.bukkit.Keyed;
+-import org.bukkit.Location;
+-import org.bukkit.NamespacedKey;
+-import org.bukkit.OfflinePlayer;
+-import org.bukkit.Registry;
+-import org.bukkit.Server;
+-import org.bukkit.StructureType;
+-import org.bukkit.UnsafeValues;
++import org.bukkit.*;
+ import org.bukkit.Warning.WarningState;
+-import org.bukkit.World;
+ import org.bukkit.World.Environment;
+-import org.bukkit.WorldBorder;
+-import org.bukkit.WorldCreator;
+ import org.bukkit.block.data.BlockData;
+ import org.bukkit.boss.BarColor;
+ import org.bukkit.boss.BarFlag;
+@@ -245,6 +231,7 @@ import org.bukkit.scoreboard.Criteria;
+ import org.bukkit.structure.StructureManager;
+ import org.bukkit.util.StringUtil;
+ import org.bukkit.util.permissions.DefaultPermissions;
++import org.jetbrains.annotations.NotNull;
+ import org.yaml.snakeyaml.LoaderOptions;
+ import org.yaml.snakeyaml.Yaml;
+ import org.yaml.snakeyaml.constructor.SafeConstructor;
+@@ -379,6 +366,30 @@ public final class CraftServer implements Server {
+ 
+     // Folia end - region threading API
+ 
++    // TenseiMC start
++    /**
++     * Add an Item as fuel for furnaces
++     *
++     * @param material The material that will be the fuel
++     * @param burnTime The time (in ticks) this item will burn for
++     */
++    @Override
++    public void addFuel(@NotNull Material material, int burnTime) {
++        Preconditions.checkArgument(burnTime > 0, "BurnTime must be greater than 0");
++        net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity.addFuel(net.minecraft.world.item.ItemStack.fromBukkitCopy(new ItemStack(material)), burnTime);
++    }
++
++    /**
++     * Remove an item as fuel for furnaces
++     *
++     * @param material The material that will no longer be a fuel
++     */
++    @Override
++    public void removeFuel(@NotNull Material material) {
++        net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity.removeFuel(net.minecraft.world.item.ItemStack.fromBukkitCopy(new ItemStack(material)));
++    }
++    // TenseiMC end
++
+     public CraftServer(DedicatedServer console, PlayerList playerList) {
+         this.console = console;
+         this.playerList = (DedicatedPlayerList) playerList;
