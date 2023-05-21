@@ -1,0 +1,23 @@
+name: Build TenseiMC
+on: [push]
+jobs:
+  paperclip:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Git Repository
+        uses: actions/checkout@v2
+      - name: Setup Java 17
+        uses: actions/setup-java@v3.11.0
+        with:
+          java-version: "17"
+          cache: "gradle"
+          distribution: "temurin"
+      - name: Configure Git User
+        run: git config --global user.email "actions@github.com" && git config --global user.name "Github Actions"
+      - name: ApplyPatches
+        run: ./gradlew applyPatches --stacktrace
+      - name: Upload Paperclip jar
+        uses: actions/upload-artifact@v2
+        with:
+          name: TenseiMC.jar
+          path: build/libs/TenseiMC-paperclip-*-reobf.jar
