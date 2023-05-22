@@ -1,0 +1,51 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Mon, 22 May 2023 12:51:34 +0200
+Subject: [PATCH] Configurable piston push limit
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+index e719d5a3a5acfd971010eb3469de7d059eae7a08..93f59b4363277a665b2462396cd910d00f43062d 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+@@ -65,7 +65,9 @@ public class TenseiWorldConfig {
+     }
+ 
+     public boolean disableObserverClocks = false;
++    public int pistonBlockPushLimit = 12;
+     private void redstoneSettings() {
+         disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
++        pistonBlockPushLimit = getInt("blocks.piston.block-push-limit", pistonBlockPushLimit);
+     }
+ }
+diff --git a/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java b/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java
+index 744d91546d1a810f60a43c15ed74b4158f341a4a..5407001cc036f62f18a00a31879e58ed78b5cbcf 100644
+--- a/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java
++++ b/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java
+@@ -86,7 +86,7 @@ public class PistonStructureResolver {
+             return true;
+         } else {
+             int i = 1;
+-            if (i + this.toPush.size() > 12) {
++            if (i + this.toPush.size() > this.level.tenseiWorldConfig.pistonBlockPushLimit) { // TenseiMC
+                 return false;
+             } else {
+                 while(isSticky(blockState)) {
+@@ -98,7 +98,7 @@ public class PistonStructureResolver {
+                     }
+ 
+                     ++i;
+-                    if (i + this.toPush.size() > 12) {
++                    if (i + this.toPush.size() > this.level.tenseiWorldConfig.pistonBlockPushLimit) { // TenseiMC
+                         return false;
+                     }
+                 }
+@@ -142,7 +142,7 @@ public class PistonStructureResolver {
+                         return true;
+                     }
+ 
+-                    if (this.toPush.size() >= 12) {
++                    if (this.toPush.size() >= this.level.tenseiWorldConfig.pistonBlockPushLimit) { // TenseiMC
+                         return false;
+                     }
+ 
