@@ -1,0 +1,36 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Mon, 22 May 2023 12:40:13 +0200
+Subject: [PATCH] Add Option for disable observer clocks
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+index 88392a19ff87af5966adc2cd54b10ac61b8dde03..e719d5a3a5acfd971010eb3469de7d059eae7a08 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+@@ -64,4 +64,8 @@ public class TenseiWorldConfig {
+         return value.isEmpty() ? fallback : value;
+     }
+ 
++    public boolean disableObserverClocks = false;
++    private void redstoneSettings() {
++        disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
++    }
+ }
+diff --git a/src/main/java/net/minecraft/world/level/block/ObserverBlock.java b/src/main/java/net/minecraft/world/level/block/ObserverBlock.java
+index 7b45d6b9a005036ca5051d089a7be792eb87012f..9433278bb48ea40bdc625356e76e350fb0b8ca68 100644
+--- a/src/main/java/net/minecraft/world/level/block/ObserverBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ObserverBlock.java
+@@ -64,7 +64,12 @@ public class ObserverBlock extends DirectionalBlock {
+     @Override
+     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+         if (state.getValue(ObserverBlock.FACING) == direction && !(Boolean) state.getValue(ObserverBlock.POWERED)) {
++            // TenseiMC start
++            if (world.getMinecraftWorld().tenseiWorldConfig.disableObserverClocks ||
++                    !(neighborState.getBlock() instanceof ObserverBlock) ||
++                    neighborState.getValue(DirectionalBlock.FACING).getOpposite() != direction) {
+             this.startSignal(world, pos);
++            } // TenseiMC end
+         }
+ 
+         return super.updateShape(state, direction, neighborState, world, pos, neighborPos);

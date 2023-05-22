@@ -1,7 +1,8 @@
 <div align="center">
 
 # TenseiMC
-
+[![MIT License](https://img.shields.io/github/license/DoctaEnkoda/TenseiMC?&logo=github)](LICENSE)
+![Build TenseiMC](https://github.com/DoctaEnkoda/TenseiMC/actions/workflows/build.yml/badge.svg)
 </div>
 
 
@@ -15,7 +16,7 @@ Discord : DocktaEnkoda#4311
 
 ## Downloads
 
-For the moment, no download link is available.
+[Github Actions](https://github.com/DoctaEnkoda/TenseiMC/actions)
 
 ## API
 
