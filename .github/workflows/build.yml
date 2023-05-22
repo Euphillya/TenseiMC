@@ -23,4 +23,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: TenseiMC.jar
-          path: build/libs/tenseimc-paperclip-*-reobf.jar
+          path: build/libs/TenseiMC-paperclip-*-reobf.jar
