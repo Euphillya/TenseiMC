@@ -5,7 +5,7 @@ Subject: [PATCH] Rebranding
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index dd53b1ffaff8dbaea0cf21c489a90162a496a026..099c95681e2d0fd8efa7a032cc13afe4c2bb9b68 100644
+index dd53b1ffaff8dbaea0cf21c489a90162a496a026..b9891e41dc917aa0f732f8e5fc480ffaee928948 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -8,7 +8,7 @@ plugins {
@@ -52,10 +52,10 @@ index c5d5648f4ca603ef2b1df723b58f9caf4dd3c722..e720d7f098a619a65b18f55a785ffbe4
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f5721f6d719b7055fdccc81d5e67ed758e90cb10..7191dee7f3750e4c95bb08367f414854474f0836 100644
+index 61bac6fda2d2f4b3db8a3f7e3003f47c84d5c4cd..1893011417019a6de933b127a784acc9e61e12f4 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1833,7 +1833,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1815,7 +1815,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
@@ -78,7 +78,7 @@ index 32c9b38036052649b7b5fb25d7c4a49fdd1ca972..7b8c2bb04710b79ce8a4962d782d7164
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
-index e9b6ca3aa25e140467ae866d572483050ea3fa0e..8fc1b839e953ba6cffb7046b8f7cf5e608a6a735 100644
+index e9b6ca3aa25e140467ae866d572483050ea3fa0e..d51274b49abe8c29ca6a54f618506697705ad9cc 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/Versioning.java
 @@ -11,7 +11,7 @@ public final class Versioning {
