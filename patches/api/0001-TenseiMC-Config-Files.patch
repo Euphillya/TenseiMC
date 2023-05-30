@@ -12,12 +12,12 @@ index 717635388aa449fd2e24692b14ceccc8a0f762c1..e890915ceeefeecfe2b01a1137218f15
          }
          // Paper end
  
-+        // Tensei start
++        // TenseiMC start
 +        @NotNull
 +        public org.bukkit.configuration.file.YamlConfiguration getTenseiConfig()  {
 +            throw new UnsupportedOperationException("Not supported yet");
 +        }
-+        // Tensei end
++        // TenseiMC end
 +
          /**
           * Sends the component to the player
