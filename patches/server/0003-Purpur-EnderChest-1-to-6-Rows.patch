@@ -1,7 +1,7 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Sun, 21 May 2023 00:08:44 +0200
-Subject: [PATCH] EnderChest 1 to 6 Rows
+Subject: [PATCH] Purpur - EnderChest 1 to 6 Rows
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
@@ -22,7 +22,7 @@ index 6e5e53a79e4d0621445c520cf28930b6de2c3732..649c75970ceac7b13434b6bc9042f4a4
 +    }
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 5f13a2f03d7a448d86550d90f105edc5dcde1194..1889a95e62c80792a65c97b7dc769f416f46fb0b 100644
+index 6af3e57e72caa0cf25b970fb08939fdde3be2fd3..c033be4ee0722f62037ade0d81fbf4cf4490c736 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1215,6 +1215,27 @@ public abstract class PlayerList {
