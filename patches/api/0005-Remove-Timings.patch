@@ -1,0 +1,89 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Sat, 3 Jun 2023 20:33:49 +0200
+Subject: [PATCH] Remove Timings
+
+
+diff --git a/src/main/java/co/aikar/timings/Timings.java b/src/main/java/co/aikar/timings/Timings.java
+index 34386d6ce702de9a58f2892045563dd57ef46bbf..7912d91ec9c79f82de327e4668fd06dbc2dcae2b 100644
+--- a/src/main/java/co/aikar/timings/Timings.java
++++ b/src/main/java/co/aikar/timings/Timings.java
+@@ -161,7 +161,7 @@ public final class Timings {
+     public static Component deprecationMessage() {
+         return Component.text()
+             .color(TextColor.color(0xf39195)) // Folia
+-            .append(Component.text("[!] The timings system cannot be enabled on Folia, and has been scheduled for removal from Paper in the future.")) // Folia
++            .append(Component.text("[!] The timing system has been removed from TenseiMC.")) // Folia // TenseiMC
+             .append(Component.newline())
+             .append(
+                 Component.text("    We recommend installing the spark profiler as a replacement: ")
+diff --git a/src/main/java/org/bukkit/command/Command.java b/src/main/java/org/bukkit/command/Command.java
+index b791358f90fe92bc2264d9a26492245763813af3..31ec2b8ebe983cb1a940c7baf18200f14c024ba8 100644
+--- a/src/main/java/org/bukkit/command/Command.java
++++ b/src/main/java/org/bukkit/command/Command.java
+@@ -33,7 +33,7 @@ public abstract class Command {
+     protected String usageMessage;
+     private String permission;
+     private net.kyori.adventure.text.Component permissionMessage; // Paper
+-    public co.aikar.timings.Timing timings; // Paper
++    // public co.aikar.timings.Timing timings; // Paper // TenseiMC - remove timings
+     @NotNull public String getTimingName() {return getName();} // Paper
+ 
+     protected Command(@NotNull String name) {
+diff --git a/src/main/java/org/bukkit/command/FormattedCommandAlias.java b/src/main/java/org/bukkit/command/FormattedCommandAlias.java
+index 9d4f553c04784cca63901a56a7aea62a5cae1d72..c1e7505f7bfd753381c616bdf07d8887350424a7 100644
+--- a/src/main/java/org/bukkit/command/FormattedCommandAlias.java
++++ b/src/main/java/org/bukkit/command/FormattedCommandAlias.java
+@@ -12,7 +12,7 @@ public class FormattedCommandAlias extends Command {
+ 
+     public FormattedCommandAlias(@NotNull String alias, @NotNull String[] formatStrings) {
+         super(alias);
+-        timings = co.aikar.timings.TimingsManager.getCommandTiming("minecraft", this); // Spigot
++        // timings = co.aikar.timings.TimingsManager.getCommandTiming("minecraft", this); // Spigot // TenseiMC - remove timings
+         this.formatStrings = formatStrings;
+     }
+ 
+diff --git a/src/main/java/org/bukkit/command/SimpleCommandMap.java b/src/main/java/org/bukkit/command/SimpleCommandMap.java
+index ac9a28922f8a556944a4c3649d74c32c622f0cb0..8010cabff86707b7116a56cc30de73e40b72fa0c 100644
+--- a/src/main/java/org/bukkit/command/SimpleCommandMap.java
++++ b/src/main/java/org/bukkit/command/SimpleCommandMap.java
+@@ -66,7 +66,7 @@ public class SimpleCommandMap implements CommandMap {
+      */
+     @Override
+     public boolean register(@NotNull String label, @NotNull String fallbackPrefix, @NotNull Command command) {
+-        command.timings = co.aikar.timings.TimingsManager.getCommandTiming(fallbackPrefix, command); // Paper
++        // command.timings = co.aikar.timings.TimingsManager.getCommandTiming(fallbackPrefix, command); // Paper // TenseiMC - remove timings
+         label = label.toLowerCase(java.util.Locale.ENGLISH).trim();
+         fallbackPrefix = fallbackPrefix.toLowerCase(java.util.Locale.ENGLISH).trim();
+         boolean registered = register(label, command, false, fallbackPrefix);
+@@ -144,22 +144,24 @@ public class SimpleCommandMap implements CommandMap {
+         }
+ 
+         // Paper start - Plugins do weird things to workaround normal registration
+-        if (target.timings == null) {
++        // TenseiMC start - remove timings
++        /*if (target.timings == null) {
+             target.timings = co.aikar.timings.TimingsManager.getCommandTiming(null, target);
+-        }
++        }*/
++        // TenseiMC end - remove timings
+         // Paper end
+ 
+         try {
+-            try (co.aikar.timings.Timing ignored = target.timings.startTiming()) { // Paper - use try with resources
++            // try (co.aikar.timings.Timing ignored = target.timings.startTiming()) { // Paper - use try with resources // TenseiMC - remove timings
+             // Note: we don't return the result of target.execute as thats success / failure, we return handled (true) or not handled (false)
+             target.execute(sender, sentCommandLabel, Arrays.copyOfRange(args, 1, args.length));
+-            } // target.timings.stopTiming(); // Spigot // Paper
++            // } // target.timings.stopTiming(); // Spigot // Paper // TenseiMC - remove timings
+         } catch (CommandException ex) {
+             server.getPluginManager().callEvent(new com.destroystokyo.paper.event.server.ServerExceptionEvent(new com.destroystokyo.paper.exception.ServerCommandException(ex, target, sender, args))); // Paper
+-            //target.timings.stopTiming(); // Spigot // Paper
++            //target.timings.stopTiming(); // Spigot // Paper // TenseiMC - remove timings
+             throw ex;
+         } catch (Throwable ex) {
+-            //target.timings.stopTiming(); // Spigot // Paper
++            //target.timings.stopTiming(); // Spigot // Paper // TenseiMC - remove timings
+             String msg = "Unhandled exception executing '" + commandLine + "' in " + target;
+             server.getPluginManager().callEvent(new com.destroystokyo.paper.event.server.ServerExceptionEvent(new com.destroystokyo.paper.exception.ServerCommandException(ex, target, sender, args))); // Paper
+             throw new CommandException(msg, ex);
