@@ -1,0 +1,188 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Sun, 4 Jun 2023 00:17:02 +0200
+Subject: [PATCH] Compostable items configuration.
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+index 087601a4000db1325057d0de013d36d1c9430adf..fc2c3a86406e9a645e50d6f02a0ea553e05f354f 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+@@ -2,6 +2,9 @@ package fr.euphilia.tenseimc;
+ 
+ import com.google.common.base.Throwables;
+ import com.google.common.collect.ImmutableMap;
++import net.minecraft.core.registries.BuiltInRegistries;
++import net.minecraft.resources.ResourceLocation;
++import net.minecraft.world.item.Item;
+ import org.bukkit.Bukkit;
+ import org.bukkit.configuration.ConfigurationSection;
+ import org.bukkit.configuration.InvalidConfigurationException;
+@@ -13,8 +16,7 @@ import java.io.IOException;
+ import java.lang.reflect.InvocationTargetException;
+ import java.lang.reflect.Method;
+ import java.lang.reflect.Modifier;
+-import java.util.List;
+-import java.util.Map;
++import java.util.*;
+ import java.util.logging.Level;
+ 
+ public class TenseiConfig {
+@@ -125,6 +127,7 @@ public class TenseiConfig {
+     public static boolean enderChestSixRows = false;
+     public static boolean enderChestPermissionRows = false;
+     public static int barrelRows = 3;
++    public static HashMap<Item, Double> itemCompostable = new HashMap<>();
+     private static void blockSettings() {
+         enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
+         org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
+@@ -135,5 +138,15 @@ public class TenseiConfig {
+             barrelRows = 3;
+         }
+         org.bukkit.event.inventory.InventoryType.BARREL.setDefaultSize(barrelRows*9);
++        itemCompostable.clear();
++        getMap("settings.blocks.composter.compostable", net.minecraft.world.level.block.ComposterBlock.composterBlockItem()).forEach((item, value) -> {
++            try {
++                Item items = BuiltInRegistries.ITEM.get(new ResourceLocation(item.toLowerCase()));
++                itemCompostable.put(items, (Double) value);
++            } catch (Exception exception) {
++                log(Level.SEVERE, "Invalid id " + item);
++            }
++        });
++        net.minecraft.world.level.block.ComposterBlock.loadComposterBlock();
+     }
+ }
+diff --git a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
+index ae90e86327957bb784e2d81694ee7eea288bb455..b97e186e5387fbf9022e118cd25a6270e8f00970 100644
+--- a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
+@@ -64,7 +64,8 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+ 
+     public static void bootStrap() {
+         ComposterBlock.COMPOSTABLES.defaultReturnValue(-1.0F);
+-        float f = 0.3F;
++        // TenseiMC start
++        /*float f = 0.3F;
+         float f1 = 0.5F;
+         float f2 = 0.65F;
+         float f3 = 0.85F;
+@@ -168,9 +169,118 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+         ComposterBlock.add(0.85F, Items.COOKIE);
+         ComposterBlock.add(0.85F, Items.TORCHFLOWER);
+         ComposterBlock.add(1.0F, Items.CAKE);
+-        ComposterBlock.add(1.0F, Items.PUMPKIN_PIE);
++        ComposterBlock.add(1.0F, Items.PUMPKIN_PIE);*/
+     }
+ 
++    public static void loadComposterBlock() {
++        fr.euphilia.tenseimc.TenseiConfig.itemCompostable.forEach((item, aDouble) -> {
++            ComposterBlock.add(aDouble.floatValue(), item);
++        });
++    }
++    public static java.util.Map<String, Double> composterBlockItem() {
++        return java.util.Map.<String, Double>ofEntries(
++                java.util.Map.entry("JUNGLE_LEAVES", 0.3),
++                java.util.Map.entry("OAK_LEAVES", 0.3),
++                java.util.Map.entry("SPRUCE_LEAVES", 0.3),
++                java.util.Map.entry("DARK_OAK_LEAVES", 0.3),
++                java.util.Map.entry("ACACIA_LEAVES", 0.3),
++                java.util.Map.entry("CHERRY_LEAVES", 0.3),
++                java.util.Map.entry("BIRCH_LEAVES", 0.3),
++                java.util.Map.entry("AZALEA_LEAVES", 0.3),
++                java.util.Map.entry("MANGROVE_LEAVES", 0.3),
++                java.util.Map.entry("OAK_SAPLING", 0.3),
++                java.util.Map.entry("SPRUCE_SAPLING", 0.3),
++                java.util.Map.entry("BIRCH_SAPLING", 0.3),
++                java.util.Map.entry("JUNGLE_SAPLING", 0.3),
++                java.util.Map.entry("ACACIA_SAPLING", 0.3),
++                java.util.Map.entry("CHERRY_SAPLING", 0.3),
++                java.util.Map.entry("DARK_OAK_SAPLING", 0.3),
++                java.util.Map.entry("MANGROVE_PROPAGULE", 0.3),
++                java.util.Map.entry("BEETROOT_SEEDS", 0.3),
++                java.util.Map.entry("DRIED_KELP", 0.3),
++                java.util.Map.entry("GRASS", 0.3),
++                java.util.Map.entry("KELP", 0.3),
++                java.util.Map.entry("MELON_SEEDS", 0.3),
++                java.util.Map.entry("PUMPKIN_SEEDS", 0.3),
++                java.util.Map.entry("SEAGRASS", 0.3),
++                java.util.Map.entry("SWEET_BERRIES", 0.3),
++                java.util.Map.entry("GLOW_BERRIES", 0.3),
++                java.util.Map.entry("WHEAT_SEEDS", 0.3),
++                java.util.Map.entry("MOSS_CARPET", 0.3),
++                java.util.Map.entry("PINK_PETALS", 0.3),
++                java.util.Map.entry("SMALL_DRIPLEAF", 0.3),
++                java.util.Map.entry("HANGING_ROOTS", 0.3),
++                java.util.Map.entry("MANGROVE_ROOTS", 0.3),
++                java.util.Map.entry("TORCHFLOWER_SEEDS", 0.3),
++                java.util.Map.entry("DRIED_KELP_BLOCK", 0.5),
++                java.util.Map.entry("TALL_GRASS", 0.5),
++                java.util.Map.entry("FLOWERING_AZALEA_LEAVES", 0.5),
++                java.util.Map.entry("CACTUS", 0.5),
++                java.util.Map.entry("SUGAR_CANE", 0.5),
++                java.util.Map.entry("VINE", 0.5),
++                java.util.Map.entry("NETHER_SPROUTS", 0.5),
++                java.util.Map.entry("WEEPING_VINES", 0.5),
++                java.util.Map.entry("TWISTING_VINES", 0.5),
++                java.util.Map.entry("MELON_SLICE", 0.5),
++                java.util.Map.entry("GLOW_LICHEN", 0.5),
++                java.util.Map.entry("SEA_PICKLE", 0.65),
++                java.util.Map.entry("LILY_PAD", 0.65),
++                java.util.Map.entry("PUMPKIN", 0.65),
++                java.util.Map.entry("CARVED_PUMPKIN", 0.65),
++                java.util.Map.entry("MELON", 0.65),
++                java.util.Map.entry("APPLE", 0.65),
++                java.util.Map.entry("BEETROOT", 0.65),
++                java.util.Map.entry("CARROT", 0.65),
++                java.util.Map.entry("COCOA_BEANS", 0.65),
++                java.util.Map.entry("POTATO", 0.65),
++                java.util.Map.entry("WHEAT", 0.65),
++                java.util.Map.entry("BROWN_MUSHROOM", 0.65),
++                java.util.Map.entry("RED_MUSHROOM", 0.65),
++                java.util.Map.entry("MUSHROOM_STEM", 0.65),
++                java.util.Map.entry("CRIMSON_FUNGUS", 0.65),
++                java.util.Map.entry("WARPED_FUNGUS", 0.65),
++                java.util.Map.entry("NETHER_WART", 0.65),
++                java.util.Map.entry("CRIMSON_ROOTS", 0.65),
++                java.util.Map.entry("WARPED_ROOTS", 0.65),
++                java.util.Map.entry("SHROOMLIGHT", 0.65),
++                java.util.Map.entry("DANDELION", 0.65),
++                java.util.Map.entry("POPPY", 0.65),
++                java.util.Map.entry("BLUE_ORCHID", 0.65),
++                java.util.Map.entry("ALLIUM", 0.65),
++                java.util.Map.entry("AZURE_BLUET", 0.65),
++                java.util.Map.entry("RED_TULIP", 0.65),
++                java.util.Map.entry("ORANGE_TULIP", 0.65),
++                java.util.Map.entry("WHITE_TULIP", 0.65),
++                java.util.Map.entry("PINK_TULIP", 0.65),
++                java.util.Map.entry("OXEYE_DAISY", 0.65),
++                java.util.Map.entry("CORNFLOWER", 0.65),
++                java.util.Map.entry("LILY_OF_THE_VALLEY", 0.65),
++                java.util.Map.entry("WITHER_ROSE", 0.65),
++                java.util.Map.entry("FERN", 0.65),
++                java.util.Map.entry("SUNFLOWER", 0.65),
++                java.util.Map.entry("LILAC", 0.65),
++                java.util.Map.entry("ROSE_BUSH", 0.65),
++                java.util.Map.entry("PEONY", 0.65),
++                java.util.Map.entry("LARGE_FERN", 0.65),
++                java.util.Map.entry("SPORE_BLOSSOM", 0.65),
++                java.util.Map.entry("AZALEA", 0.65),
++                java.util.Map.entry("MOSS_BLOCK", 0.65),
++                java.util.Map.entry("BIG_DRIPLEAF", 0.65),
++                java.util.Map.entry("HAY_BLOCK", 0.85),
++                java.util.Map.entry("BROWN_MUSHROOM_BLOCK", 0.85),
++                java.util.Map.entry("RED_MUSHROOM_BLOCK", 0.85),
++                java.util.Map.entry("NETHER_WART_BLOCK", 0.85),
++                java.util.Map.entry("WARPED_WART_BLOCK", 0.85),
++                java.util.Map.entry("FLOWERING_AZALEA", 0.85),
++                java.util.Map.entry("BREAD", 0.85),
++                java.util.Map.entry("BAKED_POTATO", 0.85),
++                java.util.Map.entry("COOKIE", 0.85),
++                java.util.Map.entry("TORCHFLOWER", 0.85),
++                java.util.Map.entry("CAKE", 1.0),
++                java.util.Map.entry("PUMPKIN_PIE", 1.0));
++    }
++    // TenseiMC end
++
+     private static void add(float levelIncreaseChance, ItemLike item) {
+         ComposterBlock.COMPOSTABLES.put(item.asItem(), levelIncreaseChance);
+     }

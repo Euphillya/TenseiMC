@@ -6,7 +6,7 @@ Subject: [PATCH] TenseiMC Config Files
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..6e5e53a79e4d0621445c520cf28930b6de2c3732
+index 0000000000000000000000000000000000000000..4bc8c7f69c94be174c5385c3b8ed64670b7e673d
 --- /dev/null
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 @@ -0,0 +1,124 @@
@@ -113,7 +113,7 @@ index 0000000000000000000000000000000000000000..6e5e53a79e4d0621445c520cf28930b6
 +        return config.getList(path, config.getList(path));
 +    }
 +
-+    static Map<String, Object> getMap(@NotNull String path, Map<String, Object> def) {
++    static Map<String, ?> getMap(@NotNull String path, Map<String, ?> def) {
 +        if (config.getConfigurationSection(path) == null) {
 +            config.addDefault(path, def);
 +            return def;
@@ -136,7 +136,7 @@ index 0000000000000000000000000000000000000000..6e5e53a79e4d0621445c520cf28930b6
 +}
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..88392a19ff87af5966adc2cd54b10ac61b8dde03
+index 0000000000000000000000000000000000000000..87b4ba6680d3106fe76fb490bdf68b8f94c23d88
 --- /dev/null
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 @@ -0,0 +1,67 @@
@@ -200,7 +200,7 @@ index 0000000000000000000000000000000000000000..88392a19ff87af5966adc2cd54b10ac6
 +        TenseiConfig.config.addDefault(worldSettingsDefault + path, def);
 +        return TenseiConfig.config.getList(worldSettings + worldName + "." + path, TenseiConfig.config.getList(worldSettingsDefault + path));
 +    }
-+    private Map<String, Object> getMap(@NotNull String path, Map<String, Object> def) {
++    private Map<String, ?> getMap(@NotNull String path, Map<String, ?> def) {
 +        final Map<String, Object> fallback = TenseiConfig.getMap(worldSettingsDefault + path, def);
 +        final Map<String, Object> value = TenseiConfig.getMap(worldSettings + worldName + "." + path, null);
 +        return value.isEmpty() ? fallback : value;
