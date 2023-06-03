@@ -201,8 +201,8 @@ index 0000000000000000000000000000000000000000..87b4ba6680d3106fe76fb490bdf68b8f
 +        return TenseiConfig.config.getList(worldSettings + worldName + "." + path, TenseiConfig.config.getList(worldSettingsDefault + path));
 +    }
 +    private Map<String, ?> getMap(@NotNull String path, Map<String, ?> def) {
-+        final Map<String, Object> fallback = TenseiConfig.getMap(worldSettingsDefault + path, def);
-+        final Map<String, Object> value = TenseiConfig.getMap(worldSettings + worldName + "." + path, null);
++        final Map<String, ?> fallback = TenseiConfig.getMap(worldSettingsDefault + path, def);
++        final Map<String, ?> value = TenseiConfig.getMap(worldSettings + worldName + "." + path, null);
 +        return value.isEmpty() ? fallback : value;
 +    }
 +
