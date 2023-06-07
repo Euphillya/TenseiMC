@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./others/D8_ZtPAVUAAirq8.jpg" alt="TenseiMC">
+
 # TenseiMC
 [![MIT License](https://img.shields.io/github/license/DoctaEnkoda/TenseiMC?&logo=github)](LICENSE)
 ![Build TenseiMC](https://github.com/DoctaEnkoda/TenseiMC/actions/workflows/build.yml/badge.svg)
@@ -25,6 +27,6 @@ Discord : DocktaEnkoda#4311
 <dependency>
     <groupId>fr.euphilia.tenseimc</groupId>
     <artifactId>TenseiMC-api</artifactId>
-    <version>1.19.4-R0.1-SNAPSHOT</version>
+    <version>1.20-R0.1-SNAPSHOT</version>
 </dependency>
 ```
