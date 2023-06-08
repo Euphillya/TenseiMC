@@ -49,10 +49,10 @@ index a3f073066f6e2eea8964461ad2b0409ade202f35..1ac8b07e05c6099192da694b7d0bf79a
      private int maxStack = MAX_STACK;
      public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index ecf47cb58f1405733320eaf14135512412f554ba..fb6ea9d2336503699a12918135644c842ef6dae7 100644
+index d6ecabc46ccef9e9d5477d655a10796a4f998511..f7dfd5e27f38492384409da82d4086c5e690de83 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -245,6 +245,7 @@ import org.bukkit.scoreboard.Criteria;
+@@ -251,6 +251,7 @@ import org.bukkit.scoreboard.Criteria;
  import org.bukkit.structure.StructureManager;
  import org.bukkit.util.StringUtil;
  import org.bukkit.util.permissions.DefaultPermissions;
@@ -60,7 +60,7 @@ index ecf47cb58f1405733320eaf14135512412f554ba..fb6ea9d2336503699a12918135644c84
  import org.yaml.snakeyaml.LoaderOptions;
  import org.yaml.snakeyaml.Yaml;
  import org.yaml.snakeyaml.constructor.SafeConstructor;
-@@ -379,6 +380,30 @@ public final class CraftServer implements Server {
+@@ -386,6 +387,30 @@ public final class CraftServer implements Server {
  
      // Folia end - region threading API
  

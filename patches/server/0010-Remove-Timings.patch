@@ -26,10 +26,10 @@ index 112029cb275d45dced60807820f1bfe9f394496d..d9083c1712828469656682954d3fbd18
 +    }*/ // TenseiMC end - remove timings
  }
 diff --git a/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java
-index eba309c8614eb099d55db9c9ebfe6b09f3403a04..538c5fe426183a67edcafd1862fdafa1f263baf3 100644
+index 8580ddfeb9cab5ba3d7c5cea836bdb67e49bab50..44dcba3318cf1f4b0447a91934a66b708577ce63 100644
 --- a/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java
 +++ b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java
-@@ -1529,9 +1529,9 @@ public final class ChunkHolderManager {
+@@ -1536,9 +1536,9 @@ public final class ChunkHolderManager {
      }
  
      public boolean processTicketUpdates() {
@@ -526,7 +526,7 @@ index e664c568aba954e04878c06f3671ae74673dd342..764361de9de4b1ce2be9f9f3021d7329
              // Paper end - use set of chunks requiring updates, rather than iterating every single one loaded
              // Paper start - controlled flush for entity tracker packets
 diff --git a/src/main/java/net/minecraft/server/level/ServerLevel.java b/src/main/java/net/minecraft/server/level/ServerLevel.java
-index acc8af33ad8534d812908b0feb9a1963ee2c64fb..85ce4eaa35ee38123c6bdd9487c6d35425f986bd 100644
+index 6db245339eaa2c72253231d1e71c363d916c30b5..819833bde1e526409a112394af3cba1dbd93efcc 100644
 --- a/src/main/java/net/minecraft/server/level/ServerLevel.java
 +++ b/src/main/java/net/minecraft/server/level/ServerLevel.java
 @@ -1,7 +1,7 @@
@@ -731,10 +731,10 @@ index acc8af33ad8534d812908b0feb9a1963ee2c64fb..85ce4eaa35ee38123c6bdd9487c6d354
  
          } else if (close) { chunkproviderserver.close(false); } // Paper - rewrite chunk system
 diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-index 4963e87adf11c9df90f0dd4b60d360a137c07bc9..1692a498c31de891cd9193cef03c729db4b5284c 100644
+index cebfc29c50c631d0f2636f600b1839b2c5515ba1..7e1633e588c6a67f673ac62f8cd7714b016a352a 100644
 --- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
 +++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
-@@ -2519,7 +2519,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2534,7 +2534,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
              }
          }
          // Paper End
@@ -743,7 +743,7 @@ index 4963e87adf11c9df90f0dd4b60d360a137c07bc9..1692a498c31de891cd9193cef03c729d
          if ( org.spigotmc.SpigotConfig.logCommands ) // Spigot
          this.LOGGER.info(this.player.getScoreboardName() + " issued server command: " + s);
  
-@@ -2529,7 +2529,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2544,7 +2544,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
          this.cserver.getPluginManager().callEvent(event);
  
          if (event.isCancelled()) {
@@ -752,7 +752,7 @@ index 4963e87adf11c9df90f0dd4b60d360a137c07bc9..1692a498c31de891cd9193cef03c729d
              return;
          }
  
-@@ -2542,7 +2542,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
+@@ -2557,7 +2557,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Tic
              java.util.logging.Logger.getLogger(ServerGamePacketListenerImpl.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
              return;
          } finally {
@@ -762,7 +762,7 @@ index 4963e87adf11c9df90f0dd4b60d360a137c07bc9..1692a498c31de891cd9193cef03c729d
      }
      // CraftBukkit end
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index c033be4ee0722f62037ade0d81fbf4cf4490c736..4bbf48d7792156082b0f4f259b28568a41b46ddc 100644
+index 3c841e67fff54906c7932b1d4a6b00de1200e57f..fb968a4eabebc9a8ae6422881be4c46f2e7e0d72 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1,6 +1,6 @@
@@ -773,7 +773,7 @@ index c033be4ee0722f62037ade0d81fbf4cf4490c736..4bbf48d7792156082b0f4f259b28568a
  import com.google.common.collect.Lists;
  import com.google.common.collect.Maps;
  import com.google.common.collect.Sets;
-@@ -1296,7 +1296,7 @@ public abstract class PlayerList {
+@@ -1304,7 +1304,7 @@ public abstract class PlayerList {
  
      public void saveAll(int interval) {
          io.papermc.paper.util.MCUtil.ensureMain("Save Players" , () -> { // Paper - Ensure main
@@ -782,7 +782,7 @@ index c033be4ee0722f62037ade0d81fbf4cf4490c736..4bbf48d7792156082b0f4f259b28568a
          int numSaved = 0;
          long now = System.nanoTime(); // Folia - region threading
          int max = io.papermc.paper.configuration.GlobalConfiguration.get().playerAutoSave.maxPerTick(); // Folia - region threading
-@@ -1316,7 +1316,7 @@ public abstract class PlayerList {
+@@ -1324,7 +1324,7 @@ public abstract class PlayerList {
              }
              // Paper end
          }
@@ -1048,10 +1048,10 @@ index ac1f6d5c78c1970b3242c017031679fb9a906fb0..2835be22bc40733f0374e2172610197d
      private static final CraftPersistentDataTypeRegistry DATA_TYPE_REGISTRY = new CraftPersistentDataTypeRegistry();
      public CraftPersistentDataContainer persistentDataContainer;
 diff --git a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-index f4c4951f815062c2791531a703ed8cbe9337d574..9f9906add6796c37caaabdd75aa8218a50843d30 100644
+index e78bb4416d9fac6465738071b529564a6d47391b..47a838b416c214a8975d7b792b3d51c866a7149f 100644
 --- a/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
 +++ b/src/main/java/net/minecraft/world/level/chunk/LevelChunk.java
-@@ -837,7 +837,7 @@ public class LevelChunk extends ChunkAccess {
+@@ -831,7 +831,7 @@ public class LevelChunk extends ChunkAccess {
              this.chunkHolder.getEntityChunk().callEntitiesLoadEvent(); // Paper - rewrite chunk system
  
              if (this.needsDecoration) {
@@ -1060,16 +1060,16 @@ index f4c4951f815062c2791531a703ed8cbe9337d574..9f9906add6796c37caaabdd75aa8218a
                  this.needsDecoration = false;
                  java.util.Random random = new java.util.Random();
                  random.setSeed(this.level.getSeed());
-@@ -857,7 +857,7 @@ public class LevelChunk extends ChunkAccess {
+@@ -851,7 +851,7 @@ public class LevelChunk extends ChunkAccess {
                      }
                  }
-                 server.getPluginManager().callEvent(new org.bukkit.event.world.ChunkPopulateEvent(this.bukkitChunk));
+                 server.getPluginManager().callEvent(new org.bukkit.event.world.ChunkPopulateEvent(bukkitChunk));
 -                } // Paper
 +                // } // Paper // TenseiMC - remove timings
              }
          }
      }
-@@ -1243,7 +1243,7 @@ public class LevelChunk extends ChunkAccess {
+@@ -1238,7 +1238,7 @@ public class LevelChunk extends ChunkAccess {
                          ProfilerFiller gameprofilerfiller = LevelChunk.this.level.getProfiler();
  
                          gameprofilerfiller.push(this::getType);
@@ -1078,7 +1078,7 @@ index f4c4951f815062c2791531a703ed8cbe9337d574..9f9906add6796c37caaabdd75aa8218a
                          BlockState iblockdata = LevelChunk.this.getBlockState(blockposition);
  
                          if (this.blockEntity.getType().isValid(iblockdata)) {
-@@ -1265,7 +1265,7 @@ public class LevelChunk extends ChunkAccess {
+@@ -1260,7 +1260,7 @@ public class LevelChunk extends ChunkAccess {
                          // Paper end
                          // Spigot start
                      } finally {
@@ -1237,10 +1237,10 @@ index 071289fe33f444b903b61d6ec34c9ca4873c9ac5..660929c37ddbfe8ff8be7edccf6ae9e9
          // Paper end - add timings for scoreboard search
      }
 diff --git a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-index 9f5e8a21de3785721897cf8cf75b17ce3968cb7e..c01243cf967a8408333b28a60e86573713c3320d 100644
+index 3dc2223bcdffb425f207e7418a8bcc55db26842f..2ab3f36d3fd225fc804440cd1092704cb5971d95 100644
 --- a/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
 +++ b/src/main/java/org/bukkit/craftbukkit/util/CraftMagicNumbers.java
-@@ -225,7 +225,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -227,7 +227,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
      // Paper start
      @Override
      public void reportTimings() {
@@ -1249,7 +1249,7 @@ index 9f5e8a21de3785721897cf8cf75b17ce3968cb7e..c01243cf967a8408333b28a60e865737
      }
      // Paper end
  
-@@ -465,7 +465,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
+@@ -473,7 +473,7 @@ public final class CraftMagicNumbers implements UnsafeValues {
      // Paper start
      @Override
      public String getTimingsServerName() {
@@ -1259,7 +1259,7 @@ index 9f5e8a21de3785721897cf8cf75b17ce3968cb7e..c01243cf967a8408333b28a60e865737
  
      @Override
 diff --git a/src/main/java/org/spigotmc/ActivationRange.java b/src/main/java/org/spigotmc/ActivationRange.java
-index 5b85034aeb2445a980f8d6156cea6a483ce97391..0c73d05badd8f2c63a480dbd19998a87b4260e5c 100644
+index 806894e6db5d78e85c7bad48c0685151c270d0c1..4592536c7f4720f67ffb9d171386a762bd44679a 100644
 --- a/src/main/java/org/spigotmc/ActivationRange.java
 +++ b/src/main/java/org/spigotmc/ActivationRange.java
 @@ -34,7 +34,7 @@ import net.minecraft.world.entity.projectile.FireworkRocketEntity;
@@ -1280,7 +1280,7 @@ index 5b85034aeb2445a980f8d6156cea6a483ce97391..0c73d05badd8f2c63a480dbd19998a87
          final int miscActivationRange = world.spigotConfig.miscActivationRange;
          final int raiderActivationRange = world.spigotConfig.raiderActivationRange;
          final int animalActivationRange = world.spigotConfig.animalActivationRange;
-@@ -222,7 +222,7 @@ public class ActivationRange
+@@ -223,7 +223,7 @@ public class ActivationRange
              }
              // Paper end
          }

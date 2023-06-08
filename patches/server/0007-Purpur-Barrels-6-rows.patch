@@ -6,7 +6,7 @@ Subject: [PATCH] Purpur - Barrels 6 rows
 Co-authored by: William Blake Galbreath <blake.galbreath@gmail.com>
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index 649c75970ceac7b13434b6bc9042f4a42d97a94d..e25af919773374f7717bc967879f96d8e3cda495 100644
+index 80e76f54978047b48990a6c928c972a7d87df43a..087601a4000db1325057d0de013d36d1c9430adf 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 @@ -124,9 +124,16 @@ public class TenseiConfig {
@@ -67,10 +67,10 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..6e81a4e4662b68944dbcc3d1f1957d0a
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-index 0090ba650490c37f88625c6763812ef90a991d6c..95653178a16c303ab7e37d0920fbc3b56e3c1481 100644
+index d3c5dcf0511522046f48f2cdb59e481953f6ed2d..cb03489676c5d7a95a0a222d36061431a6e31bf0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-@@ -173,7 +173,16 @@ public class CraftContainer extends AbstractContainerMenu {
+@@ -189,7 +189,16 @@ public class CraftContainer extends AbstractContainerMenu {
                  break;
                  // TenseiMC end
              case BARREL:

@@ -5,10 +5,10 @@ Subject: [PATCH] Purpur - Allow Inventory Resizing
 
 
 diff --git a/src/main/java/org/bukkit/event/inventory/InventoryType.java b/src/main/java/org/bukkit/event/inventory/InventoryType.java
-index 94f127fd6ba69ca48d03acbc9886ee499e9be4f3..72fb984ff34ea4186bf50ffac74de79d5075202a 100644
+index a8e631315f2da68895a258cf0ba9875bc88fc48c..a7877b94c56d2821cb2c28ceb099ccf4422d928d 100644
 --- a/src/main/java/org/bukkit/event/inventory/InventoryType.java
 +++ b/src/main/java/org/bukkit/event/inventory/InventoryType.java
-@@ -152,7 +152,7 @@ public enum InventoryType {
+@@ -155,7 +155,7 @@ public enum InventoryType {
      SMITHING_NEW(4, "Upgrade Gear"),
      ;
  

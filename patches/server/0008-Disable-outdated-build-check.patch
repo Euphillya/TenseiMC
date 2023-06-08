@@ -5,10 +5,10 @@ Subject: [PATCH] Disable outdated build check
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 426c5f23dc8eb1cb6bbff91754119669b194b3f7..e6b8c0696716c7e91d06c33d93f66f2f341ba6c1 100644
+index 459e0619e9373977e161b2a54c5031eb0c8e2223..4a89bc89f4591305ef7e826ae5a67d145e708550 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
-@@ -285,7 +285,7 @@ public class Main {
+@@ -292,7 +292,7 @@ public class Main {
                      System.setProperty(net.minecrell.terminalconsole.TerminalConsoleAppender.JLINE_OVERRIDE_PROPERTY, "false"); // Paper
                  }
  
