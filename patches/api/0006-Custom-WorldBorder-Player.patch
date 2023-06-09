@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Sat, 10 Jun 2023 00:58:29 +0200
+Subject: [PATCH] Custom WorldBorder Player
+
+
+diff --git a/src/main/java/fr/euphilia/utils/BorderColor.java b/src/main/java/fr/euphilia/utils/BorderColor.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..426a6780c125e3d6be1f79974dfa3d551dadcde1
+--- /dev/null
++++ b/src/main/java/fr/euphilia/utils/BorderColor.java
+@@ -0,0 +1,6 @@
++package fr.euphilia.utils;
++
++public enum BorderColor {
++
++    BLUE, RED, GREEN;
++}
+diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
+index 997afb6739c72529ea8226228a9905d72f77c89a..14d6a697fc7c5e8c88c240f9a925d00b01455f9a 100644
+--- a/src/main/java/org/bukkit/entity/Player.java
++++ b/src/main/java/org/bukkit/entity/Player.java
+@@ -2112,6 +2112,20 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+      */
+     public void setWorldBorder(@Nullable WorldBorder border);
+ 
++    // TenseiMC start
++    /**
++     * Create a personal border just for the player.
++     *
++     * @param centerBorder The center of the border
++     * @param colorBorder Border color: Blue/Red/Green
++     * @param borderSize Border size
++     * @param warningBlocks Sets the warning distance that causes the screen to be tinted red when the player is within the specified number of blocks from the border.
++     * @param warningTime Sets the warning time that causes the screen to be tinted red when a contracting border will reach the player within the specified time.
++     */
++    @org.jetbrains.annotations.ApiStatus.Experimental
++    public void setOwnWorldBorder(@NotNull Location centerBorder, @NotNull fr.euphilia.utils.BorderColor colorBorder, double borderSize, int warningBlocks, int warningTime);
++    // TenseiMC end
++
+     /**
+      * Gets if the client is displayed a 'scaled' health, that is, health on a
+      * scale from 0-{@link #getHealthScale()}.
