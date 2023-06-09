@@ -31,7 +31,7 @@ index 8580ddfeb9cab5ba3d7c5cea836bdb67e49bab50..44dcba3318cf1f4b0447a91934a66b70
 +++ b/src/main/java/io/papermc/paper/chunk/system/scheduling/ChunkHolderManager.java
 @@ -1536,9 +1536,9 @@ public final class ChunkHolderManager {
      }
- 
+
      public boolean processTicketUpdates() {
 -        co.aikar.timings.MinecraftTimings.distanceManagerTick.startTiming(); try { // Paper - add timings for distance manager
 +        // co.aikar.timings.MinecraftTimings.distanceManagerTick.startTiming(); try { // Paper - add timings for distance manager // TenseiMC - remove timings
@@ -39,7 +39,7 @@ index 8580ddfeb9cab5ba3d7c5cea836bdb67e49bab50..44dcba3318cf1f4b0447a91934a66b70
 -        } finally { co.aikar.timings.MinecraftTimings.distanceManagerTick.stopTiming(); } // Paper - add timings for distance manager
 +        // } finally { co.aikar.timings.MinecraftTimings.distanceManagerTick.stopTiming(); } // Paper - add timings for distance manager  // TenseiMC - remove timings
      }
- 
+
      private static final ThreadLocal<List<ChunkProgressionTask>> CURRENT_TICKET_UPDATE_SCHEDULING = new ThreadLocal<>();
 diff --git a/src/main/java/io/papermc/paper/chunk/system/scheduling/NewChunkHolder.java b/src/main/java/io/papermc/paper/chunk/system/scheduling/NewChunkHolder.java
 index dc60f4af918c2bd73873cadfb69e5572173b8e46..6d6be841bbb66ecd59cf0f8aa3e16db4b08885b3 100644
@@ -48,7 +48,7 @@ index dc60f4af918c2bd73873cadfb69e5572173b8e46..6d6be841bbb66ecd59cf0f8aa3e16db4
 @@ -1791,7 +1791,7 @@ public final class NewChunkHolder {
          boolean canSavePOI = !(chunk instanceof LevelChunk levelChunk && levelChunk.mustNotSave) && (poi != null && poi.isDirty());
          boolean canSaveEntities = entities != null;
- 
+
 -        try (co.aikar.timings.Timing ignored = this.world.timings.chunkSave.startTiming()) { // Paper
 +        // try (co.aikar.timings.Timing ignored = this.world.timings.chunkSave.startTiming()) { // Paper  // TenseiMC - remove timings
              if (canSaveChunk) {
@@ -60,7 +60,7 @@ index dc60f4af918c2bd73873cadfb69e5572173b8e46..6d6be841bbb66ecd59cf0f8aa3e16db4
              }
 -        }
 +        // } // TenseiMC - remove timings
- 
+
          return executedUnloadTask | canSaveChunk | canSaveEntities | canSavePOI ? new SaveStat(executedUnloadTask || canSaveChunk, canSaveEntities, canSavePOI): null;
      }
 diff --git a/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
@@ -69,7 +69,7 @@ index 3b83f25a24d6f9cdbf131d5a4432fb4ad018be4e..8571b6e014fd43530bb17f34a9141a5f
 +++ b/src/main/java/io/papermc/paper/configuration/GlobalConfiguration.java
 @@ -1,6 +1,6 @@
  package io.papermc.paper.configuration;
- 
+
 -import co.aikar.timings.MinecraftTimings;
 +// import co.aikar.timings.MinecraftTimings; // TenseiMC - remove timings
  import io.papermc.paper.configuration.constraint.Constraint;
@@ -78,10 +78,10 @@ index 3b83f25a24d6f9cdbf131d5a4432fb4ad018be4e..8571b6e014fd43530bb17f34a9141a5f
 @@ -47,10 +47,11 @@ public class GlobalConfiguration extends ConfigurationPart {
          public boolean useDisplayNameInQuitMessage = false;
      }
- 
+
 +    /* // TenseiMC start - remove timings
      public Timings timings;
- 
+
      public class Timings extends ConfigurationPart.Post {
 -        public boolean enabled = true;
 +        public boolean enabled = false; // TenseiMC - remove timings
@@ -89,7 +89,7 @@ index 3b83f25a24d6f9cdbf131d5a4432fb4ad018be4e..8571b6e014fd43530bb17f34a9141a5f
          public String url = "https://timings.aikar.co/";
          public boolean serverNamePrivacy = false;
 @@ -64,9 +65,10 @@ public class GlobalConfiguration extends ConfigurationPart {
- 
+
          @Override
          public void postProcess() {
 -            MinecraftTimings.processConfig(this);
@@ -97,9 +97,9 @@ index 3b83f25a24d6f9cdbf131d5a4432fb4ad018be4e..8571b6e014fd43530bb17f34a9141a5f
          }
      }
 +    */ // TenseiMC end - remove timings
- 
+
      public Proxies proxies;
- 
+
 diff --git a/src/main/java/net/minecraft/commands/CommandFunction.java b/src/main/java/net/minecraft/commands/CommandFunction.java
 index 8273ee1c5e513f02c9743ee38c9b7cf700e2ecad..65f3e0bddff0bf6ac0ed234c9ec43fb8978de9cc 100644
 --- a/src/main/java/net/minecraft/commands/CommandFunction.java
@@ -346,7 +346,7 @@ index bc3105fc05c45ac5e8f953b3b4377b1b6a305e89..615607c4b7a93f7fdf9e3dc25453cc40
  import org.bukkit.event.server.RemoteServerCommandEvent;
 @@ -493,7 +493,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
      }
- 
+
      public void handleConsoleInputs() {
 -        MinecraftTimings.serverCommandTimer.startTiming(); // Spigot
 +        // MinecraftTimings.serverCommandTimer.startTiming(); // Spigot // TenseiMC - remove timings
@@ -356,11 +356,11 @@ index bc3105fc05c45ac5e8f953b3b4377b1b6a305e89..615607c4b7a93f7fdf9e3dc25453cc40
 @@ -510,7 +510,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
              // CraftBukkit end
          }
- 
+
 -        MinecraftTimings.serverCommandTimer.stopTiming(); // Spigot
 +        // MinecraftTimings.serverCommandTimer.stopTiming(); // Spigot // TenseiMC - remove timings
      }
- 
+
      @Override
 @@ -781,7 +781,7 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
                      }
@@ -377,7 +377,7 @@ index c8bc7db4c22f48047aa409f0bcff3ef8c4034781..8f5288573fda040848b4d2881096a1d2
 +++ b/src/main/java/net/minecraft/server/level/ChunkMap.java
 @@ -1,6 +1,6 @@
  package net.minecraft.server.level;
- 
+
 -import co.aikar.timings.Timing; // Paper
 +// import co.aikar.timings.Timing; // Paper // TenseiMC - remove timings
  import com.google.common.collect.ImmutableList;
@@ -386,7 +386,7 @@ index c8bc7db4c22f48047aa409f0bcff3ef8c4034781..8f5288573fda040848b4d2881096a1d2
 @@ -502,15 +502,15 @@ public class ChunkMap extends ChunkStorage implements ChunkHolder.PlayerProvider
      protected void tick(BooleanSupplier shouldKeepTicking) {
          ProfilerFiller gameprofilerfiller = this.level.getProfiler();
- 
+
 -        try (Timing ignored = this.level.timings.poiUnload.startTiming()) { // Paper
 +        //try (Timing ignored = this.level.timings.poiUnload.startTiming()) { // Paper // TenseiMC - remove timings
          gameprofilerfiller.push("poi");
@@ -401,7 +401,7 @@ index c8bc7db4c22f48047aa409f0bcff3ef8c4034781..8f5288573fda040848b4d2881096a1d2
 -            } // Paper
 +            // } // Paper // TenseiMC - remove timings
          }
- 
+
          gameprofilerfiller.pop();
 diff --git a/src/main/java/net/minecraft/server/level/ServerChunkCache.java b/src/main/java/net/minecraft/server/level/ServerChunkCache.java
 index e664c568aba954e04878c06f3671ae74673dd342..764361de9de4b1ce2be9f9f3021d7329fbb34943 100644

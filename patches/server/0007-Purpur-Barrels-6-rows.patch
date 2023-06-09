@@ -67,10 +67,10 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..6e81a4e4662b68944dbcc3d1f1957d0a
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-index d3c5dcf0511522046f48f2cdb59e481953f6ed2d..cb03489676c5d7a95a0a222d36061431a6e31bf0 100644
+index fd1ca6727ad57a4095df4b0e802439876b495373..0da5ac281cc6e507444e21acc4c83ca0dda182df 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-@@ -189,7 +189,16 @@ public class CraftContainer extends AbstractContainerMenu {
+@@ -187,7 +187,16 @@ public class CraftContainer extends AbstractContainerMenu {
                  break;
                  // TenseiMC end
              case BARREL:

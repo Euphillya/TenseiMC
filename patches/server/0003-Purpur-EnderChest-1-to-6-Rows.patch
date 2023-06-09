@@ -22,10 +22,10 @@ index 4bc8c7f69c94be174c5385c3b8ed64670b7e673d..80e76f54978047b48990a6c928c972a7
 +    }
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 7416d8eed50ef7156db158c05c89d6062193bf2e..3c841e67fff54906c7932b1d4a6b00de1200e57f 100644
+index f35192cd5f08fdac6eaee549d6b73cccd22fefe4..03c5fb84528d9c0d575e10a32107dd56767a68c8 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -1223,6 +1223,27 @@ public abstract class PlayerList {
+@@ -1230,6 +1230,27 @@ public abstract class PlayerList {
          player.getBukkitEntity().recalculatePermissions(); // CraftBukkit
          this.server.getCommands().sendCommands(player);
          } // Paper
@@ -54,10 +54,10 @@ index 7416d8eed50ef7156db158c05c89d6062193bf2e..3c841e67fff54906c7932b1d4a6b00de
  
      public boolean isWhiteListed(GameProfile profile) {
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 0629c471d38a77c44fc1c86ccdfcb0690f61ca17..2504991c6d2cefc65bd844416567f284b54214b8 100644
+index 58152160d609d0e9d105153aeb166a56a7955603..6b03dff7fd0c459761462d534718a502067c24f4 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -186,6 +186,7 @@ public abstract class Player extends LivingEntity {
+@@ -187,6 +187,7 @@ public abstract class Player extends LivingEntity {
      public boolean affectsSpawning = true;
      public net.kyori.adventure.util.TriState flyingFallDamage = net.kyori.adventure.util.TriState.NOT_SET;
      // Paper end
@@ -155,10 +155,10 @@ index 7385e91f32f070e86a4e0fd3d214f55d832c7979..fb65d6970f707679b4507602c9ed26ca
                  }, CONTAINER_TITLE));
                  player.awardStat(Stats.OPEN_ENDERCHEST);
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-index 04088918e172eecb8d53b0e6de9be0071ccf33b5..d3c5dcf0511522046f48f2cdb59e481953f6ed2d 100644
+index bdaa739aa18a95894a165e9333a3e9d596fd7dc3..fd1ca6727ad57a4095df4b0e802439876b495373 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-@@ -182,6 +182,12 @@ public class CraftContainer extends AbstractContainerMenu {
+@@ -180,6 +180,12 @@ public class CraftContainer extends AbstractContainerMenu {
              case PLAYER:
              case CHEST:
              case ENDER_CHEST:
