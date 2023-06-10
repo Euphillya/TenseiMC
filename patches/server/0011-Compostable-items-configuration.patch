@@ -53,10 +53,10 @@ index 087601a4000db1325057d0de013d36d1c9430adf..fc2c3a86406e9a645e50d6f02a0ea553
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
-index 87153b5576fed05103183a9860d804c2c8cfbe1c..03d4f139fde136f20b1341fb1c6a5e690a576b87 100644
+index 87153b5576fed05103183a9860d804c2c8cfbe1c..8a38111441b53f041f3c6fd99e300ddf054c1ec0 100644
 --- a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
-@@ -173,6 +173,19 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+@@ -173,6 +173,21 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
          ComposterBlock.add(1.0F, Items.PUMPKIN_PIE);
      }
  
@@ -68,6 +68,8 @@ index 87153b5576fed05103183a9860d804c2c8cfbe1c..03d4f139fde136f20b1341fb1c6a5e69
 +    }
 +
 +    public static void loadComposterBlock() {
++        ComposterBlock.COMPOSTABLES.clear();
++        ComposterBlock.COMPOSTABLES.defaultReturnValue(-1.0F);
 +        fr.euphilia.tenseimc.TenseiConfig.itemCompostable.forEach((item, aDouble) -> {
 +            ComposterBlock.add(aDouble.floatValue(), item);
 +        });
