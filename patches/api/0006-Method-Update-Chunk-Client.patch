@@ -5,7 +5,7 @@ Subject: [PATCH] Method Update Chunk Client
 
 
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 14d6a697fc7c5e8c88c240f9a925d00b01455f9a..1402533d4b05fba3b80a158ddc6f389b41e6323b 100644
+index 0423483f11d45160d501fc821ada2b8104188628..2fa534552dd18d71cb4a6ef0d34afac90219cf1f 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
 @@ -2124,6 +2124,15 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
