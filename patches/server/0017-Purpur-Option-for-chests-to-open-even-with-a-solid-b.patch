@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Jason Penilla <11360596+jpenilla@users.noreply.github.com>
+Date: Wed, 14 Jun 2023 18:29:00 +0200
+Subject: [PATCH] Purpur - Option for chests to open even with a solid block on
+ top
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+index bc832fe7f4c968c0cc72df4c0ce5747c9285282c..96aeddaaabb6f1570f61738eb16125757f51968f 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+@@ -88,7 +88,9 @@ public class TenseiWorldConfig {
+     }
+ 
+     public boolean buddingAmethystBreakWithSilkTouch = false;
++    public boolean chestOpenWithBlockOnTop = false;
+     private void blockSettings() {
+         buddingAmethystBreakWithSilkTouch = getBoolean("blocks.budding_amethyst.break.silk_touch", buddingAmethystBreakWithSilkTouch);
++        chestOpenWithBlockOnTop = getBoolean("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
+     }
+ }
+diff --git a/src/main/java/net/minecraft/world/level/block/ChestBlock.java b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
+index 5e22d175b1048a58802cdf64ac70a8b56329e915..6e94e5f51230665c355aca6d8d0f61ffb6e9cade 100644
+--- a/src/main/java/net/minecraft/world/level/block/ChestBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
+@@ -355,6 +355,7 @@ public class ChestBlock extends AbstractChestBlock<ChestBlockEntity> implements
+     }
+ 
+     private static boolean isBlockedChestByBlock(BlockGetter world, BlockPos pos) {
++        if (world instanceof Level level && level.tenseiWorldConfig.chestOpenWithBlockOnTop) return false; // TenseiMC
+         BlockPos blockposition1 = pos.above();
+ 
+         return world.getBlockState(blockposition1).isRedstoneConductor(world, blockposition1);
