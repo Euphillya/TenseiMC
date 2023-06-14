@@ -22,7 +22,7 @@ index 4bc8c7f69c94be174c5385c3b8ed64670b7e673d..80e76f54978047b48990a6c928c972a7
 +    }
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 7dc9114a994ff265eb66d99c4f15be197b327e55..9df464c1c55de2a9f8351660da5ee33cf4985a36 100644
+index d4620ddfcd06a037f647ab0a8938797405e001b2..ae72caa50896e1f9d0fdf0ced89b1a866c4a8044 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1230,6 +1230,27 @@ public abstract class PlayerList {
@@ -172,15 +172,15 @@ index 3075ba5f6d66316f27e618d8b279252e9520b9cb..c32d2b7b2f4d4b02209ded5e9c16890a
                  this.delegate = new ChestMenu(MenuType.GENERIC_9x3, windowId, bottom, top, top.getContainerSize() / 9);
                  break;
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
-index 10844fecc01370dcd0cc36f83e166bacb48ded30..b4664dfcf0589162d64be3ae4b5584c7efa1fd44 100644
+index df254c42b73cdb56f71781473cbf9d0f28dcfb08..d66bdcfbf43f9b4fa985d07dc9178cfc3fdb9006 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 @@ -83,7 +83,7 @@ public class CraftInventory implements Inventory {
  
      @Override
      public void setContents(ItemStack[] items) {
--        if (this.getSize() < items.length) {
-+        if (false && this.getSize() < items.length) { // TenseiMC
-             throw new IllegalArgumentException("Invalid inventory size; expected " + this.getSize() + " or less");
-         }
+-        Preconditions.checkArgument(items.length <= this.getSize(), "Invalid inventory size (%s); expected %s or less", items.length, this.getSize());
++        //Preconditions.checkArgument(items.length <= this.getSize(), "Invalid inventory size (%s); expected %s or less", items.length, this.getSize()); // TenseiMC
  
+         for (int i = 0; i < this.getSize(); i++) {
+             if (i >= items.length) {
