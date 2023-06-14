@@ -27,6 +27,6 @@ Discord : DocktaEnkoda#4311
 <dependency>
     <groupId>fr.euphilia.tenseimc</groupId>
     <artifactId>TenseiMC-api</artifactId>
-    <version>1.20-R0.1-SNAPSHOT</version>
+    <version>1.20.1-R0.1-SNAPSHOT</version>
 </dependency>
 ```
