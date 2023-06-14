@@ -1,0 +1,49 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Wed, 14 Jun 2023 18:39:27 +0200
+Subject: [PATCH] "Bee can work when raining or at night"
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+index 96aeddaaabb6f1570f61738eb16125757f51968f..a63630f34706703cb34ce2a691b4afb26cc3f4a0 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+@@ -93,4 +93,12 @@ public class TenseiWorldConfig {
+         buddingAmethystBreakWithSilkTouch = getBoolean("blocks.budding_amethyst.break.silk_touch", buddingAmethystBreakWithSilkTouch);
+         chestOpenWithBlockOnTop = getBoolean("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
+     }
++
++    public boolean beeCanWorkAtNight = false;
++    public boolean beeCanWorkInRain = false;
++    private void mobsSettings() {
++        // Bee
++        beeCanWorkAtNight = getBoolean("mobs.bee.can-work-at-night", beeCanWorkAtNight);
++        beeCanWorkInRain = getBoolean("mobs.bee.can-work-in-rain", beeCanWorkInRain);
++    }
+ }
+diff --git a/src/main/java/net/minecraft/world/entity/animal/Bee.java b/src/main/java/net/minecraft/world/entity/animal/Bee.java
+index f6062bf8c888baeb7b421150a2c64bf1af1a312b..8acb91a206c31ce2147fe92abdc97bef6770b557 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/Bee.java
++++ b/src/main/java/net/minecraft/world/entity/animal/Bee.java
+@@ -343,7 +343,7 @@ public class Bee extends Animal implements NeutralMob, FlyingAnimal {
+ 
+     boolean wantsToEnterHive() {
+         if (this.stayOutOfHiveCountdown <= 0 && !this.beePollinateGoal.isPollinating() && !this.hasStung() && this.getTarget() == null) {
+-            boolean flag = this.isTiredOfLookingForNectar() || this.level().isRaining() || this.level().isNight() || this.hasNectar();
++            boolean flag = this.isTiredOfLookingForNectar() || (this.level().isRaining() && !this.level().tenseiWorldConfig.beeCanWorkInRain) || (this.level().isNight() && !this.level().tenseiWorldConfig.beeCanWorkAtNight) || this.hasNectar(); // TenseiMC
+ 
+             return flag && !this.isHiveNearFire();
+         } else {
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
+index 41c9f074203915c31c1ae7a160ce509c13383f84..8751cf939d4339afc375b43d78753e0a97c9fd1a 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
+@@ -203,7 +203,7 @@ public class BeehiveBlockEntity extends BlockEntity {
+     }
+ 
+     private static boolean releaseBee(Level world, BlockPos blockposition, BlockState iblockdata, BeehiveBlockEntity.BeeData tileentitybeehive_hivebee, @Nullable List<Entity> list, BeehiveBlockEntity.BeeReleaseStatus tileentitybeehive_releasestatus, @Nullable BlockPos blockposition1, boolean force) {
+-        if (!force && (world.isNight() || world.isRaining()) && tileentitybeehive_releasestatus != BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY) {
++        if (!force && ((world.isNight() && !world.tenseiWorldConfig.beeCanWorkAtNight) || (world.isRaining() && !world.tenseiWorldConfig.beeCanWorkInRain)) && tileentitybeehive_releasestatus != BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY) { // TenseiMC
+             // CraftBukkit end
+             return false;
+         } else {

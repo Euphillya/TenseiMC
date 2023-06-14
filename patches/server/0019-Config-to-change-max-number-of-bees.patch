@@ -1,0 +1,38 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Wed, 14 Jun 2023 18:42:54 +0200
+Subject: [PATCH] Config to change max number of bees
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+index fc2c3a86406e9a645e50d6f02a0ea553e05f354f..f37240a8c059da4712bc90e7fff790499ad7b4c7 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+@@ -128,6 +128,7 @@ public class TenseiConfig {
+     public static boolean enderChestPermissionRows = false;
+     public static int barrelRows = 3;
+     public static HashMap<Item, Double> itemCompostable = new HashMap<>();
++    public static int beeInsideBeeHive = 3;
+     private static void blockSettings() {
+         enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
+         org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
+@@ -148,5 +149,6 @@ public class TenseiConfig {
+             }
+         });
+         net.minecraft.world.level.block.ComposterBlock.loadComposterBlock();
++        beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
+     }
+ }
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
+index 8751cf939d4339afc375b43d78753e0a97c9fd1a..1398d60003ce5939a2fd7b0f5af7647472baca41 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
+@@ -43,7 +43,7 @@ public class BeehiveBlockEntity extends BlockEntity {
+     private final List<BeehiveBlockEntity.BeeData> stored = Lists.newArrayList();
+     @Nullable
+     public BlockPos savedFlowerPos;
+-    public int maxBees = 3; // CraftBukkit - allow setting max amount of bees a hive can hold
++    public int maxBees = fr.euphilia.tenseimc.TenseiConfig.beeInsideBeeHive; // CraftBukkit - allow setting max amount of bees a hive can hold // TenseiMC
+ 
+     public BeehiveBlockEntity(BlockPos pos, BlockState state) {
+         super(BlockEntityType.BEEHIVE, pos, state);
