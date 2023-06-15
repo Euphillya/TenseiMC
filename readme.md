@@ -3,7 +3,7 @@
 <img src="./others/D8_ZtPAVUAAirq8.jpg" alt="TenseiMC">
 
 # TenseiMC
-[![MIT License](https://img.shields.io/github/license/DoctaEnkoda/TenseiMC?&logo=github)](LICENSE)
+[![MIT License](https://img.shields.io/github/license/DoctaEnkoda/TenseiMC?&logo=github)](LICENCE)
 ![Build TenseiMC](https://github.com/DoctaEnkoda/TenseiMC/actions/workflows/build.yml/badge.svg)
 [![Join us on Discord](https://discord.com/api/guilds/1114496106651471894/widget.png?style=shield)](https://discord.gg/Zq9GF7qmDW)
 </div>
