@@ -5,10 +5,10 @@ Subject: [PATCH] Method Custom WorldBorder Player
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 2e49f35376435529ac48ad5f9b2d098809200f90..2ba0555a222d5a85db9eac806c8ce35572fb2971 100644
+index 43c899d466bfffec4ea5ce1a4ed988f9ce4ecf42..8493ae5b23ce1edc0b12d9436583503192f518ee 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1102,6 +1102,26 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1115,6 +1115,26 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          connection.send(new ClientboundSetBorderWarningDistancePacket(newWorldBorder));
      }
  

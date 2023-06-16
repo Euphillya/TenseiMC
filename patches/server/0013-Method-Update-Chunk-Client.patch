@@ -5,10 +5,10 @@ Subject: [PATCH] Method Update Chunk Client
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-index 2ba0555a222d5a85db9eac806c8ce35572fb2971..c39733f4755f6354ea2f32323abb5f4e543d5bf7 100644
+index 8493ae5b23ce1edc0b12d9436583503192f518ee..232d75c7e1ae87985e13e350292e23c52d3a1cef 100644
 --- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
-@@ -1120,6 +1120,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+@@ -1133,6 +1133,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
          final net.minecraft.network.protocol.game.ClientboundInitializeBorderPacket updateWorldBorderPacket = new net.minecraft.network.protocol.game.ClientboundInitializeBorderPacket(worldBorderPlayer);
          this.getHandle().connection.send(updateWorldBorderPacket);
      }

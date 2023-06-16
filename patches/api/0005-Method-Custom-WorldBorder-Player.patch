@@ -17,10 +17,10 @@ index 0000000000000000000000000000000000000000..426a6780c125e3d6be1f79974dfa3d55
 +    BLUE, RED, GREEN;
 +}
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 4ee0eb177f6b5765a9d7263576bb36c8a8366979..a56145e58cbb30bb5ccbd90ea00f4eabb0dcbcba 100644
+index 06f00d016f1e46edb8f4fe0c14eb8b364900c3ef..71252d53ebe6354ebb4de3a3898e07288eb93e61 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -2125,6 +2125,20 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2155,6 +2155,20 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
       */
      public void setWorldBorder(@Nullable WorldBorder border);
  
