@@ -1,0 +1,64 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Tue, 20 Jun 2023 19:02:15 +0200
+Subject: [PATCH] Purpur - PlayerSetSpawnerTypeWithEggEvent
+
+
+diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
+index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..fb414bb385a136f680ed1f5aa6434db160680f6b 100644
+--- a/src/main/java/net/minecraft/world/entity/EntityType.java
++++ b/src/main/java/net/minecraft/world/entity/EntityType.java
+@@ -313,6 +313,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+         return (EntityType) Registry.register(BuiltInRegistries.ENTITY_TYPE, id, (EntityType<T>) type.build(id)); // CraftBukkit - decompile error
+     }
+ 
++    // TenseiMC start
++    public static EntityType<?> getFromBukkitType(org.bukkit.entity.EntityType bukkitType) {
++        return getFromKey(new ResourceLocation(bukkitType.getKey().toString()));
++    }
++
++    public static EntityType<?> getFromKey(ResourceLocation location) {
++        return BuiltInRegistries.ENTITY_TYPE.get(location);
++    }
++    // TenseiMC end
++
+     public static ResourceLocation getKey(EntityType<?> type) {
+         return BuiltInRegistries.ENTITY_TYPE.getKey(type);
+     }
+@@ -528,6 +538,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+         return this.category;
+     }
+ 
++    // TenseiMC start
++    public String getName() {
++        return BuiltInRegistries.ENTITY_TYPE.getKey(this).getPath();
++    }
++
++    public String getTranslatedName() {
++        return getDescription().getString();
++    }
++    // TenseiMC end
++
+     public String getDescriptionId() {
+         if (this.descriptionId == null) {
+             this.descriptionId = Util.makeDescriptionId("entity", BuiltInRegistries.ENTITY_TYPE.getKey(this));
+diff --git a/src/main/java/net/minecraft/world/item/SpawnEggItem.java b/src/main/java/net/minecraft/world/item/SpawnEggItem.java
+index 741719301e6fc91a598e74342810c4185e6fde26..3e805c9d97c768bee8968a15bc07f521e11fd503 100644
+--- a/src/main/java/net/minecraft/world/item/SpawnEggItem.java
++++ b/src/main/java/net/minecraft/world/item/SpawnEggItem.java
+@@ -68,6 +68,15 @@ public class SpawnEggItem extends Item {
+                     SpawnerBlockEntity tileentitymobspawner = (SpawnerBlockEntity) tileentity;
+                     EntityType<?> entitytypes = this.getType(itemstack.getTag());
+ 
++                    // TenseiMC start
++                    org.bukkit.block.Block bukkitBlock = world.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
++                    org.purpurmc.purpur.event.PlayerSetSpawnerTypeWithEggEvent event = new  org.purpurmc.purpur.event.PlayerSetSpawnerTypeWithEggEvent((org.bukkit.entity.Player) context.getPlayer().getBukkitEntity(), bukkitBlock, (org.bukkit.block.CreatureSpawner) bukkitBlock.getState(), org.bukkit.entity.EntityType.fromName(entitytypes.getName()));
++                    if (!event.callEvent()) {
++                        return InteractionResult.FAIL;
++                    }
++                    entitytypes = EntityType.getFromBukkitType(event.getEntityType());
++                    // TenseiMC end
++
+                     tileentitymobspawner.setEntityId(entitytypes, world.getRandom());
+                     tileentity.setChanged();
+                     world.sendBlockUpdated(blockposition, iblockdata, iblockdata, 3);
