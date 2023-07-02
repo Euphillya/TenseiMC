@@ -1,0 +1,47 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Sun, 2 Jul 2023 09:44:58 +0200
+Subject: [PATCH] Configurable broadcast settings
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+index b704ad3d55c4104983d0a34c247d8a9e1a311ca6..c2b08c4088d32d4c8bfad381ad8b1530a1a0996d 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+@@ -84,8 +84,12 @@ public class TenseiWorldConfig {
+     }
+ 
+     public double playerCriticalDamageMultiplier = 1.5D;
++    public boolean advancementOnlyBroadcastToAffectedPlayer = false;
++    public boolean deathMessageOnlyBroadcastToAffectedPlayer = false;
+     private void playerSettings() {
+         playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
++        advancementOnlyBroadcastToAffectedPlayer = getBoolean("settings.broadcasts.advancement.only-broadcast-to-affected-player", advancementOnlyBroadcastToAffectedPlayer);
++        deathMessageOnlyBroadcastToAffectedPlayer = getBoolean("settings.broadcasts.death.only-broadcast-to-affected-player", deathMessageOnlyBroadcastToAffectedPlayer);
+     }
+ 
+     public boolean buddingAmethystBreakWithSilkTouch = false;
+diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
+index acc49f66bf34e2507d0ee6fec0a56b11bfc68f46..cc10cb952858b5d96f2ab7ea09334bc3401ab75a 100644
+--- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
++++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
+@@ -249,6 +249,7 @@ public class PlayerAdvancements {
+                 advancement.getRewards().grant(this.player);
+                 // Paper start - Add Adventure message to PlayerAdvancementDoneEvent
+                 if (message != null && this.player.level().getGameRules().getBoolean(GameRules.RULE_ANNOUNCE_ADVANCEMENTS)) {
++                    if (this.player.level().tenseiWorldConfig.advancementOnlyBroadcastToAffectedPlayer) this.player.sendSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(message)); else // TenseiMC
+                     this.playerList.broadcastSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(message), false);
+                     // Paper end
+                 }
+diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+index 817f79bfca1aec161cb4635b9c7a8e21b14db7eb..60635d4911bb2cc28105d725f8adc423b82e4923 100644
+--- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
++++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
+@@ -1027,6 +1027,7 @@ public class ServerPlayer extends Player {
+             }));
+             Team scoreboardteambase = this.getTeam();
+ 
++            if (this.level().tenseiWorldConfig.deathMessageOnlyBroadcastToAffectedPlayer) this.sendSystemMessage(ichatbasecomponent); else // TenseiMC
+             if (scoreboardteambase != null && scoreboardteambase.getDeathMessageVisibility() != Team.Visibility.ALWAYS) {
+                 if (scoreboardteambase.getDeathMessageVisibility() == Team.Visibility.HIDE_FOR_OTHER_TEAMS) {
+                     this.server.getPlayerList().broadcastSystemToTeam(this, ichatbasecomponent);
