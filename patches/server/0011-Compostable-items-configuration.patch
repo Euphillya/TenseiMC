@@ -53,10 +53,10 @@ index 087601a4000db1325057d0de013d36d1c9430adf..fc2c3a86406e9a645e50d6f02a0ea553
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
-index 87153b5576fed05103183a9860d804c2c8cfbe1c..8a38111441b53f041f3c6fd99e300ddf054c1ec0 100644
+index 10d3912ef043eefdf89105332e29b0d2bf4a5539..ef78a3cabff12fe14d10b41cb909308da2444175 100644
 --- a/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/ComposterBlock.java
-@@ -173,6 +173,21 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
+@@ -172,6 +172,21 @@ public class ComposterBlock extends Block implements WorldlyContainerHolder {
          ComposterBlock.add(1.0F, Items.PUMPKIN_PIE);
      }
  

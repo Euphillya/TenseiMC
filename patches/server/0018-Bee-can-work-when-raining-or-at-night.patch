@@ -22,10 +22,10 @@ index 96aeddaaabb6f1570f61738eb16125757f51968f..a63630f34706703cb34ce2a691b4afb2
 +    }
  }
 diff --git a/src/main/java/net/minecraft/world/entity/animal/Bee.java b/src/main/java/net/minecraft/world/entity/animal/Bee.java
-index f6062bf8c888baeb7b421150a2c64bf1af1a312b..8acb91a206c31ce2147fe92abdc97bef6770b557 100644
+index 55026e1731e41b4e3e4c6a8fef5d96a32051a556..f147e9c4615ece32586e8e8fdb0481a53a20e395 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/Bee.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/Bee.java
-@@ -343,7 +343,7 @@ public class Bee extends Animal implements NeutralMob, FlyingAnimal {
+@@ -348,7 +348,7 @@ public class Bee extends Animal implements NeutralMob, FlyingAnimal {
  
      boolean wantsToEnterHive() {
          if (this.stayOutOfHiveCountdown <= 0 && !this.beePollinateGoal.isPollinating() && !this.hasStung() && this.getTarget() == null) {

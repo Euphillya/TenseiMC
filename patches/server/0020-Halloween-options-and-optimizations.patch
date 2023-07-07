@@ -62,10 +62,10 @@ index 0000000000000000000000000000000000000000..f99cfda0fa9dbe04c694a829d82b17b5
 +    }
 +}
 diff --git a/src/main/java/net/minecraft/world/entity/ambient/Bat.java b/src/main/java/net/minecraft/world/entity/ambient/Bat.java
-index 940cd932e74bc2e6754186731d7aa6f10d56eb68..e67fa1d8bda9e3d699b337b3baa3102bfc851502 100644
+index 5beaa849a250ea005733250ad3edfa8382224667..671c85574ed112d7291098e7cd5e93dcd0cf7b44 100644
 --- a/src/main/java/net/minecraft/world/entity/ambient/Bat.java
 +++ b/src/main/java/net/minecraft/world/entity/ambient/Bat.java
-@@ -241,7 +241,7 @@ public class Bat extends AmbientCreature {
+@@ -227,7 +227,7 @@ public class Bat extends AmbientCreature {
              int i = world.getMaxLocalRawBrightness(pos);
              byte b0 = 4;
  

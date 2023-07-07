@@ -5,10 +5,10 @@ Subject: [PATCH] Added the ability to add combustible items
 
 
 diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
-index db1944bc41ab0bae9b825c7839e8d1ee86eddff0..96a2d073d7bee3c23be4782b830532fedb21247c 100644
+index fd5ed5d6725537c26e6139dd6242c4154b306a97..3a5ddd56ba8f4c8d376b970c7f0038e63bd3ca7b 100644
 --- a/src/main/java/org/bukkit/Bukkit.java
 +++ b/src/main/java/org/bukkit/Bukkit.java
-@@ -2639,4 +2639,25 @@ public final class Bukkit {
+@@ -2670,4 +2670,25 @@ public final class Bukkit {
      public static Server.Spigot spigot() {
          return server.spigot();
      }
@@ -35,10 +35,10 @@ index db1944bc41ab0bae9b825c7839e8d1ee86eddff0..96a2d073d7bee3c23be4782b830532fe
 +    // TenseiMC end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 2e12ad1f7424b594ffb99f385c33a0e0e507f90e..a6174df867651625a63fe44df371ac8cfe5cd58e 100644
+index bf3f538a9df8b8742ea3f15d4c44f5ad8969434c..7b4a45b0ce66e459406a641b61dad1f34a617bcd 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -2299,4 +2299,21 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -2326,4 +2326,21 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
       */
      public boolean isGlobalTickThread();
      // Folia end - region threading API

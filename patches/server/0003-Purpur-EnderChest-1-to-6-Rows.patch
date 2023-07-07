@@ -22,7 +22,7 @@ index 4bc8c7f69c94be174c5385c3b8ed64670b7e673d..80e76f54978047b48990a6c928c972a7
 +    }
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 654ab7fc8caa9af7dc665391a197b41599c2bc8f..98edc1ca48f29e746793d520ae56f127f0dd5867 100644
+index ffb5332310e9b2d10292fe01c37fd48552fedffc..a0e2fad1ce5192a8f9e41d5c2d4a81623488169d 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1236,6 +1236,27 @@ public abstract class PlayerList {
@@ -155,10 +155,10 @@ index 7385e91f32f070e86a4e0fd3d214f55d832c7979..fb65d6970f707679b4507602c9ed26ca
                  }, CONTAINER_TITLE));
                  player.awardStat(Stats.OPEN_ENDERCHEST);
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-index 3075ba5f6d66316f27e618d8b279252e9520b9cb..c32d2b7b2f4d4b02209ded5e9c16890abe2f53d6 100644
+index 081e6c7ce4a0185ba75e48bbb581fd531cdb10a8..be77615dacac519975e30027cea82be940dc6f17 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-@@ -181,6 +181,12 @@ public class CraftContainer extends AbstractContainerMenu {
+@@ -180,6 +180,12 @@ public class CraftContainer extends AbstractContainerMenu {
              case PLAYER:
              case CHEST:
              case ENDER_CHEST:
@@ -172,7 +172,7 @@ index 3075ba5f6d66316f27e618d8b279252e9520b9cb..c32d2b7b2f4d4b02209ded5e9c16890a
                  this.delegate = new ChestMenu(MenuType.GENERIC_9x3, windowId, bottom, top, top.getContainerSize() / 9);
                  break;
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
-index df254c42b73cdb56f71781473cbf9d0f28dcfb08..d66bdcfbf43f9b4fa985d07dc9178cfc3fdb9006 100644
+index 471ae4458e7ea7c29d7551b32cec98180fbccd4e..698d64c9a44fc2c62d13072741351119241bd334 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
 @@ -83,7 +83,7 @@ public class CraftInventory implements Inventory {

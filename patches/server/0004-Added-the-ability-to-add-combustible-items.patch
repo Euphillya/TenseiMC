@@ -49,19 +49,19 @@ index 448fa4f4f200430d6ce3051763c7ceb697696146..ed6216d07f1c9566ad4b72e428e35da0
      private int maxStack = MAX_STACK;
      public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index beab79f5a4d437617226fc6cb2852787f17c222b..97818e99e488a0febd987075bde1dc952321d81c 100644
+index 15651c5078a3149bab7cfb0e736aeef037126375..c910c9e839dedd9789bc2904e045fe6da32ab893 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -250,6 +250,7 @@ import org.bukkit.scoreboard.Criteria;
- import org.bukkit.structure.StructureManager;
- import org.bukkit.util.StringUtil;
- import org.bukkit.util.permissions.DefaultPermissions;
-+import org.jetbrains.annotations.NotNull;
- import org.yaml.snakeyaml.LoaderOptions;
- import org.yaml.snakeyaml.Yaml;
- import org.yaml.snakeyaml.constructor.SafeConstructor;
-@@ -385,6 +386,30 @@ public final class CraftServer implements Server {
+@@ -262,6 +262,7 @@ import net.md_5.bungee.api.chat.BaseComponent; // Spigot
  
+ import javax.annotation.Nullable; // Paper
+ import javax.annotation.Nonnull; // Paper
++import org.jetbrains.annotations.NotNull; // TenseiMC
+ 
+ public final class CraftServer implements Server {
+     private final String serverName = "TenseiMC"; // TenseiMC // Folia // Paper
+@@ -381,6 +382,30 @@ public final class CraftServer implements Server {
+     }
      // Folia end - region threading API
  
 +    // TenseiMC start
@@ -88,6 +88,6 @@ index beab79f5a4d437617226fc6cb2852787f17c222b..97818e99e488a0febd987075bde1dc95
 +    }
 +    // TenseiMC end
 +
-     public CraftServer(DedicatedServer console, PlayerList playerList) {
-         this.console = console;
-         this.playerList = (DedicatedPlayerList) playerList;
+     static {
+         ConfigurationSerialization.registerClass(CraftOfflinePlayer.class);
+         ConfigurationSerialization.registerClass(CraftPlayerProfile.class);

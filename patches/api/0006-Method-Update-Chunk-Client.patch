@@ -5,10 +5,10 @@ Subject: [PATCH] Method Update Chunk Client
 
 
 diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
-index 71252d53ebe6354ebb4de3a3898e07288eb93e61..3ba1df11aae506aee8d74a0e4c097fa120962e6f 100644
+index fa888915e06d7f62a60daa670b4002e42b41467c..db4dba457f06a779795eefc5035fd5769f949711 100644
 --- a/src/main/java/org/bukkit/entity/Player.java
 +++ b/src/main/java/org/bukkit/entity/Player.java
-@@ -2167,6 +2167,15 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+@@ -2205,6 +2205,15 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
       */
      @org.jetbrains.annotations.ApiStatus.Experimental
      public void setOwnWorldBorder(@NotNull Location centerBorder, @NotNull fr.euphilia.utils.BorderColor colorBorder, double borderSize, int warningBlocks, int warningTime);
