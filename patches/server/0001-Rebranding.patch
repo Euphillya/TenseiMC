@@ -34,14 +34,20 @@ index 93f9abd2169a48a4fd32f712c68be7b49b034e83..78034c3ea26938cebb29d78c13779f7e
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 58dc84b7b3b04c2d0b00fc5fac5303d3378b3467..0a111e37f4070944d059c79960ce3997bf63fd19 100644
+index cb60d58d4a7556dd896f31d0cd249f860bb3ef84..c68b2ea1fbad5c2359968246b4a3ad0b10d232e5 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
-@@ -612,6 +612,7 @@ public class Metrics {
+@@ -607,11 +607,11 @@ public class Metrics {
+                 final String implVersion = org.bukkit.craftbukkit.Main.class.getPackage().getImplementationVersion();
+                 if (implVersion != null) {
+                     final String buildOrHash = implVersion.substring(implVersion.lastIndexOf('-') + 1);
+-                    paperVersion = "git-Folia-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash); // Folia - we have our own bstats page
++                    paperVersion = "git-TenseiMC-%s-%s".formatted(Bukkit.getServer().getMinecraftVersion(), buildOrHash); // Folia - we have our own bstats page // TenseiMC
+                 } else {
                      paperVersion = "unknown";
                  }
-                 metrics.addCustomChart(new Metrics.SimplePie("folia_version", () -> paperVersion)); // Folia - we have our own bstats page
-+                metrics.addCustomChart(new Metrics.SimplePie("tenseimc_version", () -> (org.bukkit.craftbukkit.Main.class.getPackage().getImplementationVersion() != null) ? org.bukkit.craftbukkit.Main.class.getPackage().getImplementationVersion() : "unknown")); // TenseiMC
+-                metrics.addCustomChart(new Metrics.SimplePie("folia_version", () -> paperVersion)); // Folia - we have our own bstats page
++                metrics.addCustomChart(new Metrics.SimplePie("tenseimc_version", () -> paperVersion)); // Folia - we have our own bstats page // TenseiMC
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
