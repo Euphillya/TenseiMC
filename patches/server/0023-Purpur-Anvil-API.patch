@@ -17,7 +17,7 @@ index 706b354ac9a1a6a4a1e61b2a109180d1dd22bbbd..c36ee296b51b874d081f650f82957b76
      // CraftBukkit start
      public boolean checkReachable = true;
 diff --git a/src/main/java/net/minecraft/world/inventory/AnvilMenu.java b/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
-index e0c3a4ba27e21c3692e601acd0af60873bcbb84c..ff06ca5beb35897e83cb2db1f8a8037912a460cb 100644
+index e0c3a4ba27e21c3692e601acd0af60873bcbb84c..6c2f5e7780b31311f4714bc08f267f7cb5215d4c 100644
 --- a/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
 +++ b/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
 @@ -23,6 +23,15 @@ import org.slf4j.Logger;
@@ -98,7 +98,7 @@ index e0c3a4ba27e21c3692e601acd0af60873bcbb84c..ff06ca5beb35897e83cb2db1f8a80379
  
 +            // TenseiMC start
 +            if (this.bypassCost && cost.get() >= this.maximumRepairCost) {
-+                itemstack.addTagElement("TenseiMC.realCost", IntTag.valueOf(cost.get()));
++                itemstack.addTagElement("Purpur.realCost", IntTag.valueOf(cost.get()));
 +                cost.set(maximumRepairCost - 1);
 +            }
 +            // TenseiMC end
