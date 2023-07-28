@@ -6,6 +6,7 @@
 [![MIT License](https://img.shields.io/github/license/DoctaEnkoda/TenseiMC?&logo=github)](LICENCE)
 ![Build TenseiMC](https://github.com/DoctaEnkoda/TenseiMC/actions/workflows/build.yml/badge.svg)
 [![Join us on Discord](https://discord.com/api/guilds/1114496106651471894/widget.png?style=shield)](https://discord.gg/Zq9GF7qmDW)
+[![](https://img.shields.io/bstats/servers/19185?label=bStats)](https://bstats.org/plugin/server-implementation/TenseiMC/19185)
 </div>
 
 
@@ -15,12 +16,15 @@ TenseiMC is not stable at all and bugs are to be expected. Also, like [Folia](ht
 
 ## Contact
 
-Discord : DocktaEnkoda#4311
+Discord : euphilia (852657907870859304)
 
 ## Downloads
 
-[Github Actions](https://github.com/DoctaEnkoda/TenseiMC/actions)
+- [Version 1.20/.1](https://github.com/DoctaEnkoda/TenseiMC/actions?query=branch%3Adev%2F1.20)
+- [Version 1.19.4](https://github.com/DoctaEnkoda/TenseiMC/actions?query=branch%3Adev%2F1.19.4)
 
+## bStats
+[![](https://bstats.org/signatures/server-implementation/TenseiMC.svg)](https://bstats.org/plugin/server-implementation/TenseiMC/19185)
 ## API
 
 ```maven
