@@ -1,0 +1,20 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Tue, 1 Aug 2023 12:43:38 +0200
+Subject: [PATCH] Allow player join full server by permission
+
+
+diff --git a/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java b/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java
+index b20f7b7142dc523c4675710365f66826866e04d5..4a7f03f8c4bbcd627e44c78f0f4201a4b52a2566 100644
+--- a/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java
++++ b/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java
+@@ -24,6 +24,9 @@ public class TenseiMCPermissions {
+         DefaultPermissions.registerPermission(PREFIX + "enderchest.rows.two", "Gives the user two rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
+         DefaultPermissions.registerPermission(PREFIX + "enderchest.rows.one", "Gives the user one row of enderchest space.", PermissionDefault.FALSE, tenseimc);
+ 
++        // Other
++        DefaultPermissions.registerPermission(PREFIX + "joinfullserver", "Allows the user to join a full server.", PermissionDefault.OP, tenseimc);
++
+         tenseimc.recalculatePermissibles();
+ 
+         return tenseimc;
