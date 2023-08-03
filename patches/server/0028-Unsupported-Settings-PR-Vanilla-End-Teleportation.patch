@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Thu, 3 Aug 2023 09:27:26 +0200
+Subject: [PATCH] Unsupported Settings : [PR] Vanilla End Teleportation Source
+ : https://github.com/PaperMC/Folia/pull/110
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+index f37240a8c059da4712bc90e7fff790499ad7b4c7..8b5f44d8a9d6b4bc66ad2a6554ca48ad76d7ae41 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+@@ -151,4 +151,9 @@ public class TenseiConfig {
+         net.minecraft.world.level.block.ComposterBlock.loadComposterBlock();
+         beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
+     }
++
++    public static boolean useVanillaEndTeleportation = false;
++    private static void settingsUnsupported() {
++        useVanillaEndTeleportation = getBoolean("settings.unsupported.pr-folia.vanilla-end-teleportation", useVanillaEndTeleportation);
++    }
+ }
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index ee15661227754149164893d6acf678d13b2e1b27..9815872a42e0dba89e7853a85c9434cf11589e32 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -4027,9 +4027,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+                             // the portal obsidian is placed at targetPos.y - 2, so if we want to place the entity
+                             // on the obsidian, we need to spawn at targetPos.y - 1
+-                            portalInfoCompletable.complete(
+-                                new PortalInfo(Vec3.atBottomCenterOf(targetPos.below()), Vec3.ZERO, 90.0f, 0.0f, destination, null)
+-                            );
++                            // TenseiMC start
++                            if (fr.euphilia.tenseimc.TenseiConfig.useVanillaEndTeleportation) {
++                                Vec3 finalPos = this instanceof Player ? Vec3.atBottomCenterOf(targetPos.below()) : Vec3.atBottomCenterOf(targetPos);
++                                portalInfoCompletable.complete(
++                                        new PortalInfo(finalPos, this.getDeltaMovement(), 90.0f, 0.0f, destination, null)
++                                );
++                            } else {
++                                portalInfoCompletable.complete(
++                                        new PortalInfo(Vec3.atBottomCenterOf(targetPos.below()), Vec3.ZERO, 90.0f, 0.0f, destination, null)
++                                );
++                            } // TenseiMC end
+                         }
+                     );
+                 } else {
