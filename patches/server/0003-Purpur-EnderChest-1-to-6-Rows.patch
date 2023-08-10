@@ -22,7 +22,7 @@ index 4bc8c7f69c94be174c5385c3b8ed64670b7e673d..80e76f54978047b48990a6c928c972a7
 +    }
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index ffb5332310e9b2d10292fe01c37fd48552fedffc..a0e2fad1ce5192a8f9e41d5c2d4a81623488169d 100644
+index 86b9d57f2c0132b8ac30045e766c01f314d3b6f3..4ad674d08587ca90023573bdc242bf2170b84bd7 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1236,6 +1236,27 @@ public abstract class PlayerList {
@@ -162,10 +162,10 @@ index 7385e91f32f070e86a4e0fd3d214f55d832c7979..b139ebb689ad8821dac3b37ef763e2e4
                  }, CONTAINER_TITLE));
                  player.awardStat(Stats.OPEN_ENDERCHEST);
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-index 081e6c7ce4a0185ba75e48bbb581fd531cdb10a8..be77615dacac519975e30027cea82be940dc6f17 100644
+index 633e6f4922ccaf59979a22885162f42c65bf628a..9ebaaf806879ed802723538ce6091e479ab293c6 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-@@ -180,6 +180,12 @@ public class CraftContainer extends AbstractContainerMenu {
+@@ -181,6 +181,12 @@ public class CraftContainer extends AbstractContainerMenu {
              case PLAYER:
              case CHEST:
              case ENDER_CHEST:

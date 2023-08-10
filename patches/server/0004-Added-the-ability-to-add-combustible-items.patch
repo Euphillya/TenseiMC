@@ -49,10 +49,10 @@ index 448fa4f4f200430d6ce3051763c7ceb697696146..ed6216d07f1c9566ad4b72e428e35da0
      private int maxStack = MAX_STACK;
      public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 15651c5078a3149bab7cfb0e736aeef037126375..c910c9e839dedd9789bc2904e045fe6da32ab893 100644
+index 6e94ab9f46a9a14af6348445506b39b781734469..70e72b129d07db615ba63e9e77e680605fc3fb73 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -262,6 +262,7 @@ import net.md_5.bungee.api.chat.BaseComponent; // Spigot
+@@ -263,6 +263,7 @@ import net.md_5.bungee.api.chat.BaseComponent; // Spigot
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
@@ -60,7 +60,7 @@ index 15651c5078a3149bab7cfb0e736aeef037126375..c910c9e839dedd9789bc2904e045fe6d
  
  public final class CraftServer implements Server {
      private final String serverName = "TenseiMC"; // TenseiMC // Folia // Paper
-@@ -381,6 +382,30 @@ public final class CraftServer implements Server {
+@@ -382,6 +383,30 @@ public final class CraftServer implements Server {
      }
      // Folia end - region threading API
  

@@ -19,7 +19,7 @@ index 504ee522b9be18dfbe9a8690c4a06e20e283c709..bc832fe7f4c968c0cc72df4c0ce5747c
 +    }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java b/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java
-index 4dae2a98070affd84bc4523a927dc9cbfe7379c6..6f75f170ebfc37bc85e4129c1d9d4676c9b33555 100644
+index 2548244c089dff583c8c424dcaa5504caedf3f10..48b0f6a7700760660745afb135c77c6e0af5a233 100644
 --- a/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java
 @@ -7,6 +7,16 @@ import net.minecraft.util.RandomSource;
@@ -39,7 +39,7 @@ index 4dae2a98070affd84bc4523a927dc9cbfe7379c6..6f75f170ebfc37bc85e4129c1d9d4676
  
  public class BuddingAmethystBlock extends AmethystBlock {
  
-@@ -47,4 +57,14 @@ public class BuddingAmethystBlock extends AmethystBlock {
+@@ -53,4 +63,14 @@ public class BuddingAmethystBlock extends AmethystBlock {
      public static boolean canClusterGrowAtState(BlockState state) {
          return state.isAir() || state.is(Blocks.WATER) && state.getFluidState().getAmount() == 8;
      }
