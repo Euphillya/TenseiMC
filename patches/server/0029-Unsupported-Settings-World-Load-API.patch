@@ -1,0 +1,76 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Sat, 12 Aug 2023 17:11:16 +0200
+Subject: [PATCH] Unsupported Settings : World Load API
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+index 8b5f44d8a9d6b4bc66ad2a6554ca48ad76d7ae41..fd2dbe80228d6a77785ff53728cff6817e5fcaa1 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+@@ -153,7 +153,9 @@ public class TenseiConfig {
+     }
+ 
+     public static boolean useVanillaEndTeleportation = false;
++    public static boolean createWorldDisabled = true;
+     private static void settingsUnsupported() {
+         useVanillaEndTeleportation = getBoolean("settings.unsupported.pr-folia.vanilla-end-teleportation", useVanillaEndTeleportation);
++        createWorldDisabled = getBoolean("settings.unsupported.create-world-api-disabled", createWorldDisabled);
+     }
+ }
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index bbe70a722484fbf231ee423ea1b8bc34304242e7..065c6066ccce9b6f78b05a79f73cf3c53cb2cd8d 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -757,6 +757,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+             int i1 = -1;
+             boolean flag2 = true;
+ 
++            // TenseiMC start - TODO rewrite
++            /*
+             for (int j1 = 0; j1 < Mth.square(11); ++j1) {
+                 if (j >= -5 && j <= 5 && k >= -5 && k <= 5) {
+                     BlockPos blockposition1 = PlayerRespawnLogic.getSpawnPosInChunk(world, new ChunkPos(chunkcoordintpair.x + j, chunkcoordintpair.z + k));
+@@ -777,7 +779,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+                 j += l;
+                 k += i1;
+             }
+-
++            */
++            // TenseiMC end - TODO rewrite
+             if (bonusChest) {
+                 world.registryAccess().registry(Registries.CONFIGURED_FEATURE).flatMap((iregistry) -> {
+                     return iregistry.getHolder(MiscOverworldFeatures.BONUS_CHEST);
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 70e72b129d07db615ba63e9e77e680605fc3fb73..b287d01b9144dd6d282dd0f220059542a1792d06 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1311,7 +1311,7 @@ public final class CraftServer implements Server {
+ 
+     @Override
+     public World createWorld(WorldCreator creator) {
+-        if (true) throw new UnsupportedOperationException(); // Folia - not implemented properly yet
++        if (fr.euphilia.tenseimc.TenseiConfig.createWorldDisabled) throw new UnsupportedOperationException(); // Folia - not implemented properly yet // TenseiMC
+         Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
+         //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
+         Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
+@@ -1431,6 +1431,11 @@ public final class CraftServer implements Server {
+         if (!(this.worlds.containsKey(name.toLowerCase(java.util.Locale.ENGLISH)))) {
+             return null;
+         }
++        // TenseiMC start
++        if (internal.randomSpawnSelection == null) {
++            internal.randomSpawnSelection = new net.minecraft.world.level.ChunkPos(internal.getChunkSource().randomState().sampler().findSpawnPosition());
++        }
++        // TenseiMC end
+ 
+         this.console.addLevel(internal); // Paper - move up
+         this.console.initWorld(internal, worlddata, worlddata, worlddata.worldGenOptions());
+@@ -1440,6 +1445,7 @@ public final class CraftServer implements Server {
+ 
+         internal.keepSpawnInMemory = creator.keepSpawnLoaded().toBooleanOrElse(internal.getWorld().getKeepSpawnInMemory()); // Paper
+         this.getServer().prepareLevels(internal.getChunkSource().chunkMap.progressListener, internal);
++        io.papermc.paper.threadedregions.RegionizedServer.getInstance().addWorld(internal); // TenseiMC
+         //internal.entityManager.tick(); // SPIGOT-6526: Load pending entities so they are available to the API // Paper - rewrite chunk system
+ 
+         this.pluginManager.callEvent(new WorldLoadEvent(internal.getWorld()));
