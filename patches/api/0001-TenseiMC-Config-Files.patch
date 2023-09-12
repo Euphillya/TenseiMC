@@ -5,10 +5,10 @@ Subject: [PATCH] TenseiMC Config Files
 
 
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index f77553fc70bc1f3f18af50e53c0041bbaaebab9a..c36ab634529c5a426bdffc7ec52bd88ce57ac46c 100644
+index b6a8217b97842cd07af24fadb21e0e44226e5bb9..41bf1e46762db4a56bf04f6a62a909c0c04b4c43 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -2081,6 +2081,13 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -2121,6 +2121,13 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
          }
          // Paper end
  

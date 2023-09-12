@@ -208,7 +208,7 @@ index 0000000000000000000000000000000000000000..f15cffe87dd294d25b40dae056eb6964
 +
 +}
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index 78ada86028bac06b62a7d70776a29705a3b11a06..e56fd119254525b8dea7503c70ec319ae2d5fa0d 100644
+index c5dfd99a38a79fd19a2bf85fa297a28e40612b51..ecea7d477b1721971a17d592194b7838dea5df3b 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -218,6 +218,14 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -227,7 +227,7 @@ index 78ada86028bac06b62a7d70776a29705a3b11a06..e56fd119254525b8dea7503c70ec319a
          io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
          // Paper end
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 4338b948a53d32cac5c780cbd43c6ca1cc5d11e5..45198ddff8064a392165b8e5743139b201324ba4 100644
+index 916df0c8d263f90e04564c5f512fd5ed5eaaa6d5..c9d4f31b1e88e2fb2c64c2ae11d2f7eebbc29211 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -166,6 +166,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -247,7 +247,7 @@ index 4338b948a53d32cac5c780cbd43c6ca1cc5d11e5..45198ddff8064a392165b8e5743139b2
          this.world = new CraftWorld((ServerLevel) this, gen, biomeProvider, env);
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 3b180e972dbfd5dab018925843c9fd250193c1e3..6e94ab9f46a9a14af6348445506b39b781734469 100644
+index e7af5e4dec9179d6cb568dff2ea91ba96903ba8e..db848d195b3a7704c0bddc9f694f91c1bc5b02f4 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1098,6 +1098,7 @@ public final class CraftServer implements Server {
@@ -266,7 +266,7 @@ index 3b180e972dbfd5dab018925843c9fd250193c1e3..6e94ab9f46a9a14af6348445506b39b7
          }
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
-@@ -2945,6 +2947,14 @@ public final class CraftServer implements Server {
+@@ -2975,6 +2977,14 @@ public final class CraftServer implements Server {
              return CraftServer.this.console.paperConfigurations.createLegacyObject(CraftServer.this.console);
          }
  

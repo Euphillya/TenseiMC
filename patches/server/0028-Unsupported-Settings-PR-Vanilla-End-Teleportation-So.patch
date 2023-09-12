@@ -20,10 +20,10 @@ index f37240a8c059da4712bc90e7fff790499ad7b4c7..8b5f44d8a9d6b4bc66ad2a6554ca48ad
 +    }
  }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index 8b28f6fed78cbad95b7943efb05099edd9eeed57..5d90bd7f9e3530314213be03cb534ab6c70c237f 100644
+index fa35d2c1c8de225acd68e08f15976c92f7ab82aa..2eb6bf896ff372f09782d645cb5e02633a69ee83 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4026,9 +4026,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4028,9 +4028,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
                              // the portal obsidian is placed at targetPos.y - 2, so if we want to place the entity
                              // on the obsidian, we need to spawn at targetPos.y - 1

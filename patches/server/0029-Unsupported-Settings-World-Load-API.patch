@@ -19,10 +19,10 @@ index 8b5f44d8a9d6b4bc66ad2a6554ca48ad76d7ae41..fd2dbe80228d6a77785ff53728cff681
      }
  }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index bbe70a722484fbf231ee423ea1b8bc34304242e7..065c6066ccce9b6f78b05a79f73cf3c53cb2cd8d 100644
+index 3b000979ce9b5b7033d69ccfd68546994f84d412..e872dcc598747a63c94ac84ab3b1166ffe9ac2c6 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -757,6 +757,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -756,6 +756,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              int i1 = -1;
              boolean flag2 = true;
  
@@ -31,7 +31,7 @@ index bbe70a722484fbf231ee423ea1b8bc34304242e7..065c6066ccce9b6f78b05a79f73cf3c5
              for (int j1 = 0; j1 < Mth.square(11); ++j1) {
                  if (j >= -5 && j <= 5 && k >= -5 && k <= 5) {
                      BlockPos blockposition1 = PlayerRespawnLogic.getSpawnPosInChunk(world, new ChunkPos(chunkcoordintpair.x + j, chunkcoordintpair.z + k));
-@@ -777,7 +779,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -776,7 +778,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  j += l;
                  k += i1;
              }
@@ -42,7 +42,7 @@ index bbe70a722484fbf231ee423ea1b8bc34304242e7..065c6066ccce9b6f78b05a79f73cf3c5
                  world.registryAccess().registry(Registries.CONFIGURED_FEATURE).flatMap((iregistry) -> {
                      return iregistry.getHolder(MiscOverworldFeatures.BONUS_CHEST);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 70e72b129d07db615ba63e9e77e680605fc3fb73..b287d01b9144dd6d282dd0f220059542a1792d06 100644
+index c12ed4bba73dcce9d935fa461ab68495274af6d3..0614a40d489d66c4cacf135fc65a055b0ba77449 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1311,7 +1311,7 @@ public final class CraftServer implements Server {

@@ -22,10 +22,10 @@ index 4bc8c7f69c94be174c5385c3b8ed64670b7e673d..80e76f54978047b48990a6c928c972a7
 +    }
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 86b9d57f2c0132b8ac30045e766c01f314d3b6f3..4ad674d08587ca90023573bdc242bf2170b84bd7 100644
+index 4f7a9a4ca030c8349a684080b44547f66ed0d2d7..8db4182bd5eb15a333ea79a8bb59a002337fbcfb 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -1236,6 +1236,27 @@ public abstract class PlayerList {
+@@ -1244,6 +1244,27 @@ public abstract class PlayerList {
          player.getBukkitEntity().recalculatePermissions(); // CraftBukkit
          this.server.getCommands().sendCommands(player);
          } // Paper
