@@ -22,10 +22,10 @@ index 4bc8c7f69c94be174c5385c3b8ed64670b7e673d..80e76f54978047b48990a6c928c972a7
 +    }
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 4f7a9a4ca030c8349a684080b44547f66ed0d2d7..8db4182bd5eb15a333ea79a8bb59a002337fbcfb 100644
+index 7bfbcda5cf086c3c50f8cb202ceaf685a899141c..07a1f27050df27d6a8a277d61bc7136cc4f3a7a1 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -1244,6 +1244,27 @@ public abstract class PlayerList {
+@@ -1241,6 +1241,27 @@ public abstract class PlayerList {
          player.getBukkitEntity().recalculatePermissions(); // CraftBukkit
          this.server.getCommands().sendCommands(player);
          } // Paper
@@ -54,10 +54,10 @@ index 4f7a9a4ca030c8349a684080b44547f66ed0d2d7..8db4182bd5eb15a333ea79a8bb59a002
  
      public boolean isWhiteListed(GameProfile profile) {
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 58152160d609d0e9d105153aeb166a56a7955603..6b03dff7fd0c459761462d534718a502067c24f4 100644
+index ea52f7b3620249a75cf9619481c90acdf781653e..97efc245e0e1dcbd5ba1c602c0a67dcf403cb7a5 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -187,6 +187,7 @@ public abstract class Player extends LivingEntity {
+@@ -188,6 +188,7 @@ public abstract class Player extends LivingEntity {
      public boolean affectsSpawning = true;
      public net.kyori.adventure.util.TriState flyingFallDamage = net.kyori.adventure.util.TriState.NOT_SET;
      // Paper end

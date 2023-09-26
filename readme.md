@@ -20,6 +20,7 @@ Discord : euphilia (852657907870859304)
 
 ## Downloads
 
+- [Version 1.20.2](https://github.com/DoctaEnkoda/TenseiMC/actions?query=branch%3Adev%2F1.20.2)
 - [Version 1.20/.1](https://github.com/DoctaEnkoda/TenseiMC/actions?query=branch%3Adev%2F1.20)
 - [Version 1.19.4](https://github.com/DoctaEnkoda/TenseiMC/actions?query=branch%3Adev%2F1.19.4)
 
@@ -31,6 +32,6 @@ Discord : euphilia (852657907870859304)
 <dependency>
     <groupId>fr.euphilia.tenseimc</groupId>
     <artifactId>TenseiMC-api</artifactId>
-    <version>1.20.1-R0.1-SNAPSHOT</version>
+    <version>1.20.2-R0.1-SNAPSHOT</version>
 </dependency>
 ```

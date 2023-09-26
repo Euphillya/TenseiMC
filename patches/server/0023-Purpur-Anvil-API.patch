@@ -5,7 +5,7 @@ Subject: [PATCH] Purpur - Anvil API
 
 
 diff --git a/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java b/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
-index 706b354ac9a1a6a4a1e61b2a109180d1dd22bbbd..c36ee296b51b874d081f650f82957b769567862c 100644
+index ffd349c1b80df0f1e8c02bda23700184825170fd..9ca12dea4dfca88f238fdf5041c1d08fc41a82e0 100644
 --- a/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
 +++ b/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
 @@ -76,6 +76,7 @@ public abstract class AbstractContainerMenu {
@@ -120,10 +120,10 @@ index e0c3a4ba27e21c3692e601acd0af60873bcbb84c..6c2f5e7780b31311f4714bc08f267f7c
      }
  
 diff --git a/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java b/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java
-index ff770b9ce68a62418de0c7ed389650626fa1dcb2..2986f48786c664534f79803c5769f1b4f1586cb5 100644
+index c2cf5a8e788637c6264cf43d712a5be223ff1cc5..15ef1d57b561eaef2f62d19de3c0c0c2f05badd1 100644
 --- a/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java
 +++ b/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java
-@@ -177,7 +177,9 @@ public abstract class ItemCombinerMenu extends AbstractContainerMenu {
+@@ -178,7 +178,9 @@ public abstract class ItemCombinerMenu extends AbstractContainerMenu {
                  return ItemStack.EMPTY;
              }
  

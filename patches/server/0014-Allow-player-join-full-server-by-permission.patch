@@ -1,15 +1,15 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Bierque Jason <bierquejason@gmail.com>
-Date: Sun, 11 Jun 2023 12:27:33 +0200
+Date: Wed, 27 Sep 2023 00:06:20 +0200
 Subject: [PATCH] Allow player join full server by permission
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 8db4182bd5eb15a333ea79a8bb59a002337fbcfb..43d2e16fbc7cc5f62213f32e08c857c55d7ad029 100644
+index 07a1f27050df27d6a8a277d61bc7136cc4f3a7a1..c847cdbde46078e662777925be87fddc16c7e39b 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
-@@ -825,7 +825,7 @@ public abstract class PlayerList {
-             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, PaperAdventure.asAdventure(ichatmutablecomponent)); // Paper - Adventure
+@@ -815,7 +815,7 @@ public abstract class PlayerList {
+             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, io.papermc.paper.adventure.PaperAdventure.asAdventure(ichatmutablecomponent)); // Paper - Adventure
          } else {
              // return this.players.size() >= this.maxPlayers && !this.canBypassPlayerLimit(gameprofile) ? IChatBaseComponent.translatable("multiplayer.disconnect.server_full") : null;
 -            if (this.getTotalConnections() >= this.maxPlayers && !this.canBypassPlayerLimit(gameprofile)) { // Folia - region threading - we control connection state here now async, not player list size

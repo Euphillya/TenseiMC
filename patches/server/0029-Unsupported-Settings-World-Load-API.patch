@@ -19,10 +19,10 @@ index 8b5f44d8a9d6b4bc66ad2a6554ca48ad76d7ae41..fd2dbe80228d6a77785ff53728cff681
      }
  }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 3b000979ce9b5b7033d69ccfd68546994f84d412..e872dcc598747a63c94ac84ab3b1166ffe9ac2c6 100644
+index 758bcbf493bf7e3b65086f8b38750f28c83dadcb..79fcb7e1b5867339d5bad1f2ff8ac072eda43a3a 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -756,6 +756,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -744,6 +744,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
              int i1 = -1;
              boolean flag2 = true;
  
@@ -31,7 +31,7 @@ index 3b000979ce9b5b7033d69ccfd68546994f84d412..e872dcc598747a63c94ac84ab3b1166f
              for (int j1 = 0; j1 < Mth.square(11); ++j1) {
                  if (j >= -5 && j <= 5 && k >= -5 && k <= 5) {
                      BlockPos blockposition1 = PlayerRespawnLogic.getSpawnPosInChunk(world, new ChunkPos(chunkcoordintpair.x + j, chunkcoordintpair.z + k));
-@@ -776,7 +778,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -764,7 +766,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
                  j += l;
                  k += i1;
              }
@@ -42,10 +42,10 @@ index 3b000979ce9b5b7033d69ccfd68546994f84d412..e872dcc598747a63c94ac84ab3b1166f
                  world.registryAccess().registry(Registries.CONFIGURED_FEATURE).flatMap((iregistry) -> {
                      return iregistry.getHolder(MiscOverworldFeatures.BONUS_CHEST);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index c12ed4bba73dcce9d935fa461ab68495274af6d3..0614a40d489d66c4cacf135fc65a055b0ba77449 100644
+index 3967cbb51ed68f92bbe711f95b080617893e1df0..b31aad316d16389ee39c08a74453aa713ed93886 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1311,7 +1311,7 @@ public final class CraftServer implements Server {
+@@ -1293,7 +1293,7 @@ public final class CraftServer implements Server {
  
      @Override
      public World createWorld(WorldCreator creator) {
@@ -54,7 +54,7 @@ index c12ed4bba73dcce9d935fa461ab68495274af6d3..0614a40d489d66c4cacf135fc65a055b
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1431,6 +1431,11 @@ public final class CraftServer implements Server {
+@@ -1413,6 +1413,11 @@ public final class CraftServer implements Server {
          if (!(this.worlds.containsKey(name.toLowerCase(java.util.Locale.ENGLISH)))) {
              return null;
          }
@@ -66,7 +66,7 @@ index c12ed4bba73dcce9d935fa461ab68495274af6d3..0614a40d489d66c4cacf135fc65a055b
  
          this.console.addLevel(internal); // Paper - move up
          this.console.initWorld(internal, worlddata, worlddata, worlddata.worldGenOptions());
-@@ -1440,6 +1445,7 @@ public final class CraftServer implements Server {
+@@ -1422,6 +1427,7 @@ public final class CraftServer implements Server {
  
          internal.keepSpawnInMemory = creator.keepSpawnLoaded().toBooleanOrElse(internal.getWorld().getKeepSpawnInMemory()); // Paper
          this.getServer().prepareLevels(internal.getChunkSource().chunkMap.progressListener, internal);

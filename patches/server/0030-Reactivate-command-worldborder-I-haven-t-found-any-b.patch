@@ -5,10 +5,10 @@ Subject: [PATCH] Reactivate command: /worldborder I haven't found any bugs
 
 
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index 681cd79ce24fe5d952e987d46e2fd8df07a0f8a1..e8362f639225bf44f71de837fb96ebcbae45cb76 100644
+index 4f6bd2d88219ac82c4d08c35231e5d3314f87110..798c58c74f755c1811d4d3347c9a76c3be86bb19 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
-@@ -199,7 +199,7 @@ public class Commands {
+@@ -202,7 +202,7 @@ public class Commands {
          TitleCommand.register(this.dispatcher);
          //TriggerCommand.register(this.dispatcher); // Folia - region threading - TODO later
          WeatherCommand.register(this.dispatcher);

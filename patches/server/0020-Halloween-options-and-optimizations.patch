@@ -75,7 +75,7 @@ index 5beaa849a250ea005733250ad3edfa8382224667..671c85574ed112d7291098e7cd5e93dc
              } else if (random.nextBoolean()) {
                  return false;
 diff --git a/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java b/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java
-index 9ca1e9d95e62929c0015d5ca2c2f9c70e421842e..867bd0b8170ea6cf8949d3c53bd513ac0a28ec3b 100644
+index b319021b22c5dceba6199ed27814b2dcf47b8d50..f3fb8a193c3858cbc3d0be61db9c1fe56000407f 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/AbstractSkeleton.java
 @@ -161,11 +161,7 @@ public abstract class AbstractSkeleton extends Monster implements RangedAttackMo
@@ -92,10 +92,10 @@ index 9ca1e9d95e62929c0015d5ca2c2f9c70e421842e..867bd0b8170ea6cf8949d3c53bd513ac
                  this.armorDropChances[EquipmentSlot.HEAD.getIndex()] = 0.0F;
              }
 diff --git a/src/main/java/net/minecraft/world/entity/monster/Zombie.java b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
-index 720278afd8c28c4303cc2fbfe5874a79d607f6ef..68b0dca86560dc2d82ea69b2533d19e318d81e3e 100644
+index 483bf035ad9d278755f5a2c525f7e2ca4cc62211..4bccbdf6bc5f3495b34da73628c626c5689f185c 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/Zombie.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
-@@ -556,11 +556,7 @@ public class Zombie extends Monster {
+@@ -557,11 +557,7 @@ public class Zombie extends Monster {
          }
  
          if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {

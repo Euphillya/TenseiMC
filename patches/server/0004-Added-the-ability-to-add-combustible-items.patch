@@ -5,10 +5,10 @@ Subject: [PATCH] Added the ability to add combustible items
 
 
 diff --git a/src/main/java/net/minecraft/world/inventory/AbstractFurnaceMenu.java b/src/main/java/net/minecraft/world/inventory/AbstractFurnaceMenu.java
-index 35b41bceeba72c3896c91c2605bac3b0bf9c54e9..cf57e2df6c096a870e6f436a8d567d37ba48846b 100644
+index 1af7e1548f0648890a1ef2fc0ff4e4c3a56c947c..16040f6cf487b9dc31296daec0b40f7f4b67b0cb 100644
 --- a/src/main/java/net/minecraft/world/inventory/AbstractFurnaceMenu.java
 +++ b/src/main/java/net/minecraft/world/inventory/AbstractFurnaceMenu.java
-@@ -145,7 +145,11 @@ public abstract class AbstractFurnaceMenu extends RecipeBookMenu<Container> {
+@@ -147,7 +147,11 @@ public abstract class AbstractFurnaceMenu extends RecipeBookMenu<Container> {
              } else if (slot != 1 && slot != 0) {
                  if (this.canSmelt(itemstack1)) {
                      if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
@@ -22,7 +22,7 @@ index 35b41bceeba72c3896c91c2605bac3b0bf9c54e9..cf57e2df6c096a870e6f436a8d567d37
                  } else if (this.isFuel(itemstack1)) {
                      if (!this.moveItemStackTo(itemstack1, 1, 2, false)) {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
-index 448fa4f4f200430d6ce3051763c7ceb697696146..ed6216d07f1c9566ad4b72e428e35da02161c07b 100644
+index a18aadbf7ae83713e1f2b21553185d8000bc7699..aac9515a73e2e9d449ca4e2c99874963d0afe467 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity.java
 @@ -207,6 +207,22 @@ public abstract class AbstractFurnaceBlockEntity extends BaseContainerBlockEntit
@@ -49,10 +49,10 @@ index 448fa4f4f200430d6ce3051763c7ceb697696146..ed6216d07f1c9566ad4b72e428e35da0
      private int maxStack = MAX_STACK;
      public List<HumanEntity> transaction = new java.util.ArrayList<HumanEntity>();
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 6e94ab9f46a9a14af6348445506b39b781734469..70e72b129d07db615ba63e9e77e680605fc3fb73 100644
+index 312ade879d178a385c4cdf8d330598fa7f7d65b8..3967cbb51ed68f92bbe711f95b080617893e1df0 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -263,6 +263,7 @@ import net.md_5.bungee.api.chat.BaseComponent; // Spigot
+@@ -265,6 +265,7 @@ import net.md_5.bungee.api.chat.BaseComponent; // Spigot
  
  import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
@@ -60,7 +60,7 @@ index 6e94ab9f46a9a14af6348445506b39b781734469..70e72b129d07db615ba63e9e77e68060
  
  public final class CraftServer implements Server {
      private final String serverName = "TenseiMC"; // TenseiMC // Folia // Paper
-@@ -382,6 +383,30 @@ public final class CraftServer implements Server {
+@@ -384,6 +385,30 @@ public final class CraftServer implements Server {
      }
      // Folia end - region threading API
  

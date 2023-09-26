@@ -19,10 +19,10 @@ index c6de83a7f275d218c61925531ae825b4e1a98202..504ee522b9be18dfbe9a8690c4a06e20
 +    }
  }
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 6b03dff7fd0c459761462d534718a502067c24f4..5ca203b523d666fe9b616ab439ee753b2ccd33d1 100644
+index 97efc245e0e1dcbd5ba1c602c0a67dcf403cb7a5..c9b26438fa496b52bf329cc2d00c5bd046f4e4cf 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
-@@ -1283,7 +1283,7 @@ public abstract class Player extends LivingEntity {
+@@ -1289,7 +1289,7 @@ public abstract class Player extends LivingEntity {
                      flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper
                      flag2 = flag2 && !this.isSprinting();
                      if (flag2) {

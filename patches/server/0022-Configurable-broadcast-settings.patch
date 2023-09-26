@@ -1,6 +1,6 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Bierque Jason <bierquejason@gmail.com>
-Date: Sun, 2 Jul 2023 09:44:58 +0200
+Date: Wed, 27 Sep 2023 00:16:23 +0200
 Subject: [PATCH] Configurable broadcast settings
 
 
@@ -22,26 +22,28 @@ index b704ad3d55c4104983d0a34c247d8a9e1a311ca6..c2b08c4088d32d4c8bfad381ad8b1530
  
      public boolean buddingAmethystBreakWithSilkTouch = false;
 diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-index acc49f66bf34e2507d0ee6fec0a56b11bfc68f46..cc10cb952858b5d96f2ab7ea09334bc3401ab75a 100644
+index e38e2e5a7ddba9c140f362021b6be0b0974f7cd1..c1149705fa8de5397ec6455975b5005c310cf8e0 100644
 --- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
 +++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-@@ -249,6 +249,7 @@ public class PlayerAdvancements {
-                 advancement.getRewards().grant(this.player);
-                 // Paper start - Add Adventure message to PlayerAdvancementDoneEvent
-                 if (message != null && this.player.level().getGameRules().getBoolean(GameRules.RULE_ANNOUNCE_ADVANCEMENTS)) {
-+                    if (this.player.level().tenseiWorldConfig.advancementOnlyBroadcastToAffectedPlayer) this.player.sendSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(message)); else // TenseiMC
-                     this.playerList.broadcastSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(message), false);
-                     // Paper end
-                 }
+@@ -246,7 +246,7 @@ public class PlayerAdvancements {
+                 advancement.value().display().ifPresent((advancementdisplay) -> {
+                     // Paper start - Add Adventure message to PlayerAdvancementDoneEvent
+                     if (event.message() != null && this.player.level().getGameRules().getBoolean(GameRules.RULE_ANNOUNCE_ADVANCEMENTS)) {
+-                        this.playerList.broadcastSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.message()), false);
++                        if (this.player.level().tenseiWorldConfig.advancementOnlyBroadcastToAffectedPlayer) this.player.sendSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.message())); else this.playerList.broadcastSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.message()), false); // TenseiMC
+                         // Paper end
+                     }
+ 
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index febd0ba72922462364eb65243640dcb693129e21..4a4b26ed92e70567d061ed61f282f39024b28daa 100644
+index 500b05ce2cda7b2c0e5332e2921d55a3101fc451..8f88ad75247227f215c81a3695d11b2ebb52af5b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-@@ -1085,6 +1085,7 @@ public class ServerPlayer extends Player {
+@@ -1092,7 +1092,7 @@ public class ServerPlayer extends Player {
              }));
              Team scoreboardteambase = this.getTeam();
  
-+            if (this.level().tenseiWorldConfig.deathMessageOnlyBroadcastToAffectedPlayer) this.sendSystemMessage(ichatbasecomponent); else // TenseiMC
-             if (scoreboardteambase != null && scoreboardteambase.getDeathMessageVisibility() != Team.Visibility.ALWAYS) {
+-            if (scoreboardteambase != null && scoreboardteambase.getDeathMessageVisibility() != Team.Visibility.ALWAYS) {
++            if (this.level().tenseiWorldConfig.deathMessageOnlyBroadcastToAffectedPlayer) this.sendSystemMessage(ichatbasecomponent); else if (scoreboardteambase != null && scoreboardteambase.getDeathMessageVisibility() != Team.Visibility.ALWAYS) { // TenseiMC
                  if (scoreboardteambase.getDeathMessageVisibility() == Team.Visibility.HIDE_FOR_OTHER_TEAMS) {
                      this.server.getPlayerList().broadcastSystemToTeam(this, ichatbasecomponent);
+                 } else if (scoreboardteambase.getDeathMessageVisibility() == Team.Visibility.HIDE_FOR_OWN_TEAM) {

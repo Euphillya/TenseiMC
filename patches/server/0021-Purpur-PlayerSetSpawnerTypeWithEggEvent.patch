@@ -5,10 +5,10 @@ Subject: [PATCH] Purpur - PlayerSetSpawnerTypeWithEggEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..fb414bb385a136f680ed1f5aa6434db160680f6b 100644
+index 73871f456a85bda1e51f54986d0e61fb629822e8..692ad02cb8ff44d9d889e4383afc7b6d36bbf5d2 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
-@@ -313,6 +313,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -314,6 +314,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
          return (EntityType) Registry.register(BuiltInRegistries.ENTITY_TYPE, id, (EntityType<T>) type.build(id)); // CraftBukkit - decompile error
      }
  
@@ -25,7 +25,7 @@ index 9afc81ccb237c3655d64cdbe8a0db9a4d7791043..fb414bb385a136f680ed1f5aa6434db1
      public static ResourceLocation getKey(EntityType<?> type) {
          return BuiltInRegistries.ENTITY_TYPE.getKey(type);
      }
-@@ -528,6 +538,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -529,6 +539,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
          return this.category;
      }
  

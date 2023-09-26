@@ -25,10 +25,10 @@ index 88a753fcf568e4628ac5470782f35504e2e1b6e0..c6de83a7f275d218c61925531ae825b4
 +    }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
-index dfd3432d648c9dafcb45b4f6a00d58cb308625b3..663299a462f4eb6897d12d9d605f4b4fc1359013 100644
+index 9c3a271f98e723f1d8bf3badd3fca7a19fdc6d13..af37c7a2dcf33a1889241bc4a19f19c29ef84824 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
-@@ -84,6 +84,17 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
+@@ -88,6 +88,17 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
  
      public double getEffectRange() {
          if (this.effectRange < 0) {
