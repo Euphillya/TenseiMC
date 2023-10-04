@@ -5,7 +5,7 @@ Subject: [PATCH] Purpur - PlayerSetSpawnerTypeWithEggEvent
 
 
 diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
-index 73871f456a85bda1e51f54986d0e61fb629822e8..692ad02cb8ff44d9d889e4383afc7b6d36bbf5d2 100644
+index 3f3494c20cd15a721090f1b36293562a6b834b14..ce7178000f78a9bd1b94779e5b10dc8b861564c6 100644
 --- a/src/main/java/net/minecraft/world/entity/EntityType.java
 +++ b/src/main/java/net/minecraft/world/entity/EntityType.java
 @@ -314,6 +314,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
@@ -25,7 +25,7 @@ index 73871f456a85bda1e51f54986d0e61fb629822e8..692ad02cb8ff44d9d889e4383afc7b6d
      public static ResourceLocation getKey(EntityType<?> type) {
          return BuiltInRegistries.ENTITY_TYPE.getKey(type);
      }
-@@ -529,6 +539,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+@@ -542,6 +552,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
          return this.category;
      }
  
