@@ -92,10 +92,10 @@ index b319021b22c5dceba6199ed27814b2dcf47b8d50..f3fb8a193c3858cbc3d0be61db9c1fe5
                  this.armorDropChances[EquipmentSlot.HEAD.getIndex()] = 0.0F;
              }
 diff --git a/src/main/java/net/minecraft/world/entity/monster/Zombie.java b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
-index 483bf035ad9d278755f5a2c525f7e2ca4cc62211..4bccbdf6bc5f3495b34da73628c626c5689f185c 100644
+index ef61663d9ba41cf02a03800c74d4ce4ccc5faec5..e2482c0632f343f1903008ea2e9a611567e7b4c5 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/Zombie.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
-@@ -557,11 +557,7 @@ public class Zombie extends Monster {
+@@ -549,11 +549,7 @@ public class Zombie extends Monster {
          }
  
          if (this.getItemBySlot(EquipmentSlot.HEAD).isEmpty()) {
