@@ -5,7 +5,7 @@ Subject: [PATCH] Reactivate command: /worldborder I haven't found any bugs
 
 
 diff --git a/src/main/java/net/minecraft/commands/Commands.java b/src/main/java/net/minecraft/commands/Commands.java
-index 4f6bd2d88219ac82c4d08c35231e5d3314f87110..798c58c74f755c1811d4d3347c9a76c3be86bb19 100644
+index 3435bdeaf723c64103f7c924ea42a4ec78f2ba01..a55e078247701d252d649d6f70503b4ff43b40df 100644
 --- a/src/main/java/net/minecraft/commands/Commands.java
 +++ b/src/main/java/net/minecraft/commands/Commands.java
 @@ -202,7 +202,7 @@ public class Commands {

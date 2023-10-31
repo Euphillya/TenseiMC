@@ -5,7 +5,7 @@ Subject: [PATCH] Disable outdated build check
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 8574ae30cb88c17e8c2a2b819c2acc8c52aaa557..58bd5fc9a7b10c8001a1baf6597d36c999b6b75e 100644
+index 266122ad86855de1b9e7c50b528637831376ac7e..3ffc77446cea2c8c295ddcf11e2dfe4b9a0aeda9 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -300,7 +300,7 @@ public class Main {

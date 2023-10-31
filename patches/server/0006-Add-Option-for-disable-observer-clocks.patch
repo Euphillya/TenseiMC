@@ -5,7 +5,7 @@ Subject: [PATCH] Add Option for disable observer clocks
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 88392a19ff87af5966adc2cd54b10ac61b8dde03..e719d5a3a5acfd971010eb3469de7d059eae7a08 100644
+index f15cffe87dd294d25b40dae056eb6964c3610d0d..6a0cf3bc937425fe5df6cb010e8be89025abb5c6 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 @@ -64,4 +64,8 @@ public class TenseiWorldConfig {

@@ -5,7 +5,7 @@ Subject: [PATCH] Allow player join full server by permission
 
 
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 07a1f27050df27d6a8a277d61bc7136cc4f3a7a1..c847cdbde46078e662777925be87fddc16c7e39b 100644
+index ac9e0f7abe9a41fb3209ef6f8044a03f359d8e07..c6971f42e1a545ea92a94ddaa0a333e062a3e7cf 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -815,7 +815,7 @@ public abstract class PlayerList {

@@ -19,7 +19,7 @@ index 8b5f44d8a9d6b4bc66ad2a6554ca48ad76d7ae41..fd2dbe80228d6a77785ff53728cff681
      }
  }
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index 758bcbf493bf7e3b65086f8b38750f28c83dadcb..79fcb7e1b5867339d5bad1f2ff8ac072eda43a3a 100644
+index b62137def6ac3826eb5d9e367d97579b32fe01d2..93398f0e887c4c177ce6a4c0dd6b214854b65a4d 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
 @@ -744,6 +744,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
@@ -42,7 +42,7 @@ index 758bcbf493bf7e3b65086f8b38750f28c83dadcb..79fcb7e1b5867339d5bad1f2ff8ac072
                  world.registryAccess().registry(Registries.CONFIGURED_FEATURE).flatMap((iregistry) -> {
                      return iregistry.getHolder(MiscOverworldFeatures.BONUS_CHEST);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 3967cbb51ed68f92bbe711f95b080617893e1df0..b31aad316d16389ee39c08a74453aa713ed93886 100644
+index 1a7f17e7d85dd42c7331d79712e698c956e20f49..73c015acc0c1801316192f1186375b9f90a506c8 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1293,7 +1293,7 @@ public final class CraftServer implements Server {

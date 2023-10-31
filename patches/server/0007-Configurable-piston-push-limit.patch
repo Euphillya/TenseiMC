@@ -5,7 +5,7 @@ Subject: [PATCH] Configurable piston push limit
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index e719d5a3a5acfd971010eb3469de7d059eae7a08..93f59b4363277a665b2462396cd910d00f43062d 100644
+index 6a0cf3bc937425fe5df6cb010e8be89025abb5c6..88a753fcf568e4628ac5470782f35504e2e1b6e0 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 @@ -65,7 +65,9 @@ public class TenseiWorldConfig {

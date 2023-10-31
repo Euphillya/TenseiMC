@@ -22,7 +22,7 @@ index 96aeddaaabb6f1570f61738eb16125757f51968f..a63630f34706703cb34ce2a691b4afb2
 +    }
  }
 diff --git a/src/main/java/net/minecraft/world/entity/animal/Bee.java b/src/main/java/net/minecraft/world/entity/animal/Bee.java
-index 55026e1731e41b4e3e4c6a8fef5d96a32051a556..f147e9c4615ece32586e8e8fdb0481a53a20e395 100644
+index 25fd3aea2d66503018637781ccb8b5690c02e57b..5c179c77984256bdf559758d8d48b045459f8784 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/Bee.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/Bee.java
 @@ -348,7 +348,7 @@ public class Bee extends Animal implements NeutralMob, FlyingAnimal {

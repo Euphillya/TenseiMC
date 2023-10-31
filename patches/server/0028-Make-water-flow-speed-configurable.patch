@@ -22,7 +22,7 @@ index 525e94f0a2a01698718977c8104b4a96b3eb22d4..48874bcbcd65418dec7013e3a1061153
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/material/WaterFluid.java b/src/main/java/net/minecraft/world/level/material/WaterFluid.java
-index 2e1a8dd2aa071a90df9989b5226a2b21b24c9253..97acf33c8c2e6c813fc479b73f72d77289190fce 100644
+index 4cad1459f205d9e2cf7d56c6ae4ec0726890d5f0..6ffd3461a74f15318bde746fa4606879ba2ccf13 100644
 --- a/src/main/java/net/minecraft/world/level/material/WaterFluid.java
 +++ b/src/main/java/net/minecraft/world/level/material/WaterFluid.java
 @@ -106,7 +106,7 @@ public abstract class WaterFluid extends FlowingFluid {
