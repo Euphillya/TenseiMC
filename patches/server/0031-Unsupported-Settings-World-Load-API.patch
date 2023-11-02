@@ -42,10 +42,10 @@ index b62137def6ac3826eb5d9e367d97579b32fe01d2..93398f0e887c4c177ce6a4c0dd6b2148
                  world.registryAccess().registry(Registries.CONFIGURED_FEATURE).flatMap((iregistry) -> {
                      return iregistry.getHolder(MiscOverworldFeatures.BONUS_CHEST);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 1a7f17e7d85dd42c7331d79712e698c956e20f49..73c015acc0c1801316192f1186375b9f90a506c8 100644
+index 164eb1601b84461fd94f5293dd42244fd8d38d69..c2215c237e20459524520cd2933f9a5f8288dc6c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1293,7 +1293,7 @@ public final class CraftServer implements Server {
+@@ -1296,7 +1296,7 @@ public final class CraftServer implements Server {
  
      @Override
      public World createWorld(WorldCreator creator) {
@@ -54,7 +54,7 @@ index 1a7f17e7d85dd42c7331d79712e698c956e20f49..73c015acc0c1801316192f1186375b9f
          Preconditions.checkState(this.console.getAllLevels().iterator().hasNext(), "Cannot create additional worlds on STARTUP");
          //Preconditions.checkState(!this.console.isIteratingOverLevels, "Cannot create a world while worlds are being ticked"); // Paper - Cat - Temp disable. We'll see how this goes.
          Preconditions.checkArgument(creator != null, "WorldCreator cannot be null");
-@@ -1413,6 +1413,11 @@ public final class CraftServer implements Server {
+@@ -1416,6 +1416,11 @@ public final class CraftServer implements Server {
          if (!(this.worlds.containsKey(name.toLowerCase(java.util.Locale.ENGLISH)))) {
              return null;
          }
@@ -66,7 +66,7 @@ index 1a7f17e7d85dd42c7331d79712e698c956e20f49..73c015acc0c1801316192f1186375b9f
  
          this.console.addLevel(internal); // Paper - move up
          this.console.initWorld(internal, worlddata, worlddata, worlddata.worldGenOptions());
-@@ -1422,6 +1427,7 @@ public final class CraftServer implements Server {
+@@ -1425,6 +1430,7 @@ public final class CraftServer implements Server {
  
          internal.keepSpawnInMemory = creator.keepSpawnLoaded().toBooleanOrElse(internal.getWorld().getKeepSpawnInMemory()); // Paper
          this.getServer().prepareLevels(internal.getChunkSource().chunkMap.progressListener, internal);

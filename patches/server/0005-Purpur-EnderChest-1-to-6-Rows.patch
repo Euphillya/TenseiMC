@@ -125,7 +125,7 @@ index 4703f23316f82a1a942907b46d2d6dcb7d70ec37..bd52a4514ef9eac36c89e7db734a74b2
          this.activeChest = blockEntity;
      }
 diff --git a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
-index 7385e91f32f070e86a4e0fd3d214f55d832c7979..95bf667c2e3cf60e06bf8bd34f77b61522223081 100644
+index 7385e91f32f070e86a4e0fd3d214f55d832c7979..ed7fd0a04c941698840b12e1e0e35a0274f41007 100644
 --- a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
 @@ -85,6 +85,32 @@ public class EnderChestBlock extends AbstractChestBlock<EnderChestBlockEntity> i

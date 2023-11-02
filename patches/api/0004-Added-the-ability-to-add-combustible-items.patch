@@ -35,10 +35,10 @@ index 26b32a5935aaed9b1fe356af0208a778144aac87..d62c1421099610473cd06bf7ca369978
 +    // TenseiMC end
  }
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 41bf1e46762db4a56bf04f6a62a909c0c04b4c43..e137d960436715c0b650ca8f9af3a4666787b9ed 100644
+index 73f79b1d5413c4ed82f68bf0d48f84c27ec8e52e..614f97f8471e66f582f839d5a26a0ad8eb24199a 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -2417,4 +2417,21 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -2427,4 +2427,21 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
       */
      public boolean isGlobalTickThread();
      // Folia end - region threading API
