@@ -5,20 +5,20 @@ Subject: [PATCH] Purpur - EnderChest 1 to 6 Rows
 
 
 diff --git a/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java b/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java
-index c704b742c627589de92322707ef46a21ed9b8100..b20f7b7142dc523c4675710365f66826866e04d5 100644
+index c704b742c627589de92322707ef46a21ed9b8100..a018ab14d641883e091b6a0e2a2a475549378869 100644
 --- a/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java
 +++ b/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java
 @@ -16,6 +16,14 @@ public class TenseiMCPermissions {
  
          // Add Permissions here
  
-+        // Enderchest Permissions
-+        DefaultPermissions.registerPermission(PREFIX + "enderchest.rows.six", "Gives the user six rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
-+        DefaultPermissions.registerPermission(PREFIX + "enderchest.rows.five", "Gives the user five rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
-+        DefaultPermissions.registerPermission(PREFIX + "enderchest.rows.four", "Gives the user four rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
-+        DefaultPermissions.registerPermission(PREFIX + "enderchest.rows.three", "Gives the user three rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
-+        DefaultPermissions.registerPermission(PREFIX + "enderchest.rows.two", "Gives the user two rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
-+        DefaultPermissions.registerPermission(PREFIX + "enderchest.rows.one", "Gives the user one row of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        // Enderchest Permissions Purpur
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.six", "Gives the user six rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.five", "Gives the user five rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.four", "Gives the user four rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.three", "Gives the user three rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.two", "Gives the user two rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.one", "Gives the user one row of enderchest space.", PermissionDefault.FALSE, tenseimc);
 +
          tenseimc.recalculatePermissibles();
  

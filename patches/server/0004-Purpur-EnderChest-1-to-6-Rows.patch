@@ -22,7 +22,7 @@ index 4bc8c7f69c94be174c5385c3b8ed64670b7e673d..80e76f54978047b48990a6c928c972a7
 +    }
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 9da89e8e9569666227081ebc6cb1f0348e1a183d..ac9e0f7abe9a41fb3209ef6f8044a03f359d8e07 100644
+index 9da89e8e9569666227081ebc6cb1f0348e1a183d..14361e0b4270c2cb84fe074ecd68f1e333ad1290 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1241,6 +1241,27 @@ public abstract class PlayerList {
@@ -33,17 +33,17 @@ index 9da89e8e9569666227081ebc6cb1f0348e1a183d..ac9e0f7abe9a41fb3209ef6f8044a03f
 +        // TenseiMC start
 +        if (fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows && fr.euphilia.tenseimc.TenseiConfig.enderChestPermissionRows) {
 +            org.bukkit.craftbukkit.entity.CraftHumanEntity bukkit = player.getBukkitEntity();
-+            if (bukkit.hasPermission("tenseimc.enderchest.rows.six")) {
++            if (bukkit.hasPermission("tenseimc.enderchest.rows.six") || bukkit.hasPermission("purpur.enderchest.rows.six")) {
 +                player.sixRowEnderChestSlotCount = 54;
-+            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.five")) {
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.five") || bukkit.hasPermission("purpur.enderchest.rows.five")) {
 +                player.sixRowEnderChestSlotCount = 45;
-+            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.four")) {
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.four") || bukkit.hasPermission("purpur.enderchest.rows.four")) {
 +                player.sixRowEnderChestSlotCount = 36;
-+            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.three")) {
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.three") || bukkit.hasPermission("purpur.enderchest.rows.three")) {
 +                player.sixRowEnderChestSlotCount = 27;
-+            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.two")) {
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.two") || bukkit.hasPermission("purpur.enderchest.rows.two")) {
 +                player.sixRowEnderChestSlotCount = 18;
-+            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.one")) {
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.one") || bukkit.hasPermission("purpur.enderchest.rows.one")) {
 +                player.sixRowEnderChestSlotCount = 9;
 +            }
 +        } else {
@@ -125,7 +125,7 @@ index 4703f23316f82a1a942907b46d2d6dcb7d70ec37..bd52a4514ef9eac36c89e7db734a74b2
          this.activeChest = blockEntity;
      }
 diff --git a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
-index 7385e91f32f070e86a4e0fd3d214f55d832c7979..b139ebb689ad8821dac3b37ef763e2e4a7a5aefb 100644
+index 7385e91f32f070e86a4e0fd3d214f55d832c7979..95bf667c2e3cf60e06bf8bd34f77b61522223081 100644
 --- a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
 @@ -85,6 +85,32 @@ public class EnderChestBlock extends AbstractChestBlock<EnderChestBlockEntity> i
@@ -135,22 +135,22 @@ index 7385e91f32f070e86a4e0fd3d214f55d832c7979..b139ebb689ad8821dac3b37ef763e2e4
 +                    // TenseiMC start
 +                    if (fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows) {
 +                        org.bukkit.craftbukkit.entity.CraftHumanEntity bukkitPlayer = player.getBukkitEntity();
-+                        if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.six")) {
++                        if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.six") || bukkit.hasPermission("purpur.enderchest.rows.six")) {
 +                            player.sixRowEnderChestSlotCount = 54;
 +                            return ChestMenu.sixRows(syncId, inventory, playerEnderChestContainer);
-+                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.five")) {
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.five") || bukkit.hasPermission("purpur.enderchest.rows.five")) {
 +                            player.sixRowEnderChestSlotCount = 45;
 +                            return ChestMenu.fiveRows(syncId, inventory, playerEnderChestContainer);
-+                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.four")) {
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.four") || bukkit.hasPermission("purpur.enderchest.rows.four")) {
 +                            player.sixRowEnderChestSlotCount = 36;
 +                            return ChestMenu.fourRows(syncId, inventory, playerEnderChestContainer);
-+                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.three")) {
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.three") || bukkit.hasPermission("purpur.enderchest.rows.three")) {
 +                            player.sixRowEnderChestSlotCount = 27;
 +                            return ChestMenu.threeRows(syncId, inventory, playerEnderChestContainer);
-+                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.two")) {
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.two") || bukkit.hasPermission("purpur.enderchest.rows.two")) {
 +                            player.sixRowEnderChestSlotCount = 18;
 +                            return ChestMenu.twoRows(syncId, inventory, playerEnderChestContainer);
-+                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.one")) {
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.one") || bukkit.hasPermission("purpur.enderchest.rows.one")) {
 +                            player.sixRowEnderChestSlotCount = 9;
 +                            return ChestMenu.oneRows(syncId, inventory, playerEnderChestContainer);
 +                        }
