@@ -14,6 +14,7 @@ TenseiMC is a drop-in replacement for [Folia](https://github.com/PaperMC/Folia) 
 
 TenseiMC is not stable at all and bugs are to be expected. Also, like [Folia](https://github.com/PaperMC/Folia), most plugins on the Spigot markets may not work!
 
+TenseiMC contains patches from other [Paper](https://github.com/PaperMC/Paper) Forks. I'd like to stress that I'm not going to make a horrible patch mix and pray that it compiles. I just think some of the features are cool, and I'd like to make them work on a [Folia](https://github.com/PaperMC/Folia) fork.
 ## Contact
 
 Discord : euphilia (852657907870859304)

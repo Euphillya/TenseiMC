@@ -135,22 +135,22 @@ index 7385e91f32f070e86a4e0fd3d214f55d832c7979..95bf667c2e3cf60e06bf8bd34f77b615
 +                    // TenseiMC start
 +                    if (fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows) {
 +                        org.bukkit.craftbukkit.entity.CraftHumanEntity bukkitPlayer = player.getBukkitEntity();
-+                        if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.six") || bukkit.hasPermission("purpur.enderchest.rows.six")) {
++                        if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.six") || bukkitPlayer.hasPermission("purpur.enderchest.rows.six")) {
 +                            player.sixRowEnderChestSlotCount = 54;
 +                            return ChestMenu.sixRows(syncId, inventory, playerEnderChestContainer);
-+                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.five") || bukkit.hasPermission("purpur.enderchest.rows.five")) {
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.five") || bukkitPlayer.hasPermission("purpur.enderchest.rows.five")) {
 +                            player.sixRowEnderChestSlotCount = 45;
 +                            return ChestMenu.fiveRows(syncId, inventory, playerEnderChestContainer);
-+                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.four") || bukkit.hasPermission("purpur.enderchest.rows.four")) {
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.four") || bukkitPlayer.hasPermission("purpur.enderchest.rows.four")) {
 +                            player.sixRowEnderChestSlotCount = 36;
 +                            return ChestMenu.fourRows(syncId, inventory, playerEnderChestContainer);
-+                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.three") || bukkit.hasPermission("purpur.enderchest.rows.three")) {
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.three") || bukkitPlayer.hasPermission("purpur.enderchest.rows.three")) {
 +                            player.sixRowEnderChestSlotCount = 27;
 +                            return ChestMenu.threeRows(syncId, inventory, playerEnderChestContainer);
-+                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.two") || bukkit.hasPermission("purpur.enderchest.rows.two")) {
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.two") || bukkitPlayer.hasPermission("purpur.enderchest.rows.two")) {
 +                            player.sixRowEnderChestSlotCount = 18;
 +                            return ChestMenu.twoRows(syncId, inventory, playerEnderChestContainer);
-+                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.one") || bukkit.hasPermission("purpur.enderchest.rows.one")) {
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.one") || bukkitPlayer.hasPermission("purpur.enderchest.rows.one")) {
 +                            player.sixRowEnderChestSlotCount = 9;
 +                            return ChestMenu.oneRows(syncId, inventory, playerEnderChestContainer);
 +                        }
