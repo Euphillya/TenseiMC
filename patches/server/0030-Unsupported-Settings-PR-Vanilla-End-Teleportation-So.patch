@@ -6,12 +6,12 @@ Subject: [PATCH] Unsupported Settings : [PR] Vanilla End Teleportation Source
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index f37240a8c059da4712bc90e7fff790499ad7b4c7..8b5f44d8a9d6b4bc66ad2a6554ca48ad76d7ae41 100644
+index 7922ba7c4175572bd378b50c03725a5b02d2df3f..dbb685483d810b9f130306ed7369907ac00a2147 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -151,4 +151,9 @@ public class TenseiConfig {
-         net.minecraft.world.level.block.ComposterBlock.loadComposterBlock();
-         beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
+@@ -161,4 +161,9 @@ public class TenseiConfig {
+             set("settings.blocks.beehive.max-bees-inside", null);
+         }
      }
 +
 +    public static boolean useVanillaEndTeleportation = false;

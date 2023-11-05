@@ -5,24 +5,26 @@ Subject: [PATCH] Make water flow speed configurable
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 525e94f0a2a01698718977c8104b4a96b3eb22d4..48874bcbcd65418dec7013e3a10611535dd3cad0 100644
+index 84528a553dfaff069d21ff069ac26841821d638b..1baefa7bd2b4c0221fa3b2e7772b8e09999e11d1 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -137,10 +137,12 @@ public class TenseiWorldConfig {
+@@ -161,6 +161,7 @@ public class TenseiWorldConfig {
      public int lavaSpeedNether = 10;
      public int lavaSpeedNotNether = 30;
      public int waterInfiniteRequiredSources = 2;
 +    public int waterSpeed = 5;
      private void liquidsSettings() {
-         lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
-         lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
-         lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
-         waterInfiniteRequiredSources = getInt("blocks.water.infinite-required-sources", waterInfiniteRequiredSources);
+         if (TenseiConfig.version < 2) {
+             lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
+@@ -172,5 +173,6 @@ public class TenseiWorldConfig {
+             set("blocks.lava.speed.nether", null);
+             set("blocks.lava.speed.not-nether", null);
+         }
 +        waterSpeed = getInt("blocks.water.speed", waterSpeed);
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/material/WaterFluid.java b/src/main/java/net/minecraft/world/level/material/WaterFluid.java
-index 4cad1459f205d9e2cf7d56c6ae4ec0726890d5f0..6ffd3461a74f15318bde746fa4606879ba2ccf13 100644
+index 2ae9f50b7d52b9d4e2659a882c33a82bf08ece08..0f3f2e030f547965024ee955c61ba43fa5d42ad9 100644
 --- a/src/main/java/net/minecraft/world/level/material/WaterFluid.java
 +++ b/src/main/java/net/minecraft/world/level/material/WaterFluid.java
 @@ -106,7 +106,7 @@ public abstract class WaterFluid extends FlowingFluid {

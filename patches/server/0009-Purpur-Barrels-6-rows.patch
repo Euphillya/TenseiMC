@@ -1,33 +1,33 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
-From: Bierque Jason <bierquejason@gmail.com>
+From: William Blake Galbreath <blake.galbreath@gmail.com>
 Date: Tue, 23 May 2023 07:15:04 +0200
 Subject: [PATCH] Purpur - Barrels 6 rows
 
-Co-authored by: William Blake Galbreath <blake.galbreath@gmail.com>
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index 80e76f54978047b48990a6c928c972a7d87df43a..087601a4000db1325057d0de013d36d1c9430adf 100644
+index 2e53b730d14ab99bbad3525c30cfe7b4716ed90e..bf1110e21a31a2acfc7df3f6e91e5b278b3a59e3 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -124,9 +124,16 @@ public class TenseiConfig {
+@@ -126,6 +126,7 @@ public class TenseiConfig {
  
-     public static boolean enderChestSixRows = false;
-     public static boolean enderChestPermissionRows = false;
-+    public static int barrelRows = 3;
+     private static boolean enderChestSixRows = false;
+     private static boolean enderChestPermissionRows = false;
++    private static int barrelRows = 3;
      private static void blockSettings() {
-         enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
-         org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
-         enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
-+        barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
-+        if (barrelRows < 1 || barrelRows > 6) {
-+            Bukkit.getLogger().severe("settings.blocks.barrel.rows must be 1-6, resetting to default");
-+            barrelRows = 3;
+         if (version < 2) {
+             PurpurConfig.enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
+@@ -135,5 +136,9 @@ public class TenseiConfig {
+             PurpurConfig.enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
+             set("settings.blocks.ender_chest.use-permissions-for-rows", null);
+         }
++        if (version < 2) {
++            PurpurConfig.barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
++            set("settings.blocks.barrel.rows", null);
 +        }
-+        org.bukkit.event.inventory.InventoryType.BARREL.setDefaultSize(barrelRows*9);
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
-index 416aa989ebb18a8741cc9d605a1180ab830f6643..6e81a4e4662b68944dbcc3d1f1957d0a524f78ba 100644
+index 416aa989ebb18a8741cc9d605a1180ab830f6643..89c637babe8e0b47ffd86e3a0c239f1691347774 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
 @@ -67,7 +67,7 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
@@ -35,7 +35,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..6e81a4e4662b68944dbcc3d1f1957d0a
      public BarrelBlockEntity(BlockPos pos, BlockState state) {
          super(BlockEntityType.BARREL, pos, state);
 -        this.items = NonNullList.withSize(27, ItemStack.EMPTY);
-+        this.items = NonNullList.withSize(fr.euphilia.tenseimc.TenseiConfig.barrelRows*9, ItemStack.EMPTY); // TenseiMC start
++        this.items = NonNullList.withSize(org.purpurmc.purpur.PurpurConfig.barrelRows*9, ItemStack.EMPTY); // TenseiMC start
          this.openersCounter = new ContainerOpenersCounter() {
              @Override
              protected void onOpen(Level world, BlockPos pos, BlockState state) {
@@ -44,7 +44,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..6e81a4e4662b68944dbcc3d1f1957d0a
      @Override
      public int getContainerSize() {
 -        return 27;
-+        return fr.euphilia.tenseimc.TenseiConfig.barrelRows*9;
++        return org.purpurmc.purpur.PurpurConfig.barrelRows*9; // TenseiMC start
      }
  
      @Override
@@ -54,7 +54,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..6e81a4e4662b68944dbcc3d1f1957d0a
      protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
 -        return ChestMenu.threeRows(syncId, playerInventory, this);
 +        // TenseiMC Start
-+        return switch (fr.euphilia.tenseimc.TenseiConfig.barrelRows) {
++        return switch (org.purpurmc.purpur.PurpurConfig.barrelRows) {
 +            case 6 -> ChestMenu.sixRows(syncId, playerInventory, this);
 +            case 5 -> ChestMenu.fiveRows(syncId, playerInventory, this);
 +            case 4 -> ChestMenu.fourRows(syncId, playerInventory, this);
@@ -67,7 +67,7 @@ index 416aa989ebb18a8741cc9d605a1180ab830f6643..6e81a4e4662b68944dbcc3d1f1957d0a
  
      @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-index 9ebaaf806879ed802723538ce6091e479ab293c6..fc7bcf3998bdd06d0187c3a9a8f9a65bff67973a 100644
+index 2730e8fd695a9bad0e991fcb98f6127cc895557f..e466f35911943de42f3ca808ce31b0254a8af4fe 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
 @@ -188,7 +188,16 @@ public class CraftContainer extends AbstractContainerMenu {
@@ -76,7 +76,7 @@ index 9ebaaf806879ed802723538ce6091e479ab293c6..fc7bcf3998bdd06d0187c3a9a8f9a65b
              case BARREL:
 -                this.delegate = new ChestMenu(MenuType.GENERIC_9x3, windowId, bottom, top, top.getContainerSize() / 9);
 +                // TenseiMC start
-+                this.delegate = new ChestMenu(switch (fr.euphilia.tenseimc.TenseiConfig.barrelRows) {
++                this.delegate = new ChestMenu(switch (org.purpurmc.purpur.PurpurConfig.barrelRows) {
 +                    case 6 -> MenuType.GENERIC_9x6;
 +                    case 5 -> MenuType.GENERIC_9x5;
 +                    case 4 -> MenuType.GENERIC_9x4;
@@ -88,3 +88,24 @@ index 9ebaaf806879ed802723538ce6091e479ab293c6..fc7bcf3998bdd06d0187c3a9a8f9a65b
                  break;
              case DISPENSER:
              case DROPPER:
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurConfig.java b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+index ecebdbbf79f407993963dc3d43f0ed4b9ae91e0f..2565d0857a0f578ca7e10e895e8a8ac303f7daf8 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+@@ -173,9 +173,16 @@ public class PurpurConfig {
+         return builder.build();
+     }
+ 
++    public static int barrelRows = 3;
+     public static boolean enderChestSixRows = false;
+     public static boolean enderChestPermissionRows = false;
+     private static void blockSettings() {
++        barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
++        if (barrelRows < 1 || barrelRows > 6) {
++            Bukkit.getLogger().severe("settings.blocks.barrel.rows must be 1-6, resetting to default");
++            barrelRows = 3;
++        }
++        org.bukkit.event.inventory.InventoryType.BARREL.setDefaultSize(barrelRows*9);
+         enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
+         org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
+         enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);

@@ -5,26 +5,29 @@ Subject: [PATCH] Config to change max number of bees
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index fc2c3a86406e9a645e50d6f02a0ea553e05f354f..f37240a8c059da4712bc90e7fff790499ad7b4c7 100644
+index edc68abf1d012084a21eea59f40092bb4b37a363..7922ba7c4175572bd378b50c03725a5b02d2df3f 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -128,6 +128,7 @@ public class TenseiConfig {
-     public static boolean enderChestPermissionRows = false;
-     public static int barrelRows = 3;
+@@ -132,6 +132,7 @@ public class TenseiConfig {
+     private static boolean enderChestPermissionRows = false;
+     private static int barrelRows = 3;
      public static HashMap<Item, Double> itemCompostable = new HashMap<>();
 +    public static int beeInsideBeeHive = 3;
      private static void blockSettings() {
-         enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
-         org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
-@@ -148,5 +149,6 @@ public class TenseiConfig {
+         if (version < 2) {
+             PurpurConfig.enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
+@@ -155,5 +156,9 @@ public class TenseiConfig {
              }
          });
          net.minecraft.world.level.block.ComposterBlock.loadComposterBlock();
-+        beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
++        if (version < 2) {
++            beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
++            set("settings.blocks.beehive.max-bees-inside", null);
++        }
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
-index 8751cf939d4339afc375b43d78753e0a97c9fd1a..1398d60003ce5939a2fd7b0f5af7647472baca41 100644
+index f0dde6d99fa0035ffec89701691e7f18169067dd..56cd23d34b5224391d86d3c4bdcb6975bc810972 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 @@ -43,7 +43,7 @@ public class BeehiveBlockEntity extends BlockEntity {
@@ -32,7 +35,35 @@ index 8751cf939d4339afc375b43d78753e0a97c9fd1a..1398d60003ce5939a2fd7b0f5af76474
      @Nullable
      public BlockPos savedFlowerPos;
 -    public int maxBees = 3; // CraftBukkit - allow setting max amount of bees a hive can hold
-+    public int maxBees = fr.euphilia.tenseimc.TenseiConfig.beeInsideBeeHive; // CraftBukkit - allow setting max amount of bees a hive can hold // TenseiMC
++    public int maxBees = org.purpurmc.purpur.PurpurConfig.beeInsideBeeHive; // CraftBukkit - allow setting max amount of bees a hive can hold // TenseiMC
  
      public BeehiveBlockEntity(BlockPos pos, BlockState state) {
          super(BlockEntityType.BEEHIVE, pos, state);
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurConfig.java b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+index 2565d0857a0f578ca7e10e895e8a8ac303f7daf8..aa0fda51a36ddc74d76ab97570013dffd1ad7ec7 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
+ // import net.kyori.adventure.text.minimessage.MiniMessage; // TenseiMC - not implemented
+ // import net.minecraft.core.registries.BuiltInRegistries; // TenseiMC - not implemented
+ // import net.minecraft.resources.ResourceLocation; // TenseiMC - not implemented
++import fr.euphilia.tenseimc.TenseiConfig;
+ import net.minecraft.server.MinecraftServer;
+ // import net.minecraft.world.effect.MobEffect; // TenseiMC - not implemented
+ // import net.minecraft.world.effect.MobEffectInstance; // TenseiMC - not implemented
+@@ -174,6 +175,7 @@ public class PurpurConfig {
+     }
+ 
+     public static int barrelRows = 3;
++    public static int beeInsideBeeHive = 3;
+     public static boolean enderChestSixRows = false;
+     public static boolean enderChestPermissionRows = false;
+     private static void blockSettings() {
+@@ -186,5 +188,6 @@ public class PurpurConfig {
+         enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
+         org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
+         enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
++        beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
+     }
+ }
+\ No newline at end of file

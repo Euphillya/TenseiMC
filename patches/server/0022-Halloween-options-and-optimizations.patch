@@ -5,7 +5,7 @@ Subject: [PATCH] Halloween options and optimizations
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index a63630f34706703cb34ce2a691b4afb26cc3f4a0..b704ad3d55c4104983d0a34c247d8a9e1a311ca6 100644
+index bbf67f54b588f643c8870c0e61eb0a48be6cd2e7..2a14bf512019f9d60e8b69bdc83e9c753dccff35 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 @@ -1,5 +1,6 @@
@@ -15,9 +15,9 @@ index a63630f34706703cb34ce2a691b4afb26cc3f4a0..b704ad3d55c4104983d0a34c247d8a9e
  import org.bukkit.World;
  import org.bukkit.configuration.ConfigurationSection;
  import org.jetbrains.annotations.NotNull;
-@@ -101,4 +102,15 @@ public class TenseiWorldConfig {
-         beeCanWorkAtNight = getBoolean("mobs.bee.can-work-at-night", beeCanWorkAtNight);
-         beeCanWorkInRain = getBoolean("mobs.bee.can-work-in-rain", beeCanWorkInRain);
+@@ -122,4 +123,15 @@ public class TenseiWorldConfig {
+             set("mobs.bee.can-work-in-rain", null);
+         }
      }
 +
 +    public boolean forceHalloweenSeason = false;

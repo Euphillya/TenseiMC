@@ -6,10 +6,10 @@ Subject: [PATCH] TenseiMC Config Files
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..4bc8c7f69c94be174c5385c3b8ed64670b7e673d
+index 0000000000000000000000000000000000000000..b32c065215c06e82ffe6370dec12f755c5608f2a
 --- /dev/null
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -0,0 +1,124 @@
+@@ -0,0 +1,125 @@
 +package fr.euphilia.tenseimc;
 +
 +import com.google.common.base.Throwables;
@@ -32,7 +32,7 @@ index 0000000000000000000000000000000000000000..4bc8c7f69c94be174c5385c3b8ed6467
 +public class TenseiConfig {
 +
 +    public static YamlConfiguration config;
-+    private static int version;
++    public static int version;
 +    private static boolean verbose;
 +    private static File CONFIG_FILE;
 +
@@ -49,7 +49,8 @@ index 0000000000000000000000000000000000000000..4bc8c7f69c94be174c5385c3b8ed6467
 +        config.options().copyDefaults(true);
 +        verbose = getBoolean("verbose", false);
 +
-+        version = getInt("config-version", 1);
++        version = getInt("config-version", 2);
++        set("config-version", 2);
 +
 +        readConfig(TenseiConfig.class, null);
 +    }
@@ -136,7 +137,7 @@ index 0000000000000000000000000000000000000000..4bc8c7f69c94be174c5385c3b8ed6467
 +}
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..f15cffe87dd294d25b40dae056eb6964c3610d0d
+index 0000000000000000000000000000000000000000..ec4112f013033ede28ea75a12f53d6c4218bb9de
 --- /dev/null
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 @@ -0,0 +1,67 @@
@@ -164,7 +165,7 @@ index 0000000000000000000000000000000000000000..f15cffe87dd294d25b40dae056eb6964
 +    }
 +
 +    public void init() {
-+        TenseiConfig.log(Level.INFO, "-------- World Settings For [ %s ] --------".formatted(worldName));
++        TenseiConfig.log(Level.INFO, "-------- World Settings TenseiMC For [ %s ] --------".formatted(worldName));
 +        TenseiConfig.readConfig(TenseiWorldConfig.class, this);
 +    }
 +

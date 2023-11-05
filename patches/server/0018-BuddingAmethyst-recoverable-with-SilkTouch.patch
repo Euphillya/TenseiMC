@@ -5,12 +5,12 @@ Subject: [PATCH] BuddingAmethyst recoverable with SilkTouch
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 504ee522b9be18dfbe9a8690c4a06e20e283c709..bc832fe7f4c968c0cc72df4c0ce5747c9285282c 100644
+index 47d747b07a10816fb1af5340d46061810503ec76..0472d41a483da46f8b362c6f3c67f0fd81ad3028 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -86,4 +86,9 @@ public class TenseiWorldConfig {
-     private void playerSettings() {
-         playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
+@@ -100,4 +100,9 @@ public class TenseiWorldConfig {
+             set("gameplay-mechanics.player.critical-damage-multiplier", null);
+         }
      }
 +
 +    public boolean buddingAmethystBreakWithSilkTouch = false;

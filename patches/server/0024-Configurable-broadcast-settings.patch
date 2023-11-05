@@ -5,24 +5,34 @@ Subject: [PATCH] Configurable broadcast settings
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index b704ad3d55c4104983d0a34c247d8a9e1a311ca6..c2b08c4088d32d4c8bfad381ad8b1530a1a0996d 100644
+index 2a14bf512019f9d60e8b69bdc83e9c753dccff35..2510e45f2ed205054873d5597f08c0785d209c36 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -84,8 +84,12 @@ public class TenseiWorldConfig {
+@@ -95,11 +95,15 @@ public class TenseiWorldConfig {
      }
  
      public double playerCriticalDamageMultiplier = 1.5D;
 +    public boolean advancementOnlyBroadcastToAffectedPlayer = false;
 +    public boolean deathMessageOnlyBroadcastToAffectedPlayer = false;
      private void playerSettings() {
-         playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
+         if (TenseiConfig.version < 2) {
+             playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
+             set("gameplay-mechanics.player.critical-damage-multiplier", null);
+         }
 +        advancementOnlyBroadcastToAffectedPlayer = getBoolean("settings.broadcasts.advancement.only-broadcast-to-affected-player", advancementOnlyBroadcastToAffectedPlayer);
 +        deathMessageOnlyBroadcastToAffectedPlayer = getBoolean("settings.broadcasts.death.only-broadcast-to-affected-player", deathMessageOnlyBroadcastToAffectedPlayer);
      }
  
      public boolean buddingAmethystBreakWithSilkTouch = false;
+@@ -134,4 +138,6 @@ public class TenseiWorldConfig {
+             halloweenTask.init(this);
+         }
+     }
++
++
+ }
 diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
-index e38e2e5a7ddba9c140f362021b6be0b0974f7cd1..c1149705fa8de5397ec6455975b5005c310cf8e0 100644
+index e38e2e5a7ddba9c140f362021b6be0b0974f7cd1..ba7eea154870c706c053efb41b5f1de1d20665ba 100644
 --- a/src/main/java/net/minecraft/server/PlayerAdvancements.java
 +++ b/src/main/java/net/minecraft/server/PlayerAdvancements.java
 @@ -246,7 +246,7 @@ public class PlayerAdvancements {
@@ -30,12 +40,12 @@ index e38e2e5a7ddba9c140f362021b6be0b0974f7cd1..c1149705fa8de5397ec6455975b5005c
                      // Paper start - Add Adventure message to PlayerAdvancementDoneEvent
                      if (event.message() != null && this.player.level().getGameRules().getBoolean(GameRules.RULE_ANNOUNCE_ADVANCEMENTS)) {
 -                        this.playerList.broadcastSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.message()), false);
-+                        if (this.player.level().tenseiWorldConfig.advancementOnlyBroadcastToAffectedPlayer) this.player.sendSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.message())); else this.playerList.broadcastSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.message()), false); // TenseiMC
++                        if (this.player.level().purpurConfig.advancementOnlyBroadcastToAffectedPlayer) this.player.sendSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.message())); else this.playerList.broadcastSystemMessage(io.papermc.paper.adventure.PaperAdventure.asVanilla(event.message()), false); // TenseiMC
                          // Paper end
                      }
  
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 62a98ba81cbe89622dd6a545146ff52aa57de880..4a0188469f8bd9d29059e300890691f443d086dc 100644
+index 62a98ba81cbe89622dd6a545146ff52aa57de880..18faa37a3b989ffaffba03f9ef6e2876c26dac5e 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1093,7 +1093,7 @@ public class ServerPlayer extends Player {
@@ -43,7 +53,7 @@ index 62a98ba81cbe89622dd6a545146ff52aa57de880..4a0188469f8bd9d29059e300890691f4
              Team scoreboardteambase = this.getTeam();
  
 -            if (scoreboardteambase != null && scoreboardteambase.getDeathMessageVisibility() != Team.Visibility.ALWAYS) {
-+            if (this.level().tenseiWorldConfig.deathMessageOnlyBroadcastToAffectedPlayer) this.sendSystemMessage(ichatbasecomponent); else if (scoreboardteambase != null && scoreboardteambase.getDeathMessageVisibility() != Team.Visibility.ALWAYS) { // TenseiMC
++            if (this.level().purpurConfig.deathMessageOnlyBroadcastToAffectedPlayer) this.sendSystemMessage(ichatbasecomponent); else if (scoreboardteambase != null && scoreboardteambase.getDeathMessageVisibility() != Team.Visibility.ALWAYS) { // TenseiMC
                  if (scoreboardteambase.getDeathMessageVisibility() == Team.Visibility.HIDE_FOR_OTHER_TEAMS) {
                      this.server.getPlayerList().broadcastSystemToTeam(this, ichatbasecomponent);
                  } else if (scoreboardteambase.getDeathMessageVisibility() == Team.Visibility.HIDE_FOR_OWN_TEAM) {

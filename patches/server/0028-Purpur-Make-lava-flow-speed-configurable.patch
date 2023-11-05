@@ -5,10 +5,10 @@ Subject: [PATCH] Purpur - Make lava flow speed configurable
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 4ebf12ce135c9210fbd1bb48ba98e1c0a3f40e9a..525e94f0a2a01698718977c8104b4a96b3eb22d4 100644
+index 26274f76e87e112c313cce13429acade38a559ec..84528a553dfaff069d21ff069ac26841821d638b 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -134,9 +134,13 @@ public class TenseiWorldConfig {
+@@ -158,6 +158,8 @@ public class TenseiWorldConfig {
      }
  
      public int lavaInfiniteRequiredSources = 2;
@@ -16,14 +16,20 @@ index 4ebf12ce135c9210fbd1bb48ba98e1c0a3f40e9a..525e94f0a2a01698718977c8104b4a96
 +    public int lavaSpeedNotNether = 30;
      public int waterInfiniteRequiredSources = 2;
      private void liquidsSettings() {
-         lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
-+        lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
-+        lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
-         waterInfiniteRequiredSources = getInt("blocks.water.infinite-required-sources", waterInfiniteRequiredSources);
+         if (TenseiConfig.version < 2) {
+@@ -165,6 +167,10 @@ public class TenseiWorldConfig {
+             waterInfiniteRequiredSources = getInt("blocks.water.infinite-required-sources", waterInfiniteRequiredSources);
+             set("blocks.lava.infinite-required-sources", null);
+             set("blocks.water.infinite-required-sources", null);
++            lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
++            lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
++            set("blocks.lava.speed.nether", null);
++            set("blocks.lava.speed.not-nether", null);
+         }
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/material/LavaFluid.java b/src/main/java/net/minecraft/world/level/material/LavaFluid.java
-index a9f407eeb2e2bcb26e53418d5d878944bce04780..369aa58ea09d1316545cf71e41a34762f5fbd9c6 100644
+index a69011353d967aad86268cd654c9271fbcdc839b..33ee9fc9ea82799d2a15dcd3fd8f3438cbe074b4 100644
 --- a/src/main/java/net/minecraft/world/level/material/LavaFluid.java
 +++ b/src/main/java/net/minecraft/world/level/material/LavaFluid.java
 @@ -180,7 +180,7 @@ public abstract class LavaFluid extends FlowingFluid {
@@ -31,7 +37,31 @@ index a9f407eeb2e2bcb26e53418d5d878944bce04780..369aa58ea09d1316545cf71e41a34762
      @Override
      public int getTickDelay(LevelReader world) {
 -        return world.dimensionType().ultraWarm() ? 10 : 30;
-+        return world.dimensionType().ultraWarm() ? world.getWorldBorder().world.tenseiWorldConfig.lavaSpeedNether : world.getWorldBorder().world.tenseiWorldConfig.lavaSpeedNotNether; // TenseiMC
++        return world.dimensionType().ultraWarm() ? world.getWorldBorder().world.purpurConfig.lavaSpeedNether : world.getWorldBorder().world.purpurConfig.lavaSpeedNotNether; // TenseiMC
      }
  
      @Override
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index 5a26847e0c433c2e7b6bccc245725e58bad71592..f06fdb4ce3387813f406e65632ded6daab679e1a 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -170,11 +170,19 @@ public class PurpurWorldConfig {
+     }
+ 
+     public int lavaInfiniteRequiredSources = 2;
++    public int lavaSpeedNether = 10;
++    public int lavaSpeedNotNether = 30;
+     private void lavaSettings() {
+         if (TenseiConfig.version < 2) {
+             lavaInfiniteRequiredSources = this.tenseiWorldConfig.lavaInfiniteRequiredSources;
+         }
+         lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
++        if (TenseiConfig.version < 2) {
++            lavaSpeedNether = this.tenseiWorldConfig.lavaSpeedNether;
++            lavaSpeedNotNether = this.tenseiWorldConfig.lavaSpeedNotNether;
++        }
++        lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
++        lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
+     }
+ 
+     public double playerCriticalDamageMultiplier = 1.5D;

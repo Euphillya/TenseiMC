@@ -22,7 +22,7 @@ index e0caf166ee7888e9a9358fb01736b0eb2ffc0be4..faf0630c878504cda550e606c6f4ccef
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
          io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 676293d6977d2403df70a4d26a1a34bbf7c2470a..2eaea34773b5613fe6c199296d4a3beebdacc852 100644
+index 676293d6977d2403df70a4d26a1a34bbf7c2470a..f2d3109eb7d5cda318d568e074c82e47ce44fb3a 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -167,6 +167,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -37,7 +37,7 @@ index 676293d6977d2403df70a4d26a1a34bbf7c2470a..2eaea34773b5613fe6c199296d4a3bee
          this.spigotConfig = new org.spigotmc.SpigotWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName()); // Spigot
          this.paperConfig = paperWorldConfigCreator.apply(this.spigotConfig); // Paper
          this.tenseiWorldConfig = new fr.euphilia.tenseimc.TenseiWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName(), env); // TenseiMC
-+        this.purpurConfig = new org.purpurmc.purpur.PurpurWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName(), env); // TenseiMC - Purpur
++        this.purpurConfig = new org.purpurmc.purpur.PurpurWorldConfig(((net.minecraft.world.level.storage.PrimaryLevelData) worlddatamutable).getLevelName(), env, this.tenseiWorldConfig); // TenseiMC - Purpur
          this.generator = gen;
          this.world = new CraftWorld((ServerLevel) this, gen, biomeProvider, env);
  
@@ -286,7 +286,7 @@ index 0000000000000000000000000000000000000000..4c27b3a153df97dafa206de44b005780
 \ No newline at end of file
 diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..52e824d235f5eb5a9d76f23e10dcab2b7b06fb1f
+index 0000000000000000000000000000000000000000..89d8dd14823ca57c3338790bcb23690151e13ff9
 --- /dev/null
 +++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
 @@ -0,0 +1,92 @@
@@ -333,7 +333,7 @@ index 0000000000000000000000000000000000000000..52e824d235f5eb5a9d76f23e10dcab2b
 +    }
 +
 +    public void init() {
-+        log("-------- World Settings For [" + worldName + "] --------");
++        log("-------- World Settings Purpur For [" + worldName + "] --------"); // TenseiMC
 +        PurpurConfig.readConfig(PurpurWorldConfig.class, this);
 +    }
 +

@@ -5,24 +5,37 @@ Subject: [PATCH] Purpur - EnderChest 1 to 6 Rows
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index 4bc8c7f69c94be174c5385c3b8ed64670b7e673d..80e76f54978047b48990a6c928c972a7d87df43a 100644
+index b32c065215c06e82ffe6370dec12f755c5608f2a..2e53b730d14ab99bbad3525c30cfe7b4716ed90e 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -121,4 +121,12 @@ public class TenseiConfig {
+@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
+ import org.bukkit.configuration.InvalidConfigurationException;
+ import org.bukkit.configuration.file.YamlConfiguration;
+ import org.jetbrains.annotations.NotNull;
++import org.purpurmc.purpur.PurpurConfig;
+ 
+ import java.io.File;
+ import java.io.IOException;
+@@ -122,4 +123,17 @@ public class TenseiConfig {
          }
          return builder.build();
      }
 +
-+    public static boolean enderChestSixRows = false;
-+    public static boolean enderChestPermissionRows = false;
++    private static boolean enderChestSixRows = false;
++    private static boolean enderChestPermissionRows = false;
 +    private static void blockSettings() {
-+        enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
-+        org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
-+        enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
++        if (version < 2) {
++            PurpurConfig.enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
++            set("settings.blocks.ender_chest.six-rows", null);
++        }
++        if (version < 2) {
++            PurpurConfig.enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
++            set("settings.blocks.ender_chest.use-permissions-for-rows", null);
++        }
 +    }
  }
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
-index 9da89e8e9569666227081ebc6cb1f0348e1a183d..14361e0b4270c2cb84fe074ecd68f1e333ad1290 100644
+index 9da89e8e9569666227081ebc6cb1f0348e1a183d..04823def9d94a2c2d928cd584b35f168cc750022 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java
 +++ b/src/main/java/net/minecraft/server/players/PlayerList.java
 @@ -1241,6 +1241,27 @@ public abstract class PlayerList {
@@ -31,7 +44,7 @@ index 9da89e8e9569666227081ebc6cb1f0348e1a183d..14361e0b4270c2cb84fe074ecd68f1e3
          } // Paper
 +
 +        // TenseiMC start
-+        if (fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows && fr.euphilia.tenseimc.TenseiConfig.enderChestPermissionRows) {
++        if (org.purpurmc.purpur.PurpurConfig.enderChestSixRows && org.purpurmc.purpur.PurpurConfig.enderChestPermissionRows) {
 +            org.bukkit.craftbukkit.entity.CraftHumanEntity bukkit = player.getBukkitEntity();
 +            if (bukkit.hasPermission("tenseimc.enderchest.rows.six") || bukkit.hasPermission("purpur.enderchest.rows.six")) {
 +                player.sixRowEnderChestSlotCount = 54;
@@ -101,7 +114,7 @@ index 0dbfd23bbfc6ad203f048142f8c90ef741849fe1..07d7634482fc611b72ecbc5b8c280153
          return new ChestMenu(MenuType.GENERIC_9x6, syncId, playerInventory, inventory, 6);
      }
 diff --git a/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java b/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java
-index 4703f23316f82a1a942907b46d2d6dcb7d70ec37..bd52a4514ef9eac36c89e7db734a74b2d3812ee5 100644
+index 4703f23316f82a1a942907b46d2d6dcb7d70ec37..23d9eb42cdd5b2c4cc0696048865087ab0b27691 100644
 --- a/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java
 +++ b/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java
 @@ -30,11 +30,18 @@ public class PlayerEnderChestContainer extends SimpleContainer {
@@ -109,7 +122,7 @@ index 4703f23316f82a1a942907b46d2d6dcb7d70ec37..bd52a4514ef9eac36c89e7db734a74b2
  
      public PlayerEnderChestContainer(Player owner) {
 -        super(27);
-+        super(fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows ? 54 : 27); // TenseiMC
++        super(org.purpurmc.purpur.PurpurConfig.enderChestSixRows ? 54 : 27); // TenseiMC
          this.owner = owner;
          // CraftBukkit end
      }
@@ -125,7 +138,7 @@ index 4703f23316f82a1a942907b46d2d6dcb7d70ec37..bd52a4514ef9eac36c89e7db734a74b2
          this.activeChest = blockEntity;
      }
 diff --git a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
-index 7385e91f32f070e86a4e0fd3d214f55d832c7979..ed7fd0a04c941698840b12e1e0e35a0274f41007 100644
+index 7385e91f32f070e86a4e0fd3d214f55d832c7979..30f23280d1450e6f47570a6b6bf82e171a442a9c 100644
 --- a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
 @@ -85,6 +85,32 @@ public class EnderChestBlock extends AbstractChestBlock<EnderChestBlockEntity> i
@@ -133,7 +146,7 @@ index 7385e91f32f070e86a4e0fd3d214f55d832c7979..ed7fd0a04c941698840b12e1e0e35a02
                  playerEnderChestContainer.setActiveChest(enderChestBlockEntity);
                  player.openMenu(new SimpleMenuProvider((syncId, inventory, playerx) -> {
 +                    // TenseiMC start
-+                    if (fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows) {
++                    if (org.purpurmc.purpur.PurpurConfig.enderChestSixRows) {
 +                        org.bukkit.craftbukkit.entity.CraftHumanEntity bukkitPlayer = player.getBukkitEntity();
 +                        if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.six") || bukkitPlayer.hasPermission("purpur.enderchest.rows.six")) {
 +                            player.sixRowEnderChestSlotCount = 54;
@@ -162,7 +175,7 @@ index 7385e91f32f070e86a4e0fd3d214f55d832c7979..ed7fd0a04c941698840b12e1e0e35a02
                  }, CONTAINER_TITLE));
                  player.awardStat(Stats.OPEN_ENDERCHEST);
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
-index 633e6f4922ccaf59979a22885162f42c65bf628a..9ebaaf806879ed802723538ce6091e479ab293c6 100644
+index 633e6f4922ccaf59979a22885162f42c65bf628a..2730e8fd695a9bad0e991fcb98f6127cc895557f 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
 @@ -181,6 +181,12 @@ public class CraftContainer extends AbstractContainerMenu {
@@ -170,7 +183,7 @@ index 633e6f4922ccaf59979a22885162f42c65bf628a..9ebaaf806879ed802723538ce6091e47
              case CHEST:
              case ENDER_CHEST:
 +                // TenseiMC start
-+                this.delegate = new ChestMenu(fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows ?
++                this.delegate = new ChestMenu(org.purpurmc.purpur.PurpurConfig.enderChestSixRows ?
 +                        MenuType.GENERIC_9x6 : MenuType.GENERIC_9x3, windowId, bottom, top, top.getContainerSize() / 9);
 +
 +                break;
@@ -191,3 +204,21 @@ index 471ae4458e7ea7c29d7551b32cec98180fbccd4e..698d64c9a44fc2c62d13072741351119
  
          for (int i = 0; i < this.getSize(); i++) {
              if (i >= items.length) {
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurConfig.java b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+index 4c27b3a153df97dafa206de44b005780f0353986..ecebdbbf79f407993963dc3d43f0ed4b9ae91e0f 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+@@ -172,4 +172,12 @@ public class PurpurConfig {
+         }
+         return builder.build();
+     }
++
++    public static boolean enderChestSixRows = false;
++    public static boolean enderChestPermissionRows = false;
++    private static void blockSettings() {
++        enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
++        org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
++        enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
++    }
+ }
+\ No newline at end of file

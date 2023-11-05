@@ -5,7 +5,7 @@ Subject: [PATCH] Compostable items configuration.
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index 087601a4000db1325057d0de013d36d1c9430adf..fc2c3a86406e9a645e50d6f02a0ea553e05f354f 100644
+index bf1110e21a31a2acfc7df3f6e91e5b278b3a59e3..edc68abf1d012084a21eea59f40092bb4b37a363 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 @@ -2,6 +2,9 @@ package fr.euphilia.tenseimc;
@@ -18,28 +18,26 @@ index 087601a4000db1325057d0de013d36d1c9430adf..fc2c3a86406e9a645e50d6f02a0ea553
  import org.bukkit.Bukkit;
  import org.bukkit.configuration.ConfigurationSection;
  import org.bukkit.configuration.InvalidConfigurationException;
-@@ -13,8 +16,7 @@ import java.io.IOException;
+@@ -14,6 +17,7 @@ import java.io.IOException;
  import java.lang.reflect.InvocationTargetException;
  import java.lang.reflect.Method;
  import java.lang.reflect.Modifier;
--import java.util.List;
--import java.util.Map;
-+import java.util.*;
++import java.util.HashMap;
+ import java.util.List;
+ import java.util.Map;
  import java.util.logging.Level;
- 
- public class TenseiConfig {
-@@ -125,6 +127,7 @@ public class TenseiConfig {
-     public static boolean enderChestSixRows = false;
-     public static boolean enderChestPermissionRows = false;
-     public static int barrelRows = 3;
+@@ -127,6 +131,7 @@ public class TenseiConfig {
+     private static boolean enderChestSixRows = false;
+     private static boolean enderChestPermissionRows = false;
+     private static int barrelRows = 3;
 +    public static HashMap<Item, Double> itemCompostable = new HashMap<>();
      private static void blockSettings() {
-         enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
-         org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
-@@ -135,5 +138,15 @@ public class TenseiConfig {
-             barrelRows = 3;
+         if (version < 2) {
+             PurpurConfig.enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
+@@ -140,5 +145,15 @@ public class TenseiConfig {
+             PurpurConfig.barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
+             set("settings.blocks.barrel.rows", null);
          }
-         org.bukkit.event.inventory.InventoryType.BARREL.setDefaultSize(barrelRows*9);
 +        itemCompostable.clear();
 +        getMap("settings.blocks.composter.compostable", net.minecraft.world.level.block.ComposterBlock.composterBlockItem()).forEach((item, value) -> {
 +            try {

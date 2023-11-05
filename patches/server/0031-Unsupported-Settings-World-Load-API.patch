@@ -5,10 +5,10 @@ Subject: [PATCH] Unsupported Settings : World Load API
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index 8b5f44d8a9d6b4bc66ad2a6554ca48ad76d7ae41..fd2dbe80228d6a77785ff53728cff6817e5fcaa1 100644
+index dbb685483d810b9f130306ed7369907ac00a2147..1c650cc3ae2cdd01d522728b0c1a19147c337a72 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -153,7 +153,9 @@ public class TenseiConfig {
+@@ -163,7 +163,9 @@ public class TenseiConfig {
      }
  
      public static boolean useVanillaEndTeleportation = false;

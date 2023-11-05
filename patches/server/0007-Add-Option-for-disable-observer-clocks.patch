@@ -5,20 +5,31 @@ Subject: [PATCH] Add Option for disable observer clocks
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index f15cffe87dd294d25b40dae056eb6964c3610d0d..6a0cf3bc937425fe5df6cb010e8be89025abb5c6 100644
+index ec4112f013033ede28ea75a12f53d6c4218bb9de..8e4bf4f4e0ce5246763cab693b49db9f5d374ed7 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -64,4 +64,8 @@ public class TenseiWorldConfig {
+@@ -3,6 +3,7 @@ package fr.euphilia.tenseimc;
+ import org.bukkit.World;
+ import org.bukkit.configuration.ConfigurationSection;
+ import org.jetbrains.annotations.NotNull;
++import org.purpurmc.purpur.PurpurWorldConfig;
+ 
+ import java.util.List;
+ import java.util.Map;
+@@ -64,4 +65,11 @@ public class TenseiWorldConfig {
          return value.isEmpty() ? fallback : value;
      }
  
 +    public boolean disableObserverClocks = false;
 +    private void redstoneSettings() {
-+        disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
++        if (TenseiConfig.version < 2) {
++            disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
++            set("blocks.observer.disable-clock", null);
++        }
 +    }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/ObserverBlock.java b/src/main/java/net/minecraft/world/level/block/ObserverBlock.java
-index 7b45d6b9a005036ca5051d089a7be792eb87012f..9433278bb48ea40bdc625356e76e350fb0b8ca68 100644
+index 7b45d6b9a005036ca5051d089a7be792eb87012f..3836ee4965d9803eea0639aad6bc6473ee1173b9 100644
 --- a/src/main/java/net/minecraft/world/level/block/ObserverBlock.java
 +++ b/src/main/java/net/minecraft/world/level/block/ObserverBlock.java
 @@ -64,7 +64,12 @@ public class ObserverBlock extends DirectionalBlock {
@@ -26,7 +37,7 @@ index 7b45d6b9a005036ca5051d089a7be792eb87012f..9433278bb48ea40bdc625356e76e350f
      public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
          if (state.getValue(ObserverBlock.FACING) == direction && !(Boolean) state.getValue(ObserverBlock.POWERED)) {
 +            // TenseiMC start
-+            if (world.getMinecraftWorld().tenseiWorldConfig.disableObserverClocks ||
++            if (world.getMinecraftWorld().purpurConfig.disableObserverClocks ||
 +                    !(neighborState.getBlock() instanceof ObserverBlock) ||
 +                    neighborState.getValue(DirectionalBlock.FACING).getOpposite() != direction) {
              this.startSignal(world, pos);
@@ -34,3 +45,57 @@ index 7b45d6b9a005036ca5051d089a7be792eb87012f..9433278bb48ea40bdc625356e76e350f
          }
  
          return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index 89d8dd14823ca57c3338790bcb23690151e13ff9..77143a5d3038017edd2ea5889969a4b27811a55c 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -17,15 +17,14 @@ package org.purpurmc.purpur;
+ // import org.purpurmc.purpur.tool.Waxable; // TenseiMC - not implemented
+ // import org.purpurmc.purpur.tool.Weatherable; // TenseiMC - not implemented
+ // import org.apache.commons.lang.BooleanUtils; // TenseiMC - not implemented
+-import org.bukkit.ChatColor;
++import fr.euphilia.tenseimc.TenseiConfig;
++import fr.euphilia.tenseimc.TenseiWorldConfig;
+ import org.bukkit.World;
+ import org.bukkit.configuration.ConfigurationSection;
+-import java.util.ArrayList;
+-import java.util.HashMap;
++
+ import java.util.List;
+ import java.util.Map;
+-import java.util.function.Predicate;
+-import java.util.logging.Level;
++
+ import static org.purpurmc.purpur.PurpurConfig.log;
+ 
+ @SuppressWarnings("unused")
+@@ -33,10 +32,12 @@ public class PurpurWorldConfig {
+ 
+     private final String worldName;
+     private final World.Environment environment;
++    private final TenseiWorldConfig tenseiWorldConfig; // TenseiMC
+ 
+-    public PurpurWorldConfig(String worldName, World.Environment environment) {
++    public PurpurWorldConfig(String worldName, World.Environment environment, TenseiWorldConfig tenseiWorldConfig) { // TenseiMC
+         this.worldName = worldName;
+         this.environment = environment;
++        this.tenseiWorldConfig = tenseiWorldConfig;
+         init();
+     }
+ 
+@@ -89,4 +90,14 @@ public class PurpurWorldConfig {
+         final Map<String, Object> value = PurpurConfig.getMap("world-settings." + worldName + "." + path, null);
+         return value.isEmpty() ? fallback : value;
+     }
++
++    public boolean disableObserverClocks = false;
++    private void observerSettings() {
++        // TenseiMC rework start
++        if (TenseiConfig.version < 2) {
++            disableObserverClocks = this.tenseiWorldConfig.disableObserverClocks;
++        }
++        // TenseiMC rework end
++        disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
++    }
+ }
+\ No newline at end of file

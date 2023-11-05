@@ -5,24 +5,28 @@ Subject: [PATCH] "Bee can work when raining or at night"
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 96aeddaaabb6f1570f61738eb16125757f51968f..a63630f34706703cb34ce2a691b4afb26cc3f4a0 100644
+index b3e340e5ab19b30a019ec0190ef5655a7d6c303f..bbf67f54b588f643c8870c0e61eb0a48be6cd2e7 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -93,4 +93,12 @@ public class TenseiWorldConfig {
-         buddingAmethystBreakWithSilkTouch = getBoolean("blocks.budding_amethyst.break.silk_touch", buddingAmethystBreakWithSilkTouch);
-         chestOpenWithBlockOnTop = getBoolean("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
+@@ -110,4 +110,16 @@ public class TenseiWorldConfig {
+             set("blocks.chest.open-with-solid-block-on-top", null);
+         }
      }
 +
 +    public boolean beeCanWorkAtNight = false;
 +    public boolean beeCanWorkInRain = false;
 +    private void mobsSettings() {
 +        // Bee
-+        beeCanWorkAtNight = getBoolean("mobs.bee.can-work-at-night", beeCanWorkAtNight);
-+        beeCanWorkInRain = getBoolean("mobs.bee.can-work-in-rain", beeCanWorkInRain);
++        if (TenseiConfig.version < 2) {
++            beeCanWorkAtNight = getBoolean("mobs.bee.can-work-at-night", beeCanWorkAtNight);
++            beeCanWorkInRain = getBoolean("mobs.bee.can-work-in-rain", beeCanWorkInRain);
++            set("mobs.bee.can-work-at-night", null);
++            set("mobs.bee.can-work-in-rain", null);
++        }
 +    }
  }
 diff --git a/src/main/java/net/minecraft/world/entity/animal/Bee.java b/src/main/java/net/minecraft/world/entity/animal/Bee.java
-index 25fd3aea2d66503018637781ccb8b5690c02e57b..5c179c77984256bdf559758d8d48b045459f8784 100644
+index 25fd3aea2d66503018637781ccb8b5690c02e57b..12e01b572ddfaa5284433ffb6df3fa4df4ad7fa1 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/Bee.java
 +++ b/src/main/java/net/minecraft/world/entity/animal/Bee.java
 @@ -348,7 +348,7 @@ public class Bee extends Animal implements NeutralMob, FlyingAnimal {
@@ -30,12 +34,12 @@ index 25fd3aea2d66503018637781ccb8b5690c02e57b..5c179c77984256bdf559758d8d48b045
      boolean wantsToEnterHive() {
          if (this.stayOutOfHiveCountdown <= 0 && !this.beePollinateGoal.isPollinating() && !this.hasStung() && this.getTarget() == null) {
 -            boolean flag = this.isTiredOfLookingForNectar() || this.level().isRaining() || this.level().isNight() || this.hasNectar();
-+            boolean flag = this.isTiredOfLookingForNectar() || (this.level().isRaining() && !this.level().tenseiWorldConfig.beeCanWorkInRain) || (this.level().isNight() && !this.level().tenseiWorldConfig.beeCanWorkAtNight) || this.hasNectar(); // TenseiMC
++            boolean flag = this.isTiredOfLookingForNectar() || (this.level().isRaining() && !this.level().purpurConfig.beeCanWorkInRain) || (this.level().isNight() && !this.level().purpurConfig.beeCanWorkAtNight) || this.hasNectar(); // TenseiMC
  
              return flag && !this.isHiveNearFire();
          } else {
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
-index 41c9f074203915c31c1ae7a160ce509c13383f84..8751cf939d4339afc375b43d78753e0a97c9fd1a 100644
+index 41c9f074203915c31c1ae7a160ce509c13383f84..f0dde6d99fa0035ffec89701691e7f18169067dd 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 +++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 @@ -203,7 +203,7 @@ public class BeehiveBlockEntity extends BlockEntity {
@@ -43,7 +47,29 @@ index 41c9f074203915c31c1ae7a160ce509c13383f84..8751cf939d4339afc375b43d78753e0a
  
      private static boolean releaseBee(Level world, BlockPos blockposition, BlockState iblockdata, BeehiveBlockEntity.BeeData tileentitybeehive_hivebee, @Nullable List<Entity> list, BeehiveBlockEntity.BeeReleaseStatus tileentitybeehive_releasestatus, @Nullable BlockPos blockposition1, boolean force) {
 -        if (!force && (world.isNight() || world.isRaining()) && tileentitybeehive_releasestatus != BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY) {
-+        if (!force && ((world.isNight() && !world.tenseiWorldConfig.beeCanWorkAtNight) || (world.isRaining() && !world.tenseiWorldConfig.beeCanWorkInRain)) && tileentitybeehive_releasestatus != BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY) { // TenseiMC
++        if (!force && ((world.isNight() && !world.purpurConfig.beeCanWorkAtNight) || (world.isRaining() && !world.purpurConfig.beeCanWorkInRain)) && tileentitybeehive_releasestatus != BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY) { // TenseiMC
              // CraftBukkit end
              return false;
          } else {
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index 960f03367abb55014d679d4885caa4ff339fd223..ed221dd99a9678e02c74ed6fbe5f9eda438435f6 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -127,6 +127,17 @@ public class PurpurWorldConfig {
+         beaconLevelFour = getInt("blocks.beacon.effect-range.level-4", beaconLevelFour);
+     }
+ 
++    public boolean beeCanWorkAtNight = false;
++    public boolean beeCanWorkInRain = false;
++    private void beeSettings() {
++        if (TenseiConfig.version < 2) {
++            beeCanWorkAtNight = this.tenseiWorldConfig.beeCanWorkAtNight;
++            beeCanWorkInRain = this.tenseiWorldConfig.beeCanWorkInRain;
++        }
++        beeCanWorkAtNight = getBoolean("mobs.bee.can-work-at-night", beeCanWorkAtNight);
++        beeCanWorkInRain = getBoolean("mobs.bee.can-work-in-rain", beeCanWorkInRain);
++    }
++
+     public boolean chestOpenWithBlockOnTop = false;
+     private void chestSettings() {
+         if (TenseiConfig.version < 2) {

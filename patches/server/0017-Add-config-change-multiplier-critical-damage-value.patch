@@ -5,21 +5,24 @@ Subject: [PATCH] Add config change multiplier critical damage value
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index c6de83a7f275d218c61925531ae825b4e1a98202..504ee522b9be18dfbe9a8690c4a06e20e283c709 100644
+index 76701dafbf60e6b6f965824c89faa092d5ebf0c5..47d747b07a10816fb1af5340d46061810503ec76 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -81,4 +81,9 @@ public class TenseiWorldConfig {
-         beaconLevelThree = getInt("blocks.beacon.effect-range.level-3", beaconLevelThree);
-         beaconLevelFour = getInt("blocks.beacon.effect-range.level-4", beaconLevelFour);
+@@ -92,4 +92,12 @@ public class TenseiWorldConfig {
+         }
+ 
      }
 +
 +    public double playerCriticalDamageMultiplier = 1.5D;
 +    private void playerSettings() {
-+        playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
++        if (TenseiConfig.version < 2) {
++            playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
++            set("gameplay-mechanics.player.critical-damage-multiplier", null);
++        }
 +    }
  }
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
-index 97efc245e0e1dcbd5ba1c602c0a67dcf403cb7a5..c9b26438fa496b52bf329cc2d00c5bd046f4e4cf 100644
+index 97efc245e0e1dcbd5ba1c602c0a67dcf403cb7a5..82722a5cbdd9551e3aedfd6b1f5ddc1470c89d7a 100644
 --- a/src/main/java/net/minecraft/world/entity/player/Player.java
 +++ b/src/main/java/net/minecraft/world/entity/player/Player.java
 @@ -1289,7 +1289,7 @@ public abstract class Player extends LivingEntity {
@@ -27,7 +30,25 @@ index 97efc245e0e1dcbd5ba1c602c0a67dcf403cb7a5..c9b26438fa496b52bf329cc2d00c5bd0
                      flag2 = flag2 && !this.isSprinting();
                      if (flag2) {
 -                        f *= 1.5F;
-+                        f *= this.level().tenseiWorldConfig.playerCriticalDamageMultiplier; // TenseiMC
++                        f *= this.level().purpurConfig.playerCriticalDamageMultiplier; // TenseiMC
                      }
  
                      f += f1;
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index de2886b19d9639d616c63657407c0bcc4e7eae8b..790d50c037ad0aeb038d1cdd554fa2c15336b32c 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -126,4 +126,12 @@ public class PurpurWorldConfig {
+         beaconLevelThree = getInt("blocks.beacon.effect-range.level-3", beaconLevelThree);
+         beaconLevelFour = getInt("blocks.beacon.effect-range.level-4", beaconLevelFour);
+     }
++
++    public double playerCriticalDamageMultiplier = 1.5D;
++    private void playerSettings() {
++        if (TenseiConfig.version < 2) {
++            playerCriticalDamageMultiplier = this.tenseiWorldConfig.playerCriticalDamageMultiplier;
++        }
++        playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
++    }
+ }
+\ No newline at end of file
