@@ -5,23 +5,23 @@ Subject: [PATCH] Config to change max number of bees
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index edc68abf1d012084a21eea59f40092bb4b37a363..7922ba7c4175572bd378b50c03725a5b02d2df3f 100644
+index 22ce015ac324f546965ded5e27bd83e39bd964e4..b62d0ae87e6fa5d3670bb3ed74239dd184f08b20 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 @@ -132,6 +132,7 @@ public class TenseiConfig {
-     private static boolean enderChestPermissionRows = false;
-     private static int barrelRows = 3;
+     public static boolean enderChestPermissionRows = false;
+     public static int barrelRows = 3;
      public static HashMap<Item, Double> itemCompostable = new HashMap<>();
 +    public static int beeInsideBeeHive = 3;
      private static void blockSettings() {
          if (version < 2) {
-             PurpurConfig.enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
+             enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
 @@ -155,5 +156,9 @@ public class TenseiConfig {
              }
          });
          net.minecraft.world.level.block.ComposterBlock.loadComposterBlock();
 +        if (version < 2) {
-+            beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
++            PurpurConfig.beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
 +            set("settings.blocks.beehive.max-bees-inside", null);
 +        }
      }
@@ -40,7 +40,7 @@ index f0dde6d99fa0035ffec89701691e7f18169067dd..56cd23d34b5224391d86d3c4bdcb6975
      public BeehiveBlockEntity(BlockPos pos, BlockState state) {
          super(BlockEntityType.BEEHIVE, pos, state);
 diff --git a/src/main/java/org/purpurmc/purpur/PurpurConfig.java b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
-index 2565d0857a0f578ca7e10e895e8a8ac303f7daf8..aa0fda51a36ddc74d76ab97570013dffd1ad7ec7 100644
+index 9841b60b5806a579191470882330f48e850f9fdd..caaf029022a647f1ec6ae4120e10f98f493b09ea 100644
 --- a/src/main/java/org/purpurmc/purpur/PurpurConfig.java
 +++ b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
 @@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
@@ -59,10 +59,14 @@ index 2565d0857a0f578ca7e10e895e8a8ac303f7daf8..aa0fda51a36ddc74d76ab97570013dff
      public static boolean enderChestSixRows = false;
      public static boolean enderChestPermissionRows = false;
      private static void blockSettings() {
-@@ -186,5 +188,6 @@ public class PurpurConfig {
+@@ -196,5 +198,10 @@ public class PurpurConfig {
          enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
          org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
          enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
++        if (fr.euphilia.tenseimc.TenseiConfig.version < 2) {
++            beeInsideBeeHive = fr.euphilia.tenseimc.TenseiConfig.beeInsideBeeHive;
++            set("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
++        }
 +        beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
      }
  }

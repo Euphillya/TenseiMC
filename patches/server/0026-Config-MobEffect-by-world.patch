@@ -99,10 +99,10 @@ index 1f9e0c139988c4c44a26552881647d36965aa4fa..a82375935eaa334afa7ae9e770a853ef
  
      @Override
 diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-index ed221dd99a9678e02c74ed6fbe5f9eda438435f6..537e7c55d0cd2bff52a614fb878a3d66e555ec46 100644
+index af9c2fbcb3da068f23ccbaa9e76b3b1a06d68724..17091d0fc991c99daabbb55d9c13fba52db4a76b 100644
 --- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-@@ -146,6 +146,29 @@ public class PurpurWorldConfig {
+@@ -155,6 +155,35 @@ public class PurpurWorldConfig {
          chestOpenWithBlockOnTop = getBoolean("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
      }
  
@@ -120,6 +120,12 @@ index ed221dd99a9678e02c74ed6fbe5f9eda438435f6..537e7c55d0cd2bff52a614fb878a3d66
 +            entityWitherDegenerationAmount = this.tenseiWorldConfig.entityWitherDegenerationAmount;
 +            humanHungerExhaustionAmount = this.tenseiWorldConfig.humanHungerExhaustionAmount;
 +            humanSaturationRegenAmount = this.tenseiWorldConfig.humanSaturationRegenAmount;
++            set("gameplay-mechanics.mob-effects.health-regen-amount", entityHealthRegenAmount);
++            set("gameplay-mechanics.mob-effects.minimal-health-poison-amount", entityMinimalHealthPoison);
++            set("gameplay-mechanics.mob-effects.poison-degeneration-amount", entityPoisonDegenerationAmount);
++            set("gameplay-mechanics.mob-effects.wither-degeneration-amount", entityWitherDegenerationAmount);
++            set("gameplay-mechanics.mob-effects.hunger-exhaustion-amount", humanHungerExhaustionAmount);
++            set("gameplay-mechanics.mob-effects.saturation-regen-amount", humanSaturationRegenAmount);
 +        }
 +        entityHealthRegenAmount = (float) getDouble("gameplay-mechanics.mob-effects.health-regen-amount", entityHealthRegenAmount);
 +        entityMinimalHealthPoison = (float) getDouble("gameplay-mechanics.mob-effects.minimal-health-poison-amount", entityMinimalHealthPoison);

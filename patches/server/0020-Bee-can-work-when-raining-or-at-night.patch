@@ -52,10 +52,10 @@ index 41c9f074203915c31c1ae7a160ce509c13383f84..f0dde6d99fa0035ffec89701691e7f18
              return false;
          } else {
 diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-index 960f03367abb55014d679d4885caa4ff339fd223..ed221dd99a9678e02c74ed6fbe5f9eda438435f6 100644
+index 0d1b9d43ce81e4931c8e5beea2b29adfd3a56a35..af9c2fbcb3da068f23ccbaa9e76b3b1a06d68724 100644
 --- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-@@ -127,6 +127,17 @@ public class PurpurWorldConfig {
+@@ -133,6 +133,19 @@ public class PurpurWorldConfig {
          beaconLevelFour = getInt("blocks.beacon.effect-range.level-4", beaconLevelFour);
      }
  
@@ -65,6 +65,8 @@ index 960f03367abb55014d679d4885caa4ff339fd223..ed221dd99a9678e02c74ed6fbe5f9eda
 +        if (TenseiConfig.version < 2) {
 +            beeCanWorkAtNight = this.tenseiWorldConfig.beeCanWorkAtNight;
 +            beeCanWorkInRain = this.tenseiWorldConfig.beeCanWorkInRain;
++            set("mobs.bee.can-work-at-night", beeCanWorkAtNight);
++            set("mobs.bee.can-work-in-rain", beeCanWorkInRain);
 +        }
 +        beeCanWorkAtNight = getBoolean("mobs.bee.can-work-at-night", beeCanWorkAtNight);
 +        beeCanWorkInRain = getBoolean("mobs.bee.can-work-in-rain", beeCanWorkInRain);

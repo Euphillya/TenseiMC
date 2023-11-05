@@ -56,10 +56,10 @@ index 744d91546d1a810f60a43c15ed74b4158f341a4a..e6cb76e2bc25d555db087a986f5a8938
                      }
  
 diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-index 77143a5d3038017edd2ea5889969a4b27811a55c..0e3da7516e3e5601f33e6dad9315751f37c1f5a1 100644
+index e742e5935c7ed0f352ed828550fa90b02cd38c7b..fab41119d81589185731bfdaffcf3d56625a0867 100644
 --- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-@@ -100,4 +100,13 @@ public class PurpurWorldConfig {
+@@ -101,4 +101,14 @@ public class PurpurWorldConfig {
          // TenseiMC rework end
          disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
      }
@@ -69,6 +69,7 @@ index 77143a5d3038017edd2ea5889969a4b27811a55c..0e3da7516e3e5601f33e6dad9315751f
 +        // TenseiMC rework start
 +        if (TenseiConfig.version < 2) {
 +            pistonBlockPushLimit = this.tenseiWorldConfig.pistonBlockPushLimit;
++            set("blocks.piston.block-push-limit", pistonBlockPushLimit);
 +        }
 +        pistonBlockPushLimit = getInt("blocks.piston.block-push-limit", pistonBlockPushLimit);
 +    }

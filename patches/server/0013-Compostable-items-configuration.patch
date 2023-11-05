@@ -5,7 +5,7 @@ Subject: [PATCH] Compostable items configuration.
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index bf1110e21a31a2acfc7df3f6e91e5b278b3a59e3..edc68abf1d012084a21eea59f40092bb4b37a363 100644
+index 909959fe6844227d0251b85663e54bcb21739eb7..22ce015ac324f546965ded5e27bd83e39bd964e4 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 @@ -2,6 +2,9 @@ package fr.euphilia.tenseimc;
@@ -27,15 +27,15 @@ index bf1110e21a31a2acfc7df3f6e91e5b278b3a59e3..edc68abf1d012084a21eea59f40092bb
  import java.util.Map;
  import java.util.logging.Level;
 @@ -127,6 +131,7 @@ public class TenseiConfig {
-     private static boolean enderChestSixRows = false;
-     private static boolean enderChestPermissionRows = false;
-     private static int barrelRows = 3;
+     public static boolean enderChestSixRows = false;
+     public static boolean enderChestPermissionRows = false;
+     public static int barrelRows = 3;
 +    public static HashMap<Item, Double> itemCompostable = new HashMap<>();
      private static void blockSettings() {
          if (version < 2) {
-             PurpurConfig.enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
+             enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
 @@ -140,5 +145,15 @@ public class TenseiConfig {
-             PurpurConfig.barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
+             barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
              set("settings.blocks.barrel.rows", null);
          }
 +        itemCompostable.clear();

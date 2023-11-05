@@ -5,23 +5,23 @@ Subject: [PATCH] Purpur - Barrels 6 rows
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index 2e53b730d14ab99bbad3525c30cfe7b4716ed90e..bf1110e21a31a2acfc7df3f6e91e5b278b3a59e3 100644
+index bf396039ef4fa8dd711918cbcc7c45c991fbf38b..909959fe6844227d0251b85663e54bcb21739eb7 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 @@ -126,6 +126,7 @@ public class TenseiConfig {
  
-     private static boolean enderChestSixRows = false;
-     private static boolean enderChestPermissionRows = false;
-+    private static int barrelRows = 3;
+     public static boolean enderChestSixRows = false;
+     public static boolean enderChestPermissionRows = false;
++    public static int barrelRows = 3;
      private static void blockSettings() {
          if (version < 2) {
-             PurpurConfig.enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestPermissionRows);
+             enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
 @@ -135,5 +136,9 @@ public class TenseiConfig {
-             PurpurConfig.enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
+             enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
              set("settings.blocks.ender_chest.use-permissions-for-rows", null);
          }
 +        if (version < 2) {
-+            PurpurConfig.barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
++            barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
 +            set("settings.blocks.barrel.rows", null);
 +        }
      }
@@ -89,10 +89,10 @@ index 2730e8fd695a9bad0e991fcb98f6127cc895557f..e466f35911943de42f3ca808ce31b025
              case DISPENSER:
              case DROPPER:
 diff --git a/src/main/java/org/purpurmc/purpur/PurpurConfig.java b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
-index ecebdbbf79f407993963dc3d43f0ed4b9ae91e0f..2565d0857a0f578ca7e10e895e8a8ac303f7daf8 100644
+index 840aef59f276b25af8a28c99d94906fd0199c232..9841b60b5806a579191470882330f48e850f9fdd 100644
 --- a/src/main/java/org/purpurmc/purpur/PurpurConfig.java
 +++ b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
-@@ -173,9 +173,16 @@ public class PurpurConfig {
+@@ -173,9 +173,20 @@ public class PurpurConfig {
          return builder.build();
      }
  
@@ -100,12 +100,16 @@ index ecebdbbf79f407993963dc3d43f0ed4b9ae91e0f..2565d0857a0f578ca7e10e895e8a8ac3
      public static boolean enderChestSixRows = false;
      public static boolean enderChestPermissionRows = false;
      private static void blockSettings() {
++        if (fr.euphilia.tenseimc.TenseiConfig.version < 2) {
++            barrelRows = fr.euphilia.tenseimc.TenseiConfig.barrelRows;
++            set("settings.blocks.barrel.rows", barrelRows);
++        }
 +        barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
 +        if (barrelRows < 1 || barrelRows > 6) {
 +            Bukkit.getLogger().severe("settings.blocks.barrel.rows must be 1-6, resetting to default");
 +            barrelRows = 3;
 +        }
 +        org.bukkit.event.inventory.InventoryType.BARREL.setDefaultSize(barrelRows*9);
-         enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
-         org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
-         enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
+         if (fr.euphilia.tenseimc.TenseiConfig.version < 2) {
+             enderChestSixRows = fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows;
+             set("settings.blocks.ender_chest.six-rows", enderChestSixRows);

@@ -42,10 +42,10 @@ index a69011353d967aad86268cd654c9271fbcdc839b..33ee9fc9ea82799d2a15dcd3fd8f3438
  
      @Override
 diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-index 5a26847e0c433c2e7b6bccc245725e58bad71592..f06fdb4ce3387813f406e65632ded6daab679e1a 100644
+index 498989c4623f737d68fd36da12ed75192124ac8f..eaf72d43c450965b0c1547628570742ea64839e1 100644
 --- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-@@ -170,11 +170,19 @@ public class PurpurWorldConfig {
+@@ -185,11 +185,21 @@ public class PurpurWorldConfig {
      }
  
      public int lavaInfiniteRequiredSources = 2;
@@ -59,6 +59,8 @@ index 5a26847e0c433c2e7b6bccc245725e58bad71592..f06fdb4ce3387813f406e65632ded6da
 +        if (TenseiConfig.version < 2) {
 +            lavaSpeedNether = this.tenseiWorldConfig.lavaSpeedNether;
 +            lavaSpeedNotNether = this.tenseiWorldConfig.lavaSpeedNotNether;
++            set("blocks.lava.speed.nether", lavaSpeedNether);
++            set("blocks.lava.speed.not-nether", lavaSpeedNotNether);
 +        }
 +        lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
 +        lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);

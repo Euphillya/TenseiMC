@@ -35,10 +35,10 @@ index 97efc245e0e1dcbd5ba1c602c0a67dcf403cb7a5..82722a5cbdd9551e3aedfd6b1f5ddc14
  
                      f += f1;
 diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-index de2886b19d9639d616c63657407c0bcc4e7eae8b..790d50c037ad0aeb038d1cdd554fa2c15336b32c 100644
+index 5a3aac37763ac3bdd4044f262d4acda009cad51d..eb35e0be366b416618fd89a532b08619ef617fe9 100644
 --- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-@@ -126,4 +126,12 @@ public class PurpurWorldConfig {
+@@ -132,4 +132,13 @@ public class PurpurWorldConfig {
          beaconLevelThree = getInt("blocks.beacon.effect-range.level-3", beaconLevelThree);
          beaconLevelFour = getInt("blocks.beacon.effect-range.level-4", beaconLevelFour);
      }
@@ -47,6 +47,7 @@ index de2886b19d9639d616c63657407c0bcc4e7eae8b..790d50c037ad0aeb038d1cdd554fa2c1
 +    private void playerSettings() {
 +        if (TenseiConfig.version < 2) {
 +            playerCriticalDamageMultiplier = this.tenseiWorldConfig.playerCriticalDamageMultiplier;
++            set("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
 +        }
 +        playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
 +    }

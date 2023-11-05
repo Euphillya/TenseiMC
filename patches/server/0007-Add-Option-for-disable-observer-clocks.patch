@@ -46,7 +46,7 @@ index 7b45d6b9a005036ca5051d089a7be792eb87012f..3836ee4965d9803eea0639aad6bc6473
  
          return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
 diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
-index 89d8dd14823ca57c3338790bcb23690151e13ff9..77143a5d3038017edd2ea5889969a4b27811a55c 100644
+index 89d8dd14823ca57c3338790bcb23690151e13ff9..e742e5935c7ed0f352ed828550fa90b02cd38c7b 100644
 --- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
 +++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
 @@ -17,15 +17,14 @@ package org.purpurmc.purpur;
@@ -83,7 +83,7 @@ index 89d8dd14823ca57c3338790bcb23690151e13ff9..77143a5d3038017edd2ea5889969a4b2
          init();
      }
  
-@@ -89,4 +90,14 @@ public class PurpurWorldConfig {
+@@ -89,4 +90,15 @@ public class PurpurWorldConfig {
          final Map<String, Object> value = PurpurConfig.getMap("world-settings." + worldName + "." + path, null);
          return value.isEmpty() ? fallback : value;
      }
@@ -93,6 +93,7 @@ index 89d8dd14823ca57c3338790bcb23690151e13ff9..77143a5d3038017edd2ea5889969a4b2
 +        // TenseiMC rework start
 +        if (TenseiConfig.version < 2) {
 +            disableObserverClocks = this.tenseiWorldConfig.disableObserverClocks;
++            set("blocks.observer.disable-clock", disableObserverClocks);
 +        }
 +        // TenseiMC rework end
 +        disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
