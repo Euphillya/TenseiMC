@@ -5,27 +5,35 @@ Subject: [PATCH] Config to change max number of bees
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index 22ce015ac324f546965ded5e27bd83e39bd964e4..b62d0ae87e6fa5d3670bb3ed74239dd184f08b20 100644
+index f18357d363231072bd5bcf19ad056e2642231e0a..081cbd20e0cfb78ed1678447f1da3943cbccd543 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -132,6 +132,7 @@ public class TenseiConfig {
+@@ -130,6 +130,7 @@ public class TenseiConfig {
+     public static boolean enderChestSixRows = false;
      public static boolean enderChestPermissionRows = false;
      public static int barrelRows = 3;
-     public static HashMap<Item, Double> itemCompostable = new HashMap<>();
 +    public static int beeInsideBeeHive = 3;
+     public static HashMap<Item, Double> itemCompostable = new HashMap<>();
      private static void blockSettings() {
          if (version < 2) {
-             enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
-@@ -155,5 +156,9 @@ public class TenseiConfig {
-             }
-         });
-         net.minecraft.world.level.block.ComposterBlock.loadComposterBlock();
+@@ -141,6 +142,9 @@ public class TenseiConfig {
+         if (version < 2) {
+             barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
+         }
 +        if (version < 2) {
-+            PurpurConfig.beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
-+            set("settings.blocks.beehive.max-bees-inside", null);
++            beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
 +        }
+         itemCompostable.clear();
+         getMap("settings.blocks.composter.compostable", net.minecraft.world.level.block.ComposterBlock.composterBlockItem()).forEach((item, value) -> {
+             try {
+@@ -158,6 +162,7 @@ public class TenseiConfig {
+             set("settings.blocks.ender_chest.six-rows", null);
+             set("settings.blocks.ender_chest.use-permissions-for-rows", null);
+             set("settings.blocks.barrel.rows", null);
++            set("settings.blocks.beehive.max-bees-inside", null);
+         }
      }
- }
+ 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
 index f0dde6d99fa0035ffec89701691e7f18169067dd..56cd23d34b5224391d86d3c4bdcb6975bc810972 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java

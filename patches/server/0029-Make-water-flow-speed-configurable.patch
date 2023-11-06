@@ -5,24 +5,25 @@ Subject: [PATCH] Make water flow speed configurable
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 84528a553dfaff069d21ff069ac26841821d638b..1baefa7bd2b4c0221fa3b2e7772b8e09999e11d1 100644
+index 3d495c3b4b8523e35f3847dd1892cc62ae2ac704..642b15ee4eefbe5cd04cca85632930694f549df8 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -161,6 +161,7 @@ public class TenseiWorldConfig {
+@@ -119,6 +119,7 @@ public class TenseiWorldConfig {
      public int lavaSpeedNether = 10;
      public int lavaSpeedNotNether = 30;
      public int waterInfiniteRequiredSources = 2;
-+    public int waterSpeed = 5;
++    public int waterSpeed;
      private void liquidsSettings() {
          if (TenseiConfig.version < 2) {
              lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
-@@ -172,5 +173,6 @@ public class TenseiWorldConfig {
-             set("blocks.lava.speed.nether", null);
-             set("blocks.lava.speed.not-nether", null);
+@@ -126,6 +127,7 @@ public class TenseiWorldConfig {
+             lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
+             lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
          }
 +        waterSpeed = getInt("blocks.water.speed", waterSpeed);
      }
- }
+ 
+     public boolean beeCanWorkAtNight = false;
 diff --git a/src/main/java/net/minecraft/world/level/material/WaterFluid.java b/src/main/java/net/minecraft/world/level/material/WaterFluid.java
 index 2ae9f50b7d52b9d4e2659a882c33a82bf08ece08..0f3f2e030f547965024ee955c61ba43fa5d42ad9 100644
 --- a/src/main/java/net/minecraft/world/level/material/WaterFluid.java

@@ -6,10 +6,10 @@ Subject: [PATCH] Purpur - Option for chests to open even with a solid block on
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 0472d41a483da46f8b362c6f3c67f0fd81ad3028..b3e340e5ab19b30a019ec0190ef5655a7d6c303f 100644
+index 1e923c02560a52c00d3800f02224f201f39d67cb..efd8bb64030dbdb4655cd01d11cfb41d4de615d4 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -102,7 +102,12 @@ public class TenseiWorldConfig {
+@@ -78,8 +78,12 @@ public class TenseiWorldConfig {
      }
  
      public boolean buddingAmethystBreakWithSilkTouch = false;
@@ -18,10 +18,18 @@ index 0472d41a483da46f8b362c6f3c67f0fd81ad3028..b3e340e5ab19b30a019ec0190ef5655a
          buddingAmethystBreakWithSilkTouch = getBoolean("blocks.budding_amethyst.break.silk_touch", buddingAmethystBreakWithSilkTouch);
 +        if (TenseiConfig.version < 2) {
 +            chestOpenWithBlockOnTop = getBoolean("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
-+            set("blocks.chest.open-with-solid-block-on-top", null);
 +        }
      }
- }
+ 
+     public double playerCriticalDamageMultiplier = 1.5D;
+@@ -105,6 +109,7 @@ public class TenseiWorldConfig {
+             set("blocks.piston.block-push-limit", null);
+             set("blocks.beacon.effect-range", null);
+             set("gameplay-mechanics.player.critical-damage-multiplier", null);
++            set("blocks.chest.open-with-solid-block-on-top", null);
+         }
+     }
+ 
 diff --git a/src/main/java/net/minecraft/world/level/block/ChestBlock.java b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
 index 5e22d175b1048a58802cdf64ac70a8b56329e915..b32f5e021e372f2a35e3e67dc9142145d03e3192 100644
 --- a/src/main/java/net/minecraft/world/level/block/ChestBlock.java

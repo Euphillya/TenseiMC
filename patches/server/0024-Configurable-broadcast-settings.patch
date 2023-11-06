@@ -5,10 +5,10 @@ Subject: [PATCH] Configurable broadcast settings
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 2a14bf512019f9d60e8b69bdc83e9c753dccff35..2510e45f2ed205054873d5597f08c0785d209c36 100644
+index 243755164cdfe687410d4eb602fc8c686bf7efe1..867416f23802003f3012d9e64376a9c262b04de0 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -95,11 +95,15 @@ public class TenseiWorldConfig {
+@@ -108,10 +108,14 @@ public class TenseiWorldConfig {
      }
  
      public double playerCriticalDamageMultiplier = 1.5D;
@@ -17,20 +17,12 @@ index 2a14bf512019f9d60e8b69bdc83e9c753dccff35..2510e45f2ed205054873d5597f08c078
      private void playerSettings() {
          if (TenseiConfig.version < 2) {
              playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
-             set("gameplay-mechanics.player.critical-damage-multiplier", null);
          }
 +        advancementOnlyBroadcastToAffectedPlayer = getBoolean("settings.broadcasts.advancement.only-broadcast-to-affected-player", advancementOnlyBroadcastToAffectedPlayer);
 +        deathMessageOnlyBroadcastToAffectedPlayer = getBoolean("settings.broadcasts.death.only-broadcast-to-affected-player", deathMessageOnlyBroadcastToAffectedPlayer);
      }
  
-     public boolean buddingAmethystBreakWithSilkTouch = false;
-@@ -134,4 +138,6 @@ public class TenseiWorldConfig {
-             halloweenTask.init(this);
-         }
-     }
-+
-+
- }
+     public boolean disableObserverClocks = false;
 diff --git a/src/main/java/net/minecraft/server/PlayerAdvancements.java b/src/main/java/net/minecraft/server/PlayerAdvancements.java
 index e38e2e5a7ddba9c140f362021b6be0b0974f7cd1..c1149705fa8de5397ec6455975b5005c310cf8e0 100644
 --- a/src/main/java/net/minecraft/server/PlayerAdvancements.java

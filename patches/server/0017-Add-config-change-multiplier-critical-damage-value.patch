@@ -5,21 +5,30 @@ Subject: [PATCH] Add config change multiplier critical damage value
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 76701dafbf60e6b6f965824c89faa092d5ebf0c5..47d747b07a10816fb1af5340d46061810503ec76 100644
+index 9c33a3cf407d0a014fbc85053a4eafd30d310ff2..fd8a579ffca52939e539f766ba436febc33c9cc5 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -92,4 +92,12 @@ public class TenseiWorldConfig {
+@@ -77,6 +77,13 @@ public class TenseiWorldConfig {
          }
- 
      }
-+
+ 
 +    public double playerCriticalDamageMultiplier = 1.5D;
 +    private void playerSettings() {
 +        if (TenseiConfig.version < 2) {
 +            playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
-+            set("gameplay-mechanics.player.critical-damage-multiplier", null);
 +        }
 +    }
++
+     public boolean disableObserverClocks = false;
+     public int pistonBlockPushLimit = 12;
+     private void redstoneSettings() {
+@@ -92,6 +99,7 @@ public class TenseiWorldConfig {
+             set("blocks.observer.disable-clock", null);
+             set("blocks.piston.block-push-limit", null);
+             set("blocks.beacon.effect-range", null);
++            set("gameplay-mechanics.player.critical-damage-multiplier", null);
+         }
+     }
  }
 diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
 index 97efc245e0e1dcbd5ba1c602c0a67dcf403cb7a5..82722a5cbdd9551e3aedfd6b1f5ddc1470c89d7a 100644

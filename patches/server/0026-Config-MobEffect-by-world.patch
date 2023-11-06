@@ -5,14 +5,13 @@ Subject: [PATCH] Config MobEffect by world
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 2510e45f2ed205054873d5597f08c0785d209c36..51933dfd5f27a2f80fcc5a244a9ab1bd5783102a 100644
+index 867416f23802003f3012d9e64376a9c262b04de0..e89985c835b133522e45a9a503fdd41247c0181f 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -139,5 +139,21 @@ public class TenseiWorldConfig {
+@@ -87,6 +87,23 @@ public class TenseiWorldConfig {
          }
      }
  
--
 +    public float entityMinimalHealthPoison = 1.0F;
 +    public float entityHealthRegenAmount = 1.0F;
 +    public float entityPoisonDegenerationAmount = 1.0F;
@@ -27,10 +26,25 @@ index 2510e45f2ed205054873d5597f08c0785d209c36..51933dfd5f27a2f80fcc5a244a9ab1bd
 +            entityWitherDegenerationAmount = (float) getDouble("gameplay-mechanics.mob-effects.wither-degeneration-amount", entityWitherDegenerationAmount);
 +            humanHungerExhaustionAmount = (float) getDouble("gameplay-mechanics.mob-effects.hunger-exhaustion-amount", humanHungerExhaustionAmount);
 +            humanSaturationRegenAmount = (float) getDouble("gameplay-mechanics.mob-effects.saturation-regen-amount", humanSaturationRegenAmount);
-+            set("gameplay-mechanics.mob-effects", null);
 +        }
 +    }
- }
++
+     public boolean forceHalloweenSeason = false;
+     public float chanceHeadHalloweenOnEntity = 0.25F;
+     private void halloweenSettings() {
+@@ -137,6 +154,12 @@ public class TenseiWorldConfig {
+             set("blocks.chest.open-with-solid-block-on-top", null);
+             set("mobs.bee.can-work-at-night", null);
+             set("mobs.bee.can-work-in-rain", null);
++            set("gameplay-mechanics.mob-effects.health-regen-amount", null);
++            set("gameplay-mechanics.mob-effects.minimal-health-poison-amount", null);
++            set("gameplay-mechanics.mob-effects.poison-degeneration-amount", null);
++            set("gameplay-mechanics.mob-effects.wither-degeneration-amount", null);
++            set("gameplay-mechanics.mob-effects.hunger-exhaustion-amount", null);
++            set("gameplay-mechanics.mob-effects.saturation-regen-amount", null);
+         }
+     }
+ 
 diff --git a/src/main/java/net/minecraft/world/effect/HungerMobEffect.java b/src/main/java/net/minecraft/world/effect/HungerMobEffect.java
 index 3aad6bd0a1fb7bb3f9b7dab2c10c875864900750..33383b45e641369bb3574b86fedfd06e542f86ca 100644
 --- a/src/main/java/net/minecraft/world/effect/HungerMobEffect.java

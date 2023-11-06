@@ -5,10 +5,10 @@ Subject: [PATCH] Purpur - Barrels 6 rows
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index bf396039ef4fa8dd711918cbcc7c45c991fbf38b..909959fe6844227d0251b85663e54bcb21739eb7 100644
+index 9265ca7f76fc3ace51ac69554ea3853ed2042f41..bddda44bdab13d455d7a3c415d8b4e8429fa1eff 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -126,6 +126,7 @@ public class TenseiConfig {
+@@ -125,6 +125,7 @@ public class TenseiConfig {
  
      public static boolean enderChestSixRows = false;
      public static boolean enderChestPermissionRows = false;
@@ -16,16 +16,23 @@ index bf396039ef4fa8dd711918cbcc7c45c991fbf38b..909959fe6844227d0251b85663e54bcb
      private static void blockSettings() {
          if (version < 2) {
              enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
-@@ -135,5 +136,9 @@ public class TenseiConfig {
+@@ -132,12 +133,16 @@ public class TenseiConfig {
+         if (version < 2) {
              enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
-             set("settings.blocks.ender_chest.use-permissions-for-rows", null);
          }
 +        if (version < 2) {
 +            barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
-+            set("settings.blocks.barrel.rows", null);
 +        }
      }
- }
+ 
+     private static void updateConfigVersion() {
+         if (version >= 2) {
+             set("settings.blocks.ender_chest.six-rows", null);
+             set("settings.blocks.ender_chest.use-permissions-for-rows", null);
++            set("settings.blocks.barrel.rows", null);
+         }
+     }
+ 
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
 index 416aa989ebb18a8741cc9d605a1180ab830f6643..89c637babe8e0b47ffd86e3a0c239f1691347774 100644
 --- a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java

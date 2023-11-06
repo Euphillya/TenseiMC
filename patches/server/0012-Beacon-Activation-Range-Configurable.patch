@@ -5,14 +5,13 @@ Subject: [PATCH] Beacon Activation Range Configurable
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 60553c0b74367cab0572ae16dbb035d1b16c9fc2..76701dafbf60e6b6f965824c89faa092d5ebf0c5 100644
+index 181bae070ce354b1e199e644a1089ac758070593..9c33a3cf407d0a014fbc85053a4eafd30d310ff2 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -77,4 +77,19 @@ public class TenseiWorldConfig {
-             set("blocks.piston.block-push-limit", null);
-         }
+@@ -64,6 +64,19 @@ public class TenseiWorldConfig {
+         return value.isEmpty() ? fallback : value;
      }
-+
+ 
 +    public int beaconLevelOne = 20;
 +    public int beaconLevelTwo = 30;
 +    public int beaconLevelThree = 40;
@@ -23,10 +22,19 @@ index 60553c0b74367cab0572ae16dbb035d1b16c9fc2..76701dafbf60e6b6f965824c89faa092
 +            beaconLevelTwo = getInt("blocks.beacon.effect-range.level-2", beaconLevelTwo);
 +            beaconLevelThree = getInt("blocks.beacon.effect-range.level-3", beaconLevelThree);
 +            beaconLevelFour = getInt("blocks.beacon.effect-range.level-4", beaconLevelFour);
-+            set("blocks.beacon.effect-range", null);
 +        }
-+
 +    }
++
+     public boolean disableObserverClocks = false;
+     public int pistonBlockPushLimit = 12;
+     private void redstoneSettings() {
+@@ -78,6 +91,7 @@ public class TenseiWorldConfig {
+         if (TenseiConfig.version >= 2) {
+             set("blocks.observer.disable-clock", null);
+             set("blocks.piston.block-push-limit", null);
++            set("blocks.beacon.effect-range", null);
+         }
+     }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
 index 9c3a271f98e723f1d8bf3badd3fca7a19fdc6d13..3ff48acdf99e9aca2109f19cd893aece56031f05 100644

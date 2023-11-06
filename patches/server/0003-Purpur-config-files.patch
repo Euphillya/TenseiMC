@@ -42,7 +42,7 @@ index 676293d6977d2403df70a4d26a1a34bbf7c2470a..f2d3109eb7d5cda318d568e074c82e47
          this.world = new CraftWorld((ServerLevel) this, gen, biomeProvider, env);
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index e54716eb3d916c1db04f76613ac81c5516145d4c..99e0c374d3495121a08993d2581a2e33b9f98848 100644
+index 87a057b94b9743acbb8aaeda7f35528de6ecb93e..945629f5cb74d180b7eab61c550f90b2ffe77408 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1081,6 +1081,7 @@ public final class CraftServer implements Server {

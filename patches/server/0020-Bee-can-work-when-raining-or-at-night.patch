@@ -5,26 +5,34 @@ Subject: [PATCH] "Bee can work when raining or at night"
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index b3e340e5ab19b30a019ec0190ef5655a7d6c303f..bbf67f54b588f643c8870c0e61eb0a48be6cd2e7 100644
+index efd8bb64030dbdb4655cd01d11cfb41d4de615d4..2e6108681fa25c2ad61f3bdcccac11d11fb37898 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -110,4 +110,16 @@ public class TenseiWorldConfig {
-             set("blocks.chest.open-with-solid-block-on-top", null);
+@@ -86,6 +86,15 @@ public class TenseiWorldConfig {
          }
      }
-+
+ 
 +    public boolean beeCanWorkAtNight = false;
 +    public boolean beeCanWorkInRain = false;
 +    private void mobsSettings() {
-+        // Bee
 +        if (TenseiConfig.version < 2) {
 +            beeCanWorkAtNight = getBoolean("mobs.bee.can-work-at-night", beeCanWorkAtNight);
 +            beeCanWorkInRain = getBoolean("mobs.bee.can-work-in-rain", beeCanWorkInRain);
-+            set("mobs.bee.can-work-at-night", null);
-+            set("mobs.bee.can-work-in-rain", null);
 +        }
 +    }
- }
++
+     public double playerCriticalDamageMultiplier = 1.5D;
+     private void playerSettings() {
+         if (TenseiConfig.version < 2) {
+@@ -110,6 +119,8 @@ public class TenseiWorldConfig {
+             set("blocks.beacon.effect-range", null);
+             set("gameplay-mechanics.player.critical-damage-multiplier", null);
+             set("blocks.chest.open-with-solid-block-on-top", null);
++            set("mobs.bee.can-work-at-night", null);
++            set("mobs.bee.can-work-in-rain", null);
+         }
+     }
+ 
 diff --git a/src/main/java/net/minecraft/world/entity/animal/Bee.java b/src/main/java/net/minecraft/world/entity/animal/Bee.java
 index 25fd3aea2d66503018637781ccb8b5690c02e57b..12e01b572ddfaa5284433ffb6df3fa4df4ad7fa1 100644
 --- a/src/main/java/net/minecraft/world/entity/animal/Bee.java

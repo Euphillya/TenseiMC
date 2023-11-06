@@ -5,18 +5,10 @@ Subject: [PATCH] Add Option for disable observer clocks
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index ec4112f013033ede28ea75a12f53d6c4218bb9de..8e4bf4f4e0ce5246763cab693b49db9f5d374ed7 100644
+index 7c20367b93416b5434bdc29556aeafb21ea5b1c3..46abe4f55d5ccc21406f3bd3ad5b4e54eedc26c7 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -3,6 +3,7 @@ package fr.euphilia.tenseimc;
- import org.bukkit.World;
- import org.bukkit.configuration.ConfigurationSection;
- import org.jetbrains.annotations.NotNull;
-+import org.purpurmc.purpur.PurpurWorldConfig;
- 
- import java.util.List;
- import java.util.Map;
-@@ -64,4 +65,11 @@ public class TenseiWorldConfig {
+@@ -64,7 +64,15 @@ public class TenseiWorldConfig {
          return value.isEmpty() ? fallback : value;
      }
  
@@ -24,9 +16,14 @@ index ec4112f013033ede28ea75a12f53d6c4218bb9de..8e4bf4f4e0ce5246763cab693b49db9f
 +    private void redstoneSettings() {
 +        if (TenseiConfig.version < 2) {
 +            disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
-+            set("blocks.observer.disable-clock", null);
 +        }
 +    }
+     private void updateConfigVersion() {
+-
++        if (TenseiConfig.version >= 2) {
++            set("blocks.observer.disable-clock", null);
++        }
+     }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/ObserverBlock.java b/src/main/java/net/minecraft/world/level/block/ObserverBlock.java
 index 7b45d6b9a005036ca5051d089a7be792eb87012f..3836ee4965d9803eea0639aad6bc6473ee1173b9 100644

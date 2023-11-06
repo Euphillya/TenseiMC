@@ -5,10 +5,10 @@ Subject: [PATCH] Configurable piston push limit
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 8e4bf4f4e0ce5246763cab693b49db9f5d374ed7..60553c0b74367cab0572ae16dbb035d1b16c9fc2 100644
+index 46abe4f55d5ccc21406f3bd3ad5b4e54eedc26c7..181bae070ce354b1e199e644a1089ac758070593 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -66,10 +66,15 @@ public class TenseiWorldConfig {
+@@ -65,14 +65,19 @@ public class TenseiWorldConfig {
      }
  
      public boolean disableObserverClocks = false;
@@ -16,12 +16,16 @@ index 8e4bf4f4e0ce5246763cab693b49db9f5d374ed7..60553c0b74367cab0572ae16dbb035d1
      private void redstoneSettings() {
          if (TenseiConfig.version < 2) {
              disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
-             set("blocks.observer.disable-clock", null);
          }
 +        if (TenseiConfig.version < 2) {
 +            pistonBlockPushLimit = getInt("blocks.piston.block-push-limit", pistonBlockPushLimit);
-+            set("blocks.piston.block-push-limit", null);
 +        }
+     }
+     private void updateConfigVersion() {
+         if (TenseiConfig.version >= 2) {
+             set("blocks.observer.disable-clock", null);
++            set("blocks.piston.block-push-limit", null);
+         }
      }
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java b/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java

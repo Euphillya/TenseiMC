@@ -5,7 +5,7 @@ Subject: [PATCH] Halloween options and optimizations
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index bbf67f54b588f643c8870c0e61eb0a48be6cd2e7..2a14bf512019f9d60e8b69bdc83e9c753dccff35 100644
+index 2e6108681fa25c2ad61f3bdcccac11d11fb37898..243755164cdfe687410d4eb602fc8c686bf7efe1 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 @@ -1,5 +1,6 @@
@@ -15,11 +15,10 @@ index bbf67f54b588f643c8870c0e61eb0a48be6cd2e7..2a14bf512019f9d60e8b69bdc83e9c75
  import org.bukkit.World;
  import org.bukkit.configuration.ConfigurationSection;
  import org.jetbrains.annotations.NotNull;
-@@ -122,4 +123,15 @@ public class TenseiWorldConfig {
-             set("mobs.bee.can-work-in-rain", null);
+@@ -86,6 +87,17 @@ public class TenseiWorldConfig {
          }
      }
-+
+ 
 +    public boolean forceHalloweenSeason = false;
 +    public float chanceHeadHalloweenOnEntity = 0.25F;
 +    private void halloweenSettings() {
@@ -30,7 +29,10 @@ index bbf67f54b588f643c8870c0e61eb0a48be6cd2e7..2a14bf512019f9d60e8b69bdc83e9c75
 +            halloweenTask.init(this);
 +        }
 +    }
- }
++
+     public boolean beeCanWorkAtNight = false;
+     public boolean beeCanWorkInRain = false;
+     private void mobsSettings() {
 diff --git a/src/main/java/fr/euphilia/tenseimc/tasks/HalloweenTask.java b/src/main/java/fr/euphilia/tenseimc/tasks/HalloweenTask.java
 new file mode 100644
 index 0000000000000000000000000000000000000000..f99cfda0fa9dbe04c694a829d82b17b5a3ca6b7f

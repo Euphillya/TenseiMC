@@ -5,10 +5,10 @@ Subject: [PATCH] Purpur - Make lava flow speed configurable
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 26274f76e87e112c313cce13429acade38a559ec..84528a553dfaff069d21ff069ac26841821d638b 100644
+index 79b055afd96ef2cbc7a79f94793bca126da6b450..3d495c3b4b8523e35f3847dd1892cc62ae2ac704 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -158,6 +158,8 @@ public class TenseiWorldConfig {
+@@ -116,11 +116,15 @@ public class TenseiWorldConfig {
      }
  
      public int lavaInfiniteRequiredSources = 2;
@@ -17,17 +17,13 @@ index 26274f76e87e112c313cce13429acade38a559ec..84528a553dfaff069d21ff069ac26841
      public int waterInfiniteRequiredSources = 2;
      private void liquidsSettings() {
          if (TenseiConfig.version < 2) {
-@@ -165,6 +167,10 @@ public class TenseiWorldConfig {
+             lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
              waterInfiniteRequiredSources = getInt("blocks.water.infinite-required-sources", waterInfiniteRequiredSources);
-             set("blocks.lava.infinite-required-sources", null);
-             set("blocks.water.infinite-required-sources", null);
 +            lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
 +            lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
-+            set("blocks.lava.speed.nether", null);
-+            set("blocks.lava.speed.not-nether", null);
          }
      }
- }
+ 
 diff --git a/src/main/java/net/minecraft/world/level/material/LavaFluid.java b/src/main/java/net/minecraft/world/level/material/LavaFluid.java
 index a69011353d967aad86268cd654c9271fbcdc839b..33ee9fc9ea82799d2a15dcd3fd8f3438cbe074b4 100644
 --- a/src/main/java/net/minecraft/world/level/material/LavaFluid.java

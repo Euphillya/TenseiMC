@@ -5,35 +5,33 @@ Subject: [PATCH] Purpur - EnderChest 1 to 6 Rows
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index b32c065215c06e82ffe6370dec12f755c5608f2a..bf396039ef4fa8dd711918cbcc7c45c991fbf38b 100644
+index 526447c3d298706b7f5c18342562a19a3715cc45..9265ca7f76fc3ace51ac69554ea3853ed2042f41 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
- import org.bukkit.configuration.InvalidConfigurationException;
- import org.bukkit.configuration.file.YamlConfiguration;
- import org.jetbrains.annotations.NotNull;
-+import org.purpurmc.purpur.PurpurConfig;
- 
- import java.io.File;
- import java.io.IOException;
-@@ -122,4 +123,17 @@ public class TenseiConfig {
-         }
+@@ -123,8 +123,22 @@ public class TenseiConfig {
          return builder.build();
      }
-+
+ 
+-    private static void updateConfigVersion() {
 +    public static boolean enderChestSixRows = false;
 +    public static boolean enderChestPermissionRows = false;
 +    private static void blockSettings() {
 +        if (version < 2) {
 +            enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
-+            set("settings.blocks.ender_chest.six-rows", null);
 +        }
 +        if (version < 2) {
 +            enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
-+            set("settings.blocks.ender_chest.use-permissions-for-rows", null);
 +        }
 +    }
- }
+ 
++    private static void updateConfigVersion() {
++        if (version >= 2) {
++            set("settings.blocks.ender_chest.six-rows", null);
++            set("settings.blocks.ender_chest.use-permissions-for-rows", null);
++        }
+     }
+ 
+     public static boolean useVanillaEndTeleportation = false;
 diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
 index 9da89e8e9569666227081ebc6cb1f0348e1a183d..04823def9d94a2c2d928cd584b35f168cc750022 100644
 --- a/src/main/java/net/minecraft/server/players/PlayerList.java

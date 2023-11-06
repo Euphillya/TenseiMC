@@ -5,25 +5,34 @@ Subject: [PATCH] Purpur - Implement infinite liquids
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 51933dfd5f27a2f80fcc5a244a9ab1bd5783102a..26274f76e87e112c313cce13429acade38a559ec 100644
+index e89985c835b133522e45a9a503fdd41247c0181f..79b055afd96ef2cbc7a79f94793bca126da6b450 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -156,4 +156,15 @@ public class TenseiWorldConfig {
-             set("gameplay-mechanics.mob-effects", null);
+@@ -115,6 +115,15 @@ public class TenseiWorldConfig {
          }
      }
-+
+ 
 +    public int lavaInfiniteRequiredSources = 2;
 +    public int waterInfiniteRequiredSources = 2;
 +    private void liquidsSettings() {
 +        if (TenseiConfig.version < 2) {
 +            lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
 +            waterInfiniteRequiredSources = getInt("blocks.water.infinite-required-sources", waterInfiniteRequiredSources);
-+            set("blocks.lava.infinite-required-sources", null);
-+            set("blocks.water.infinite-required-sources", null);
 +        }
 +    }
- }
++
+     public boolean beeCanWorkAtNight = false;
+     public boolean beeCanWorkInRain = false;
+     private void mobsSettings() {
+@@ -160,6 +169,8 @@ public class TenseiWorldConfig {
+             set("gameplay-mechanics.mob-effects.wither-degeneration-amount", null);
+             set("gameplay-mechanics.mob-effects.hunger-exhaustion-amount", null);
+             set("gameplay-mechanics.mob-effects.saturation-regen-amount", null);
++            set("blocks.lava.infinite-required-sources", null);
++            set("blocks.water.infinite-required-sources", null);
+         }
+     }
+ 
 diff --git a/src/main/java/net/minecraft/world/level/material/FlowingFluid.java b/src/main/java/net/minecraft/world/level/material/FlowingFluid.java
 index e21f4c5aff3a8e97101f6efc1349fbecf326b5ea..2059c7e22440ef90e2798d89d3855c66852fff06 100644
 --- a/src/main/java/net/minecraft/world/level/material/FlowingFluid.java

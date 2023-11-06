@@ -5,15 +5,16 @@ Subject: [PATCH] Unsupported Settings : World Load API
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index dbb685483d810b9f130306ed7369907ac00a2147..1c650cc3ae2cdd01d522728b0c1a19147c337a72 100644
+index 081cbd20e0cfb78ed1678447f1da3943cbccd543..60f14a5a88fefef303820e93d8922955a0a0d50a 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -163,7 +163,9 @@ public class TenseiConfig {
+@@ -166,8 +166,10 @@ public class TenseiConfig {
+         }
      }
  
-     public static boolean useVanillaEndTeleportation = false;
 +    public static boolean createWorldDisabled = true;
-     private static void settingsUnsupported() {
+     public static boolean useVanillaEndTeleportation = false;
+     private static void unsupportedSettings() {
          useVanillaEndTeleportation = getBoolean("settings.unsupported.pr-folia.vanilla-end-teleportation", useVanillaEndTeleportation);
 +        createWorldDisabled = getBoolean("settings.unsupported.create-world-api-disabled", createWorldDisabled);
      }

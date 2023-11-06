@@ -5,18 +5,26 @@ Subject: [PATCH] BuddingAmethyst recoverable with SilkTouch
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 47d747b07a10816fb1af5340d46061810503ec76..0472d41a483da46f8b362c6f3c67f0fd81ad3028 100644
+index fd8a579ffca52939e539f766ba436febc33c9cc5..1e923c02560a52c00d3800f02224f201f39d67cb 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -100,4 +100,9 @@ public class TenseiWorldConfig {
-             set("gameplay-mechanics.player.critical-damage-multiplier", null);
+@@ -77,6 +77,11 @@ public class TenseiWorldConfig {
          }
      }
-+
+ 
 +    public boolean buddingAmethystBreakWithSilkTouch = false;
 +    private void blockSettings() {
 +        buddingAmethystBreakWithSilkTouch = getBoolean("blocks.budding_amethyst.break.silk_touch", buddingAmethystBreakWithSilkTouch);
 +    }
++
+     public double playerCriticalDamageMultiplier = 1.5D;
+     private void playerSettings() {
+         if (TenseiConfig.version < 2) {
+@@ -102,4 +107,5 @@ public class TenseiWorldConfig {
+             set("gameplay-mechanics.player.critical-damage-multiplier", null);
+         }
+     }
++
  }
 diff --git a/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java b/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java
 index 2548244c089dff583c8c424dcaa5504caedf3f10..48b0f6a7700760660745afb135c77c6e0af5a233 100644
