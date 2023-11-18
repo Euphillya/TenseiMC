@@ -21,10 +21,10 @@ index 2cdfb1b060878189ca00923e50574849adb983b8..526447c3d298706b7f5c18342562a19a
 +    }
  }
 diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
-index e1b6673729e71bdc929bc7b76983108a59e55891..c10a8c7b04b8303ad215b68efe59fed3eca61f8b 100644
+index 385d5bc08928dd990b690b926e174af86f178c64..b00b14e9369fb4ce7a9f3ff8cb770fc6ab1cfd3a 100644
 --- a/src/main/java/net/minecraft/world/entity/Entity.java
 +++ b/src/main/java/net/minecraft/world/entity/Entity.java
-@@ -4099,9 +4099,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+@@ -4090,9 +4090,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
  
                              // the portal obsidian is placed at targetPos.y - 2, so if we want to place the entity
                              // on the obsidian, we need to spawn at targetPos.y - 1
@@ -46,10 +46,10 @@ index e1b6673729e71bdc929bc7b76983108a59e55891..c10a8c7b04b8303ad215b68efe59fed3
                      );
                  } else {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 945629f5cb74d180b7eab61c550f90b2ffe77408..99e0c374d3495121a08993d2581a2e33b9f98848 100644
+index 92809ef69b80a69f83e61f9aa0d26e54402a6f80..21e63ca15f9ca775293f0010e5fff5149a976f19 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -999,7 +999,7 @@ public final class CraftServer implements Server {
+@@ -1001,7 +1001,7 @@ public final class CraftServer implements Server {
                  null,
                  1L
              );
@@ -58,7 +58,7 @@ index 945629f5cb74d180b7eab61c550f90b2ffe77408..99e0c374d3495121a08993d2581a2e33
              io.papermc.paper.threadedregions.RegionizedServer.getInstance().addTask(() -> {
                  CraftServer.this.dispatchCommand(sender, commandLine);
              });
-@@ -1019,7 +1019,7 @@ public final class CraftServer implements Server {
+@@ -1021,7 +1021,7 @@ public final class CraftServer implements Server {
          // Folia start - region threading
          if ((sender instanceof Entity entity)) {
              io.papermc.paper.util.TickThread.ensureTickThread(((org.bukkit.craftbukkit.entity.CraftEntity)entity).getHandle(), "Dispatching command async");

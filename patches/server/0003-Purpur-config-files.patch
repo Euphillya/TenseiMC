@@ -5,7 +5,7 @@ Subject: [PATCH] Purpur config files
 
 
 diff --git a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
-index e0caf166ee7888e9a9358fb01736b0eb2ffc0be4..faf0630c878504cda550e606c6f4ccef9494e0ec 100644
+index 85ca1e906579ccabece996431be59817be09efd2..20a323d7335cd13226c2d5ffd5ee1051a50d6c9d 100644
 --- a/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 +++ b/src/main/java/net/minecraft/server/dedicated/DedicatedServer.java
 @@ -221,10 +221,12 @@ public class DedicatedServer extends MinecraftServer implements ServerInterface
@@ -22,7 +22,7 @@ index e0caf166ee7888e9a9358fb01736b0eb2ffc0be4..faf0630c878504cda550e606c6f4ccef
          com.destroystokyo.paper.VersionHistoryManager.INSTANCE.getClass(); // load version history now
          io.papermc.paper.brigadier.PaperBrigadierProviderImpl.INSTANCE.getClass(); // init PaperBrigadierProvider
 diff --git a/src/main/java/net/minecraft/world/level/Level.java b/src/main/java/net/minecraft/world/level/Level.java
-index 676293d6977d2403df70a4d26a1a34bbf7c2470a..f2d3109eb7d5cda318d568e074c82e47ce44fb3a 100644
+index c9cb15018bc84292d931ce7e99f0aba40d0e899b..cc86a3650d130ea5d08983e4f37f08328a4c39cb 100644
 --- a/src/main/java/net/minecraft/world/level/Level.java
 +++ b/src/main/java/net/minecraft/world/level/Level.java
 @@ -167,6 +167,7 @@ public abstract class Level implements LevelAccessor, AutoCloseable {
@@ -42,18 +42,18 @@ index 676293d6977d2403df70a4d26a1a34bbf7c2470a..f2d3109eb7d5cda318d568e074c82e47
          this.world = new CraftWorld((ServerLevel) this, gen, biomeProvider, env);
  
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 87a057b94b9743acbb8aaeda7f35528de6ecb93e..945629f5cb74d180b7eab61c550f90b2ffe77408 100644
+index 8edf5dc6a997a2752605af5e161e20fba26d7ad9..92809ef69b80a69f83e61f9aa0d26e54402a6f80 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1081,6 +1081,7 @@ public final class CraftServer implements Server {
-         org.spigotmc.SpigotConfig.init((File) console.options.valueOf("spigot-settings")); // Spigot
+@@ -1083,6 +1083,7 @@ public final class CraftServer implements Server {
+         org.spigotmc.SpigotConfig.init((File) this.console.options.valueOf("spigot-settings")); // Spigot
          this.console.paperConfigurations.reloadConfigs(this.console);
          fr.euphilia.tenseimc.TenseiConfig.init((File) console.options.valueOf("tenseimc-settings")); // TenseiMC
 +        org.purpurmc.purpur.PurpurConfig.init((File) console.options.valueOf("purpur-settings")); // TenseiMC - Purpur
          for (ServerLevel world : this.console.getAllLevels()) {
              // world.serverLevelData.setDifficulty(config.difficulty); // Paper - per level difficulty
              world.setSpawnSettings(world.serverLevelData.getDifficulty() != Difficulty.PEACEFUL && config.spawnMonsters, config.spawnAnimals); // Paper - per level difficulty (from MinecraftServer#setDifficulty(ServerLevel, Difficulty, boolean))
-@@ -1097,6 +1098,7 @@ public final class CraftServer implements Server {
+@@ -1099,6 +1100,7 @@ public final class CraftServer implements Server {
              }
              world.spigotConfig.init(); // Spigot
              world.tenseiWorldConfig.init(); // TenseiMC
@@ -61,7 +61,7 @@ index 87a057b94b9743acbb8aaeda7f35528de6ecb93e..945629f5cb74d180b7eab61c550f90b2
          }
  
          Plugin[] pluginClone = pluginManager.getPlugins().clone(); // Paper
-@@ -1112,6 +1114,7 @@ public final class CraftServer implements Server {
+@@ -1114,6 +1116,7 @@ public final class CraftServer implements Server {
          this.reloadData();
          org.spigotmc.SpigotConfig.registerCommands(); // Spigot
          io.papermc.paper.command.PaperCommands.registerCommands(this.console); // Paper
@@ -69,7 +69,7 @@ index 87a057b94b9743acbb8aaeda7f35528de6ecb93e..945629f5cb74d180b7eab61c550f90b2
          this.overrideAllCommandBlockCommands = this.commandsConfiguration.getStringList("command-block-overrides").contains("*");
          this.ignoreVanillaPermissions = this.commandsConfiguration.getBoolean("ignore-vanilla-permissions");
  
-@@ -2965,6 +2968,15 @@ public final class CraftServer implements Server {
+@@ -3029,6 +3032,15 @@ public final class CraftServer implements Server {
              return fr.euphilia.tenseimc.TenseiConfig.config;
          }
  
@@ -86,7 +86,7 @@ index 87a057b94b9743acbb8aaeda7f35528de6ecb93e..945629f5cb74d180b7eab61c550f90b2
  
          @Override
 diff --git a/src/main/java/org/bukkit/craftbukkit/Main.java b/src/main/java/org/bukkit/craftbukkit/Main.java
-index 266122ad86855de1b9e7c50b528637831376ac7e..b3e9f339249d0a0af9e5e162b8b4d834a456a43f 100644
+index 399daebe38ef5d9afa6d648f4ed9ee0d52a8f1d9..e84468716def70777addbf0fd2a7bb3747e47a7c 100644
 --- a/src/main/java/org/bukkit/craftbukkit/Main.java
 +++ b/src/main/java/org/bukkit/craftbukkit/Main.java
 @@ -179,6 +179,12 @@ public class Main {

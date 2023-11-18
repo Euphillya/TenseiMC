@@ -5,10 +5,10 @@ Subject: [PATCH] More API Enchantment
 
 
 diff --git a/src/main/java/org/bukkit/craftbukkit/enchantments/CraftEnchantment.java b/src/main/java/org/bukkit/craftbukkit/enchantments/CraftEnchantment.java
-index 3d0ce0803e1da8a2681a3cb41096ac942ece54a1..005b6ded1d5fa4184ec49e0580721f81ca23faa9 100644
+index 21e83238a0bad86ffacf60d5c5612771a49ef33d..378da3287d4102f5770ff7f315e758e62b344c3e 100644
 --- a/src/main/java/org/bukkit/craftbukkit/enchantments/CraftEnchantment.java
 +++ b/src/main/java/org/bukkit/craftbukkit/enchantments/CraftEnchantment.java
-@@ -225,6 +225,18 @@ public class CraftEnchantment extends Enchantment {
+@@ -235,6 +235,18 @@ public class CraftEnchantment extends Enchantment {
          return java.util.stream.Stream.of(target.slots).map(org.bukkit.craftbukkit.CraftEquipmentSlot::getSlot).collect(java.util.stream.Collectors.toSet());
      }
  

@@ -5,10 +5,10 @@ Subject: [PATCH] Purpur config files
 
 
 diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
-index 41bf1e46762db4a56bf04f6a62a909c0c04b4c43..73f79b1d5413c4ed82f68bf0d48f84c27ec8e52e 100644
+index d56ce86527179537e7c92ba8d8fbbdd68b1b662c..696608b24cc96113ad7e474deecca2efa005bd25 100644
 --- a/src/main/java/org/bukkit/Server.java
 +++ b/src/main/java/org/bukkit/Server.java
-@@ -2126,6 +2126,16 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+@@ -2195,6 +2195,16 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
          public org.bukkit.configuration.file.YamlConfiguration getTenseiConfig()  {
              throw new UnsupportedOperationException("Not supported yet");
          }

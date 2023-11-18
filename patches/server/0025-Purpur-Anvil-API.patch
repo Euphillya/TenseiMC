@@ -5,7 +5,7 @@ Subject: [PATCH] Purpur - Anvil API
 
 
 diff --git a/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java b/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
-index ffd349c1b80df0f1e8c02bda23700184825170fd..9ca12dea4dfca88f238fdf5041c1d08fc41a82e0 100644
+index f664da5a8413bb13cc95d2cf1604f11a5d285dae..898234efd3d9fb6a9a92bfcacba761a449c0b162 100644
 --- a/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
 +++ b/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
 @@ -76,6 +76,7 @@ public abstract class AbstractContainerMenu {
@@ -17,7 +17,7 @@ index ffd349c1b80df0f1e8c02bda23700184825170fd..9ca12dea4dfca88f238fdf5041c1d08f
      // CraftBukkit start
      public boolean checkReachable = true;
 diff --git a/src/main/java/net/minecraft/world/inventory/AnvilMenu.java b/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
-index e0c3a4ba27e21c3692e601acd0af60873bcbb84c..6c2f5e7780b31311f4714bc08f267f7cb5215d4c 100644
+index f00638e9d7baf8b803dd610f2bf6250da34efab3..4349458fe6ca0bc243128da00eab8e1edb7f97d7 100644
 --- a/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
 +++ b/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
 @@ -23,6 +23,15 @@ import org.slf4j.Logger;
@@ -108,7 +108,7 @@ index e0c3a4ba27e21c3692e601acd0af60873bcbb84c..6c2f5e7780b31311f4714bc08f267f7c
              }
 @@ -315,6 +339,12 @@ public class AnvilMenu extends ItemCombinerMenu {
              org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(this.getBukkitView(), itemstack1); // CraftBukkit
-             sendAllDataToRemote(); // CraftBukkit - SPIGOT-6686: Always send completed inventory to stay in sync with client
+             this.sendAllDataToRemote(); // CraftBukkit - SPIGOT-6686: Always send completed inventory to stay in sync with client
              this.broadcastChanges();
 +            // TenseiMC start
 +            if (this.canDoUnsafeEnchants && itemstack1 != ItemStack.EMPTY) {
@@ -134,7 +134,7 @@ index c2cf5a8e788637c6264cf43d712a5be223ff1cc5..15ef1d57b561eaef2f62d19de3c0c0c2
  
          return itemstack;
 diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java
-index 88d3ca586ff6905f18a8ab9f0e229f440ed44088..67f1974111ccf1b92cd0415d9772fba3143d8fdc 100644
+index 9ee14589d63bbfc0880f2eee5e924fe946ee0035..6e26e2c172492ec6c1bd3ed45635ff4ec4e99703 100644
 --- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java
 +++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java
 @@ -9,7 +9,7 @@ import org.bukkit.inventory.AnvilInventory;
@@ -148,7 +148,7 @@ index 88d3ca586ff6905f18a8ab9f0e229f440ed44088..67f1974111ccf1b92cd0415d9772fba3
          super(inventory, resultInventory);
 @@ -57,4 +57,26 @@ public class CraftInventoryAnvil extends CraftResultInventory implements AnvilIn
          Preconditions.checkArgument(levels >= 0, "Maximum repair cost must be positive (or 0)");
-         container.maximumRepairCost = levels;
+         this.container.maximumRepairCost = levels;
      }
 +
 +    // TenseiMC start
