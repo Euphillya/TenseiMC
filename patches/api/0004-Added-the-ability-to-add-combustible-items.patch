@@ -1,0 +1,62 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Mon, 22 May 2023 00:01:46 +0200
+Subject: [PATCH] Added the ability to add combustible items
+
+
+diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
+index b7e1c8bd8dd38e1a9e74925740b22dad61a75f49..5a652f427b01b62d1af458f97b090cea7f52519b 100644
+--- a/src/main/java/org/bukkit/Bukkit.java
++++ b/src/main/java/org/bukkit/Bukkit.java
+@@ -2840,4 +2840,25 @@ public final class Bukkit {
+     public static Server.Spigot spigot() {
+         return server.spigot();
+     }
++
++    // TenseiMC start
++    /**
++     * Add an Item as fuel for furnaces
++     *
++     * @param material The material that will be the fuel
++     * @param burnTime The time (in ticks) this item will burn for
++     */
++    public static void addFuel(@NotNull Material material, int burnTime) {
++        server.addFuel(material, burnTime);
++    }
++
++    /**
++     * Remove an item as fuel for furnaces
++     *
++     * @param material The material that will no longer be a fuel
++     */
++    public static void removeFuel(@NotNull Material material) {
++        server.removeFuel(material);
++    }
++    // TenseiMC end
+ }
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index 696608b24cc96113ad7e474deecca2efa005bd25..10f026e8219f30514d45ca118708eb4a0194b4da 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -2496,4 +2496,21 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+      */
+     public boolean isGlobalTickThread();
+     // Folia end - region threading API
++
++    // TenseiMC start
++    /**
++     * Add an Item as fuel for furnaces
++     *
++     * @param material The material that will be the fuel
++     * @param burnTime The time (in ticks) this item will burn for
++     */
++    void addFuel(@NotNull Material material, int burnTime);
++
++    /**
++     * Remove an item as fuel for furnaces
++     *
++     * @param material The material that will no longer be a fuel
++     */
++    void removeFuel(@NotNull Material material);
++    // TenseiMC end
+ }

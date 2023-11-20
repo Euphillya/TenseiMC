@@ -1,0 +1,81 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Mon, 22 May 2023 12:51:34 +0200
+Subject: [PATCH] Configurable piston push limit
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+index 46abe4f55d5ccc21406f3bd3ad5b4e54eedc26c7..181bae070ce354b1e199e644a1089ac758070593 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+@@ -65,14 +65,19 @@ public class TenseiWorldConfig {
+     }
+ 
+     public boolean disableObserverClocks = false;
++    public int pistonBlockPushLimit = 12;
+     private void redstoneSettings() {
+         if (TenseiConfig.version < 2) {
+             disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
+         }
++        if (TenseiConfig.version < 2) {
++            pistonBlockPushLimit = getInt("blocks.piston.block-push-limit", pistonBlockPushLimit);
++        }
+     }
+     private void updateConfigVersion() {
+         if (TenseiConfig.version >= 2) {
+             set("blocks.observer.disable-clock", null);
++            set("blocks.piston.block-push-limit", null);
+         }
+     }
+ }
+diff --git a/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java b/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java
+index 744d91546d1a810f60a43c15ed74b4158f341a4a..e6cb76e2bc25d555db087a986f5a8938af10869b 100644
+--- a/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java
++++ b/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java
+@@ -86,7 +86,7 @@ public class PistonStructureResolver {
+             return true;
+         } else {
+             int i = 1;
+-            if (i + this.toPush.size() > 12) {
++            if (i + this.toPush.size() > this.level.purpurConfig.pistonBlockPushLimit) { // TenseiMC
+                 return false;
+             } else {
+                 while(isSticky(blockState)) {
+@@ -98,7 +98,7 @@ public class PistonStructureResolver {
+                     }
+ 
+                     ++i;
+-                    if (i + this.toPush.size() > 12) {
++                    if (i + this.toPush.size() > this.level.purpurConfig.pistonBlockPushLimit) { // TenseiMC
+                         return false;
+                     }
+                 }
+@@ -142,7 +142,7 @@ public class PistonStructureResolver {
+                         return true;
+                     }
+ 
+-                    if (this.toPush.size() >= 12) {
++                    if (this.toPush.size() >= this.level.purpurConfig.pistonBlockPushLimit) { // TenseiMC
+                         return false;
+                     }
+ 
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index e742e5935c7ed0f352ed828550fa90b02cd38c7b..fab41119d81589185731bfdaffcf3d56625a0867 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -101,4 +101,14 @@ public class PurpurWorldConfig {
+         // TenseiMC rework end
+         disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
+     }
++
++    public int pistonBlockPushLimit = 12;
++    private void pistonSettings() {
++        // TenseiMC rework start
++        if (TenseiConfig.version < 2) {
++            pistonBlockPushLimit = this.tenseiWorldConfig.pistonBlockPushLimit;
++            set("blocks.piston.block-push-limit", pistonBlockPushLimit);
++        }
++        pistonBlockPushLimit = getInt("blocks.piston.block-push-limit", pistonBlockPushLimit);
++    }
+ }
+\ No newline at end of file

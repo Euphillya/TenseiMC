@@ -1,0 +1,175 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <Blake.Galbreath@GMail.com>
+Date: Fri, 14 Jul 2023 23:36:49 +0200
+Subject: [PATCH] Purpur - Anvil API
+
+
+diff --git a/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java b/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
+index f664da5a8413bb13cc95d2cf1604f11a5d285dae..898234efd3d9fb6a9a92bfcacba761a449c0b162 100644
+--- a/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
+@@ -76,6 +76,7 @@ public abstract class AbstractContainerMenu {
+     @Nullable
+     private ContainerSynchronizer synchronizer;
+     private boolean suppressRemoteUpdates;
++    @javax.annotation.Nullable protected ItemStack activeQuickItem = null; // TenseiMC
+ 
+     // CraftBukkit start
+     public boolean checkReachable = true;
+diff --git a/src/main/java/net/minecraft/world/inventory/AnvilMenu.java b/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
+index f00638e9d7baf8b803dd610f2bf6250da34efab3..4349458fe6ca0bc243128da00eab8e1edb7f97d7 100644
+--- a/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
+@@ -23,6 +23,15 @@ import org.slf4j.Logger;
+ import org.bukkit.craftbukkit.inventory.CraftInventoryView;
+ // CraftBukkit end
+ 
++// TenseiMC start
++import net.minecraft.nbt.IntTag;
++import net.minecraft.network.protocol.game.ClientboundContainerSetDataPacket;
++import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
++import net.minecraft.server.level.ServerPlayer;
++import org.purpurmc.purpur.event.inventory.AnvilTakeResultEvent;
++import org.purpurmc.purpur.event.inventory.AnvilUpdateResultEvent;
++// TenseiMC end
++
+ public class AnvilMenu extends ItemCombinerMenu {
+ 
+     public static final int INPUT_SLOT = 0;
+@@ -51,6 +60,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+     public int maximumRepairCost = 40;
+     private CraftInventoryView bukkitEntity;
+     // CraftBukkit end
++    public boolean bypassCost = false, canDoUnsafeEnchants = false; // TenseiMC start
+ 
+     public AnvilMenu(int syncId, Inventory inventory) {
+         this(syncId, inventory, ContainerLevelAccess.NULL);
+@@ -78,13 +88,15 @@ public class AnvilMenu extends ItemCombinerMenu {
+ 
+     @Override
+     protected boolean mayPickup(Player player, boolean present) {
+-        return (player.getAbilities().instabuild || player.experienceLevel >= this.cost.get()) && this.cost.get() > AnvilMenu.DEFAULT_DENIED_COST && present; // CraftBukkit - allow cost 0 like a free item
++        return (player.getAbilities().instabuild || player.experienceLevel >= this.cost.get()) && (bypassCost || this.cost.get() > AnvilMenu.DEFAULT_DENIED_COST) && present; // CraftBukkit - allow cost 0 like a free item // TenseiMC
+     }
+ 
+     @Override
+     protected void onTake(Player player, ItemStack stack) {
++        ItemStack itemstack = activeQuickItem == null ? stack : activeQuickItem; // TenseiMC
++        if (AnvilTakeResultEvent.getHandlerList().getRegisteredListeners().length > 0) new AnvilTakeResultEvent(player.getBukkitEntity(), getBukkitView(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack)).callEvent(); // TenseiMC
+         if (!player.getAbilities().instabuild) {
+-            player.giveExperienceLevels(-this.cost.get());
++            if (bypassCost) ((ServerPlayer) player).lastSentExp = -1; else player.giveExperienceLevels(-this.cost.get()); // TenseiMC
+         }
+ 
+         this.inputSlots.setItem(0, ItemStack.EMPTY);
+@@ -134,6 +146,11 @@ public class AnvilMenu extends ItemCombinerMenu {
+ 
+     @Override
+     public void createResult() {
++        // TenseiMC start
++        this.bypassCost = false;
++        this.canDoUnsafeEnchants = false;
++        if (AnvilUpdateResultEvent.getHandlerList().getRegisteredListeners().length > 0) new AnvilUpdateResultEvent(getBukkitView()).callEvent();
++        // TenseiMC
+         ItemStack itemstack = this.inputSlots.getItem(0);
+ 
+         this.cost.set(1);
+@@ -210,7 +227,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+                             int i2 = (Integer) map1.get(enchantment);
+ 
+                             i2 = l1 == i2 ? i2 + 1 : Math.max(i2, l1);
+-                            boolean flag3 = enchantment.canEnchant(itemstack);
++                            boolean flag3 = this.canDoUnsafeEnchants || enchantment.canEnchant(itemstack); // TenseiMC
+ 
+                             if (this.player.getAbilities().instabuild || itemstack.is(Items.ENCHANTED_BOOK)) {
+                                 flag3 = true;
+@@ -222,7 +239,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+                                 Enchantment enchantment1 = (Enchantment) iterator1.next();
+ 
+                                 if (enchantment1 != enchantment && !enchantment.isCompatibleWith(enchantment1)) {
+-                                    flag3 = false;
++                                    flag3 = this.canDoUnsafeEnchants; // TenseiMC
+                                     ++i;
+                                 }
+                             }
+@@ -293,6 +310,13 @@ public class AnvilMenu extends ItemCombinerMenu {
+                 this.cost.set(this.maximumRepairCost - 1); // CraftBukkit
+             }
+ 
++            // TenseiMC start
++            if (this.bypassCost && cost.get() >= this.maximumRepairCost) {
++                itemstack.addTagElement("Purpur.realCost", IntTag.valueOf(cost.get()));
++                cost.set(maximumRepairCost - 1);
++            }
++            // TenseiMC end
++
+             if (this.cost.get() >= this.maximumRepairCost && !this.player.getAbilities().instabuild) { // CraftBukkit
+                 itemstack1 = ItemStack.EMPTY;
+             }
+@@ -315,6 +339,12 @@ public class AnvilMenu extends ItemCombinerMenu {
+             org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(this.getBukkitView(), itemstack1); // CraftBukkit
+             this.sendAllDataToRemote(); // CraftBukkit - SPIGOT-6686: Always send completed inventory to stay in sync with client
+             this.broadcastChanges();
++            // TenseiMC start
++            if (this.canDoUnsafeEnchants && itemstack1 != ItemStack.EMPTY) {
++                ((ServerPlayer) player).connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 2, itemstack1));
++                ((ServerPlayer) player).connection.send(new ClientboundContainerSetDataPacket(containerId, 0, cost.get()));
++            }
++            // TenseiMC end
+         }
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java b/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java
+index c2cf5a8e788637c6264cf43d712a5be223ff1cc5..15ef1d57b561eaef2f62d19de3c0c0c2f05badd1 100644
+--- a/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java
+@@ -178,7 +178,9 @@ public abstract class ItemCombinerMenu extends AbstractContainerMenu {
+                 return ItemStack.EMPTY;
+             }
+ 
++            this.activeQuickItem = itemstack; // TenseiMC
+             slot1.onTake(player, itemstack1);
++            this.activeQuickItem = null; // TenseiMC
+         }
+ 
+         return itemstack;
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java
+index 9ee14589d63bbfc0880f2eee5e924fe946ee0035..6e26e2c172492ec6c1bd3ed45635ff4ec4e99703 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java
+@@ -9,7 +9,7 @@ import org.bukkit.inventory.AnvilInventory;
+ public class CraftInventoryAnvil extends CraftResultInventory implements AnvilInventory {
+ 
+     private final Location location;
+-    private final AnvilMenu container;
++    public final AnvilMenu container; // TenseiMC - private -> public
+ 
+     public CraftInventoryAnvil(Location location, Container inventory, Container resultInventory, AnvilMenu container) {
+         super(inventory, resultInventory);
+@@ -57,4 +57,26 @@ public class CraftInventoryAnvil extends CraftResultInventory implements AnvilIn
+         Preconditions.checkArgument(levels >= 0, "Maximum repair cost must be positive (or 0)");
+         this.container.maximumRepairCost = levels;
+     }
++
++    // TenseiMC start
++    @Override
++    public boolean canBypassCost() {
++        return container.bypassCost;
++    }
++
++    @Override
++    public void setBypassCost(boolean bypassCost) {
++        container.bypassCost = bypassCost;
++    }
++
++    @Override
++    public boolean canDoUnsafeEnchants() {
++        return container.canDoUnsafeEnchants;
++    }
++
++    @Override
++    public void setDoUnsafeEnchants(boolean canDoUnsafeEnchants) {
++        container.canDoUnsafeEnchants = canDoUnsafeEnchants;
++    }
++    // TenseiMC end
+ }

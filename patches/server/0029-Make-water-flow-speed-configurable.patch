@@ -1,0 +1,39 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Wed, 2 Aug 2023 13:15:11 +0200
+Subject: [PATCH] Make water flow speed configurable
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+index 3d495c3b4b8523e35f3847dd1892cc62ae2ac704..642b15ee4eefbe5cd04cca85632930694f549df8 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+@@ -119,6 +119,7 @@ public class TenseiWorldConfig {
+     public int lavaSpeedNether = 10;
+     public int lavaSpeedNotNether = 30;
+     public int waterInfiniteRequiredSources = 2;
++    public int waterSpeed;
+     private void liquidsSettings() {
+         if (TenseiConfig.version < 2) {
+             lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
+@@ -126,6 +127,7 @@ public class TenseiWorldConfig {
+             lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
+             lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
+         }
++        waterSpeed = getInt("blocks.water.speed", waterSpeed);
+     }
+ 
+     public boolean beeCanWorkAtNight = false;
+diff --git a/src/main/java/net/minecraft/world/level/material/WaterFluid.java b/src/main/java/net/minecraft/world/level/material/WaterFluid.java
+index 2ae9f50b7d52b9d4e2659a882c33a82bf08ece08..0f3f2e030f547965024ee955c61ba43fa5d42ad9 100644
+--- a/src/main/java/net/minecraft/world/level/material/WaterFluid.java
++++ b/src/main/java/net/minecraft/world/level/material/WaterFluid.java
+@@ -106,7 +106,7 @@ public abstract class WaterFluid extends FlowingFluid {
+ 
+     @Override
+     public int getTickDelay(LevelReader world) {
+-        return 5;
++        return world.getWorldBorder().world.tenseiWorldConfig.waterSpeed;
+     }
+ 
+     @Override

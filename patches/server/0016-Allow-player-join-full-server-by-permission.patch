@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Wed, 27 Sep 2023 00:06:20 +0200
+Subject: [PATCH] Allow player join full server by permission
+
+
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 072849bff369699d652fd3f3c69d608c0525258f..64c2daf4e84fe93f5eb65227a4812db10239565f 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -839,7 +839,7 @@ public abstract class PlayerList {
+             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, io.papermc.paper.adventure.PaperAdventure.asAdventure(ichatmutablecomponent)); // Paper - Adventure
+         } else {
+             // return this.players.size() >= this.maxPlayers && !this.canBypassPlayerLimit(gameprofile) ? IChatBaseComponent.translatable("multiplayer.disconnect.server_full") : null;
+-            if (this.getTotalConnections() >= this.maxPlayers && !this.canBypassPlayerLimit(gameprofile)) { // Folia - region threading - we control connection state here now async, not player list size
++            if (this.getTotalConnections() >= this.maxPlayers && !((player.hasPermission("tenseimc.joinfullserver") || player.hasPermission("purpur.joinfullserver")) || this.canBypassPlayerLimit(gameprofile))) { // Folia - region threading - we control connection state here now async, not player list size // TenseiMC
+                 event.disallow(PlayerLoginEvent.Result.KICK_FULL, net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(org.spigotmc.SpigotConfig.serverFullMessage)); // Spigot // Paper - Adventure
+             }
+         }

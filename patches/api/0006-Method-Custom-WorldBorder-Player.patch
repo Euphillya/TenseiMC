@@ -1,0 +1,43 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Sat, 10 Jun 2023 00:58:29 +0200
+Subject: [PATCH] Method Custom WorldBorder Player
+
+
+diff --git a/src/main/java/fr/euphilia/utils/BorderColor.java b/src/main/java/fr/euphilia/utils/BorderColor.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..426a6780c125e3d6be1f79974dfa3d551dadcde1
+--- /dev/null
++++ b/src/main/java/fr/euphilia/utils/BorderColor.java
+@@ -0,0 +1,6 @@
++package fr.euphilia.utils;
++
++public enum BorderColor {
++
++    BLUE, RED, GREEN;
++}
+diff --git a/src/main/java/org/bukkit/entity/Player.java b/src/main/java/org/bukkit/entity/Player.java
+index 9240ea09206461d61cc08d4252e8507555bf41cf..8658c4be68059ff4752e2e368ba7f72b9eaec22b 100644
+--- a/src/main/java/org/bukkit/entity/Player.java
++++ b/src/main/java/org/bukkit/entity/Player.java
+@@ -2306,6 +2306,20 @@ public interface Player extends HumanEntity, Conversable, OfflinePlayer, PluginM
+      */
+     public void setWorldBorder(@Nullable WorldBorder border);
+ 
++    // TenseiMC start
++    /**
++     * Create a personal border just for the player.
++     *
++     * @param centerBorder The center of the border
++     * @param colorBorder Border color: Blue/Red/Green
++     * @param borderSize Border size
++     * @param warningBlocks Sets the warning distance that causes the screen to be tinted red when the player is within the specified number of blocks from the border.
++     * @param warningTime Sets the warning time that causes the screen to be tinted red when a contracting border will reach the player within the specified time.
++     */
++    @org.jetbrains.annotations.ApiStatus.Experimental
++    public void setOwnWorldBorder(@NotNull Location centerBorder, @NotNull fr.euphilia.utils.BorderColor colorBorder, double borderSize, int warningBlocks, int warningTime);
++    // TenseiMC end
++
+     /**
+      * Send a health update to the player. This will adjust the health, food, and
+      * saturation on the client and will not affect the player's actual values on

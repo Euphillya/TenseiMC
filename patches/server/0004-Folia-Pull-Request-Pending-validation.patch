@@ -1,0 +1,69 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Sat, 21 Oct 2023 19:50:16 +0200
+Subject: [PATCH] Folia Pull Request Pending validation
+
+https://github.com/PaperMC/Folia/pull/110/commits/34465611d1c6d170ef1a794cd08ed898c4b3a821 Vanilla end teleportation
+https://github.com/PaperMC/Folia/pull/164/commits/480ce47ff596e6d95889ee45f8ff5ab27e2ef3b1 Fix command sender check
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+index 2cdfb1b060878189ca00923e50574849adb983b8..526447c3d298706b7f5c18342562a19a3715cc45 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+@@ -126,4 +126,9 @@ public class TenseiConfig {
+     private static void updateConfigVersion() {
+ 
+     }
++
++    public static boolean useVanillaEndTeleportation = false;
++    private static void unsupportedSettings() {
++        useVanillaEndTeleportation = getBoolean("settings.unsupported.pr-folia.vanilla-end-teleportation", useVanillaEndTeleportation);
++    }
+ }
+diff --git a/src/main/java/net/minecraft/world/entity/Entity.java b/src/main/java/net/minecraft/world/entity/Entity.java
+index 385d5bc08928dd990b690b926e174af86f178c64..b00b14e9369fb4ce7a9f3ff8cb770fc6ab1cfd3a 100644
+--- a/src/main/java/net/minecraft/world/entity/Entity.java
++++ b/src/main/java/net/minecraft/world/entity/Entity.java
+@@ -4090,9 +4090,17 @@ public abstract class Entity implements Nameable, EntityAccess, CommandSource {
+ 
+                             // the portal obsidian is placed at targetPos.y - 2, so if we want to place the entity
+                             // on the obsidian, we need to spawn at targetPos.y - 1
+-                            portalInfoCompletable.complete(
+-                                new PortalInfo(Vec3.atBottomCenterOf(targetPos.below()), Vec3.ZERO, 90.0f, 0.0f, destination, null)
+-                            );
++                            // TenseiMC start
++                            if (fr.euphilia.tenseimc.TenseiConfig.useVanillaEndTeleportation) {
++                                Vec3 finalPos = this instanceof Player ? Vec3.atBottomCenterOf(targetPos.below()) : Vec3.atBottomCenterOf(targetPos);
++                                portalInfoCompletable.complete(
++                                        new PortalInfo(finalPos, this.getDeltaMovement(), 90.0f, 0.0f, destination, null)
++                                );
++                            } else {
++                                portalInfoCompletable.complete(
++                                        new PortalInfo(Vec3.atBottomCenterOf(targetPos.below()), Vec3.ZERO, 90.0f, 0.0f, destination, null)
++                                );
++                            } // TenseiMC end
+                         }
+                     );
+                 } else {
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index 92809ef69b80a69f83e61f9aa0d26e54402a6f80..21e63ca15f9ca775293f0010e5fff5149a976f19 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -1001,7 +1001,7 @@ public final class CraftServer implements Server {
+                 null,
+                 1L
+             );
+-        } else if (sender instanceof ConsoleCommandSender console) {
++        } else if (sender instanceof ConsoleCommandSender || sender instanceof io.papermc.paper.commands.FeedbackForwardingSender) { // TenseiMC
+             io.papermc.paper.threadedregions.RegionizedServer.getInstance().addTask(() -> {
+                 CraftServer.this.dispatchCommand(sender, commandLine);
+             });
+@@ -1021,7 +1021,7 @@ public final class CraftServer implements Server {
+         // Folia start - region threading
+         if ((sender instanceof Entity entity)) {
+             io.papermc.paper.util.TickThread.ensureTickThread(((org.bukkit.craftbukkit.entity.CraftEntity)entity).getHandle(), "Dispatching command async");
+-        } else if (sender instanceof ConsoleCommandSender console) {
++        } else if (sender instanceof ConsoleCommandSender || sender instanceof io.papermc.paper.commands.FeedbackForwardingSender) { // TenseiMC
+             io.papermc.paper.threadedregions.RegionizedServer.ensureGlobalTickThread("Dispatching command async");
+         } else {
+             // huh?

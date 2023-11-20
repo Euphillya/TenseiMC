@@ -1,0 +1,68 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Tue, 30 May 2023 10:00:23 +0200
+Subject: [PATCH] More API Enchantment
+
+
+diff --git a/src/main/java/org/bukkit/enchantments/Enchantment.java b/src/main/java/org/bukkit/enchantments/Enchantment.java
+index 8183f26545998e076ad93b4e28f3a3ff693d1032..fb58c31fcd4fd618ac51a497cfcc1ab9b74eeee2 100644
+--- a/src/main/java/org/bukkit/enchantments/Enchantment.java
++++ b/src/main/java/org/bukkit/enchantments/Enchantment.java
+@@ -432,6 +432,15 @@ public abstract class Enchantment implements Keyed, net.kyori.adventure.translat
+         acceptingNew = false;
+     }
+ 
++    // TenseiMC start
++    /**
++     * New enchantments can be added. Please note that this must be run at startup.
++     */
++    public static void acceptingNewRegistrations() {
++        acceptingNew = true;
++    }
++    // TenseiMC end
++
+     /**
+      * Gets the Enchantment at the specified key
+      *
+@@ -467,4 +476,21 @@ public abstract class Enchantment implements Keyed, net.kyori.adventure.translat
+     public static Enchantment[] values() {
+         return byName.values().toArray(new Enchantment[byName.size()]);
+     }
++
++    // TenseiMC start
++
++    /**
++     * Minimal cost of this enchantment depends on level
++     * @param level the level of enchantment
++     * @return Minimal cost
++     */
++    public abstract int getMinCost(int level);
++
++    /**
++     * Maximal cost of this enchantment depends on level
++     * @param level the level of enchantment
++     * @return Maximal cost
++     */
++    public abstract int getMaxCost(int level);
++    // TenseiMC end
+ }
+diff --git a/src/main/java/org/bukkit/enchantments/EnchantmentWrapper.java b/src/main/java/org/bukkit/enchantments/EnchantmentWrapper.java
+index 4a838d6eab5a17d7204dba96a882b6c5a22636fc..e2a115be11b39893c2d76e8a0aa2d7315c42c140 100644
+--- a/src/main/java/org/bukkit/enchantments/EnchantmentWrapper.java
++++ b/src/main/java/org/bukkit/enchantments/EnchantmentWrapper.java
+@@ -112,4 +112,15 @@ public class EnchantmentWrapper extends Enchantment {
+         return getEnchantment().getActiveSlots();
+     }
+     // Paper end
++    // TenseiMC start
++    @Override
++    public int getMinCost(int level) {
++        return getEnchantment().getMinCost(level);
++    }
++
++    @Override
++    public int getMaxCost(int level) {
++        return getEnchantment().getMaxCost(level);
++    }
++    // TenseiMC end
+ }

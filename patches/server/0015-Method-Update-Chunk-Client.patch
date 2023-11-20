@@ -1,0 +1,25 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Sat, 10 Jun 2023 01:03:59 +0200
+Subject: [PATCH] Method Update Chunk Client
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+index 1028efa7cb4b5846ba0474644ff6f4bf9ac9631c..55484b4e57ad491780a740ee51779bb0dd1cdb8c 100644
+--- a/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
++++ b/src/main/java/org/bukkit/craftbukkit/entity/CraftPlayer.java
+@@ -1140,6 +1140,14 @@ public class CraftPlayer extends CraftHumanEntity implements Player {
+         final net.minecraft.network.protocol.game.ClientboundInitializeBorderPacket updateWorldBorderPacket = new net.minecraft.network.protocol.game.ClientboundInitializeBorderPacket(worldBorderPlayer);
+         this.getHandle().connection.send(updateWorldBorderPacket);
+     }
++
++    @org.jetbrains.annotations.ApiStatus.Experimental
++    @Override
++    public void refreshPlayerChunk(int chunkX, int chunkZ) {
++        final net.minecraft.world.level.chunk.LevelChunk levelChunk = this.getHandle().level().getChunk(chunkX, chunkZ);
++        final net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket refresh = new net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket(levelChunk, levelChunk.getLevel().getLightEngine(), null, null);
++        this.getHandle().connection.send(refresh);
++    }
+     // TenseiMC end
+ 
+     private BorderChangeListener createWorldBorderListener() {

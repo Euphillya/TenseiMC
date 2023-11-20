@@ -1,0 +1,29 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Tue, 30 May 2023 10:00:34 +0200
+Subject: [PATCH] More API Enchantment
+
+
+diff --git a/src/main/java/org/bukkit/craftbukkit/enchantments/CraftEnchantment.java b/src/main/java/org/bukkit/craftbukkit/enchantments/CraftEnchantment.java
+index 21e83238a0bad86ffacf60d5c5612771a49ef33d..378da3287d4102f5770ff7f315e758e62b344c3e 100644
+--- a/src/main/java/org/bukkit/craftbukkit/enchantments/CraftEnchantment.java
++++ b/src/main/java/org/bukkit/craftbukkit/enchantments/CraftEnchantment.java
+@@ -235,6 +235,18 @@ public class CraftEnchantment extends Enchantment {
+         return java.util.stream.Stream.of(target.slots).map(org.bukkit.craftbukkit.CraftEquipmentSlot::getSlot).collect(java.util.stream.Collectors.toSet());
+     }
+ 
++    // TenseiMC start
++    @Override
++    public int getMinCost(int level) {
++        return this.target.getMinCost(level);
++    }
++
++    @Override
++    public int getMaxCost(int level) {
++        return this.target.getMaxCost(level);
++    }
++    // TenseiMC end
++
+     public static io.papermc.paper.enchantments.EnchantmentRarity fromNMSRarity(net.minecraft.world.item.enchantment.Enchantment.Rarity nmsRarity) {
+         if (nmsRarity == net.minecraft.world.item.enchantment.Enchantment.Rarity.COMMON) {
+             return io.papermc.paper.enchantments.EnchantmentRarity.COMMON;
