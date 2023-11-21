@@ -5,13 +5,13 @@ Subject: [PATCH] More API Enchantment
 
 
 diff --git a/src/main/java/org/bukkit/enchantments/Enchantment.java b/src/main/java/org/bukkit/enchantments/Enchantment.java
-index 8183f26545998e076ad93b4e28f3a3ff693d1032..fb58c31fcd4fd618ac51a497cfcc1ab9b74eeee2 100644
+index 8183f26545998e076ad93b4e28f3a3ff693d1032..6ecf3df3242fcce1a53d0cebd342a054dd47396e 100644
 --- a/src/main/java/org/bukkit/enchantments/Enchantment.java
 +++ b/src/main/java/org/bukkit/enchantments/Enchantment.java
 @@ -432,6 +432,15 @@ public abstract class Enchantment implements Keyed, net.kyori.adventure.translat
          acceptingNew = false;
      }
- 
+
 +    // TenseiMC start
 +    /**
 +     * New enchantments can be added. Please note that this must be run at startup.
@@ -24,7 +24,7 @@ index 8183f26545998e076ad93b4e28f3a3ff693d1032..fb58c31fcd4fd618ac51a497cfcc1ab9
      /**
       * Gets the Enchantment at the specified key
       *
-@@ -467,4 +476,21 @@ public abstract class Enchantment implements Keyed, net.kyori.adventure.translat
+@@ -467,4 +476,25 @@ public abstract class Enchantment implements Keyed, net.kyori.adventure.translat
      public static Enchantment[] values() {
          return byName.values().toArray(new Enchantment[byName.size()]);
      }
@@ -35,14 +35,18 @@ index 8183f26545998e076ad93b4e28f3a3ff693d1032..fb58c31fcd4fd618ac51a497cfcc1ab9
 +     * Minimal cost of this enchantment depends on level
 +     * @param level the level of enchantment
 +     * @return Minimal cost
++     * @deprecated use {@link #getMinModifiedCost(int level)} instead
 +     */
++    @Deprecated
 +    public abstract int getMinCost(int level);
 +
 +    /**
 +     * Maximal cost of this enchantment depends on level
 +     * @param level the level of enchantment
 +     * @return Maximal cost
++     * @deprecated use {@link #getMaxModifiedCost(int level)} instead
 +     */
++    @Deprecated
 +    public abstract int getMaxCost(int level);
 +    // TenseiMC end
  }
