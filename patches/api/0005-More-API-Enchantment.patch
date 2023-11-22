@@ -11,7 +11,7 @@ index 8183f26545998e076ad93b4e28f3a3ff693d1032..6ecf3df3242fcce1a53d0cebd342a054
 @@ -432,6 +432,15 @@ public abstract class Enchantment implements Keyed, net.kyori.adventure.translat
          acceptingNew = false;
      }
-
+ 
 +    // TenseiMC start
 +    /**
 +     * New enchantments can be added. Please note that this must be run at startup.

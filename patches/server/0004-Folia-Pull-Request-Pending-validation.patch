@@ -45,25 +45,3 @@ index 385d5bc08928dd990b690b926e174af86f178c64..b00b14e9369fb4ce7a9f3ff8cb770fc6
                          }
                      );
                  } else {
-diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 92809ef69b80a69f83e61f9aa0d26e54402a6f80..21e63ca15f9ca775293f0010e5fff5149a976f19 100644
---- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-+++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -1001,7 +1001,7 @@ public final class CraftServer implements Server {
-                 null,
-                 1L
-             );
--        } else if (sender instanceof ConsoleCommandSender console) {
-+        } else if (sender instanceof ConsoleCommandSender || sender instanceof io.papermc.paper.commands.FeedbackForwardingSender) { // TenseiMC
-             io.papermc.paper.threadedregions.RegionizedServer.getInstance().addTask(() -> {
-                 CraftServer.this.dispatchCommand(sender, commandLine);
-             });
-@@ -1021,7 +1021,7 @@ public final class CraftServer implements Server {
-         // Folia start - region threading
-         if ((sender instanceof Entity entity)) {
-             io.papermc.paper.util.TickThread.ensureTickThread(((org.bukkit.craftbukkit.entity.CraftEntity)entity).getHandle(), "Dispatching command async");
--        } else if (sender instanceof ConsoleCommandSender console) {
-+        } else if (sender instanceof ConsoleCommandSender || sender instanceof io.papermc.paper.commands.FeedbackForwardingSender) { // TenseiMC
-             io.papermc.paper.threadedregions.RegionizedServer.ensureGlobalTickThread("Dispatching command async");
-         } else {
-             // huh?
