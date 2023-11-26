@@ -5,7 +5,7 @@ Subject: [PATCH] Rebranding
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index a748157d6ce9c088ed3c663d9ddd6f5c2d82b6d8..5ac001438f997793a22d45444976c7729ad90843 100644
+index 0cd12a854e544e867abfd94c18a9f138ba57e587..e130e7ed56af1bde44a82cc355fe8b1892366e37 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
 @@ -14,7 +14,7 @@ val alsoShade: Configuration by configurations.creating
@@ -14,7 +14,7 @@ index a748157d6ce9c088ed3c663d9ddd6f5c2d82b6d8..5ac001438f997793a22d45444976c772
      // Folia start
 -    implementation(project(":folia-api"))
 +    implementation(project(":TenseiMC-api")) // TenseiMC
-     implementation("io.papermc.paper:paper-mojangapi:1.19.3-R0.1-SNAPSHOT") {
+     implementation("io.papermc.paper:paper-mojangapi:${project.version}") {
          exclude("io.papermc.paper", "paper-api")
      }
 @@ -68,13 +68,13 @@ tasks.jar {
@@ -134,7 +134,7 @@ index 4b189b54c8f326939a7b9ffdfb35edfb7d8cee63..87835b23e8e58b310da972c76dd620ac
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 4b43134f38ba203a309a412055461b57934da8f9..efc20a7fa1b81c16fbc96f1a00c0eda2f814649e 100644
+index bc778637c7d4371cafa9bcda67f8965f57cc66d6..c0a91ec9c5996f803088ad1ceb4e86370785c8f3 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -269,7 +269,7 @@ import javax.annotation.Nullable; // Paper
