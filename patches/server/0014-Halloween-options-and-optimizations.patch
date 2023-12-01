@@ -5,7 +5,7 @@ Subject: [PATCH] Halloween options and optimizations
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 2e6108681fa25c2ad61f3bdcccac11d11fb37898..243755164cdfe687410d4eb602fc8c686bf7efe1 100644
+index ac3644ff03b891266f853372df641db0aa9bd7d7..494ed94beab7dc2cae2fbaf7d87f545df3c2f81e 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 @@ -1,5 +1,6 @@
@@ -15,7 +15,7 @@ index 2e6108681fa25c2ad61f3bdcccac11d11fb37898..243755164cdfe687410d4eb602fc8c68
  import org.bukkit.World;
  import org.bukkit.configuration.ConfigurationSection;
  import org.jetbrains.annotations.NotNull;
-@@ -86,6 +87,17 @@ public class TenseiWorldConfig {
+@@ -116,6 +117,17 @@ public class TenseiWorldConfig {
          }
      }
  
@@ -94,7 +94,7 @@ index b319021b22c5dceba6199ed27814b2dcf47b8d50..f3fb8a193c3858cbc3d0be61db9c1fe5
                  this.armorDropChances[EquipmentSlot.HEAD.getIndex()] = 0.0F;
              }
 diff --git a/src/main/java/net/minecraft/world/entity/monster/Zombie.java b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
-index ef61663d9ba41cf02a03800c74d4ce4ccc5faec5..e2482c0632f343f1903008ea2e9a611567e7b4c5 100644
+index e2b9a18fd4a573aa2b3299a2e19afc07cc747366..43738baa589f44a8fbf7baa95def3970c6e94fcd 100644
 --- a/src/main/java/net/minecraft/world/entity/monster/Zombie.java
 +++ b/src/main/java/net/minecraft/world/entity/monster/Zombie.java
 @@ -549,11 +549,7 @@ public class Zombie extends Monster {

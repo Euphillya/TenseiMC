@@ -1,0 +1,144 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Fri, 1 Dec 2023 21:23:21 +0100
+Subject: [PATCH] Convert old config tenseimc.yml to purpur.yml
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+index 526447c3d298706b7f5c18342562a19a3715cc45..1447838ce0de5a791adff3b5d712b656bc0ce809 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
+@@ -123,8 +123,26 @@ public class TenseiConfig {
+         return builder.build();
+     }
+ 
+-    private static void updateConfigVersion() {
++    public static boolean enderChestSixRows = false;
++    public static boolean enderChestPermissionRows = false;
++    public static int barrelRows = 3;
++    public static int beeInsideBeeHive = 3;
++    private static void blockSettings() {
++        if (version < 2) {
++            enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
++            enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
++            barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
++            beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
++        }
++    }
+ 
++    private static void updateConfigVersion() {
++        if (version >= 2) {
++            set("settings.blocks.ender_chest.six-rows", null);
++            set("settings.blocks.ender_chest.use-permissions-for-rows", null);
++            set("settings.blocks.barrel.rows", null);
++            set("settings.blocks.beehive.max-bees-inside", null);
++        }
+     }
+ 
+     public static boolean useVanillaEndTeleportation = false;
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+index 7c20367b93416b5434bdc29556aeafb21ea5b1c3..c263726c91d9658924480c77b12b2b227f2d2e6e 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+@@ -64,7 +64,100 @@ public class TenseiWorldConfig {
+         return value.isEmpty() ? fallback : value;
+     }
+ 
+-    private void updateConfigVersion() {
++    public int beaconLevelOne = 20;
++    public int beaconLevelTwo = 30;
++    public int beaconLevelThree = 40;
++    public int beaconLevelFour = 50;
++    private void beaconSettings() {
++        if (TenseiConfig.version < 2) {
++            beaconLevelOne = getInt("blocks.beacon.effect-range.level-1", beaconLevelOne);
++            beaconLevelTwo = getInt("blocks.beacon.effect-range.level-2", beaconLevelTwo);
++            beaconLevelThree = getInt("blocks.beacon.effect-range.level-3", beaconLevelThree);
++            beaconLevelFour = getInt("blocks.beacon.effect-range.level-4", beaconLevelFour);
++        }
++    }
++
++    public boolean chestOpenWithBlockOnTop = false;
++    private void blockSettings() {
++        if (TenseiConfig.version < 2) {
++            chestOpenWithBlockOnTop = getBoolean("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
++        }
++    }
++
++    public float entityMinimalHealthPoison = 1.0F;
++    public float entityHealthRegenAmount = 1.0F;
++    public float entityPoisonDegenerationAmount = 1.0F;
++    public float entityWitherDegenerationAmount = 1.0F;
++    public float humanHungerExhaustionAmount = 0.005F;
++    public float humanSaturationRegenAmount = 1.0F;
++    private void effectSettings() {
++        if (TenseiConfig.version < 2) {
++            entityHealthRegenAmount = (float) getDouble("gameplay-mechanics.mob-effects.health-regen-amount", entityHealthRegenAmount);
++            entityMinimalHealthPoison = (float) getDouble("gameplay-mechanics.mob-effects.minimal-health-poison-amount", entityMinimalHealthPoison);
++            entityPoisonDegenerationAmount = (float) getDouble("gameplay-mechanics.mob-effects.poison-degeneration-amount", entityPoisonDegenerationAmount);
++            entityWitherDegenerationAmount = (float) getDouble("gameplay-mechanics.mob-effects.wither-degeneration-amount", entityWitherDegenerationAmount);
++            humanHungerExhaustionAmount = (float) getDouble("gameplay-mechanics.mob-effects.hunger-exhaustion-amount", humanHungerExhaustionAmount);
++            humanSaturationRegenAmount = (float) getDouble("gameplay-mechanics.mob-effects.saturation-regen-amount", humanSaturationRegenAmount);
++        }
++    }
++
++    public int lavaInfiniteRequiredSources = 2;
++    public int waterInfiniteRequiredSources = 2;
++    public int lavaSpeedNether = 10;
++    public int lavaSpeedNotNether = 30;
++    private void liquidsSettings() {
++        if (TenseiConfig.version < 2) {
++            lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
++            waterInfiniteRequiredSources = getInt("blocks.water.infinite-required-sources", waterInfiniteRequiredSources);
++            lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
++            lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
++        }
++    }
+ 
++    public boolean beeCanWorkAtNight = false;
++    public boolean beeCanWorkInRain = false;
++    private void mobsSettings() {
++        if (TenseiConfig.version < 2) {
++            beeCanWorkAtNight = getBoolean("mobs.bee.can-work-at-night", beeCanWorkAtNight);
++            beeCanWorkInRain = getBoolean("mobs.bee.can-work-in-rain", beeCanWorkInRain);
++        }
++    }
++
++    public double playerCriticalDamageMultiplier = 1.5D;
++    private void playerSettings() {
++        if (TenseiConfig.version < 2) {
++            playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
++        }
++    }
++
++    public boolean disableObserverClocks = false;
++    public int pistonBlockPushLimit = 12;
++    private void redstoneSettings() {
++        if (TenseiConfig.version < 2) {
++            disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
++            pistonBlockPushLimit = getInt("blocks.piston.block-push-limit", pistonBlockPushLimit);
++        }
++    }
++
++    private void updateConfigVersion() {
++        if (TenseiConfig.version >= 2) {
++            set("blocks.observer.disable-clock", null);
++            set("blocks.piston.block-push-limit", null);
++            set("blocks.beacon.effect-range", null);
++            set("gameplay-mechanics.player.critical-damage-multiplier", null);
++            set("blocks.chest.open-with-solid-block-on-top", null);
++            set("mobs.bee.can-work-at-night", null);
++            set("mobs.bee.can-work-in-rain", null);
++            set("gameplay-mechanics.mob-effects.health-regen-amount", null);
++            set("gameplay-mechanics.mob-effects.minimal-health-poison-amount", null);
++            set("gameplay-mechanics.mob-effects.poison-degeneration-amount", null);
++            set("gameplay-mechanics.mob-effects.wither-degeneration-amount", null);
++            set("gameplay-mechanics.mob-effects.hunger-exhaustion-amount", null);
++            set("gameplay-mechanics.mob-effects.saturation-regen-amount", null);
++            set("blocks.lava.infinite-required-sources", null);
++            set("blocks.water.infinite-required-sources", null);
++            set("blocks.lava.speed.nether", null);
++            set("blocks.lava.speed.not-nether", null);
++        }
+     }
+ }

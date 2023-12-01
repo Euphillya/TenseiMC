@@ -5,7 +5,7 @@ Subject: [PATCH] Compostable items configuration.
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index bddda44bdab13d455d7a3c415d8b4e8429fa1eff..f18357d363231072bd5bcf19ad056e2642231e0a 100644
+index 1447838ce0de5a791adff3b5d712b656bc0ce809..52a0928bf3341bf37bf335d34007a6eb045315d8 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 @@ -2,6 +2,9 @@ package fr.euphilia.tenseimc;
@@ -26,17 +26,17 @@ index bddda44bdab13d455d7a3c415d8b4e8429fa1eff..f18357d363231072bd5bcf19ad056e26
  import java.util.List;
  import java.util.Map;
  import java.util.logging.Level;
-@@ -126,6 +130,7 @@ public class TenseiConfig {
-     public static boolean enderChestSixRows = false;
+@@ -127,6 +131,7 @@ public class TenseiConfig {
      public static boolean enderChestPermissionRows = false;
      public static int barrelRows = 3;
+     public static int beeInsideBeeHive = 3;
 +    public static HashMap<Item, Double> itemCompostable = new HashMap<>();
      private static void blockSettings() {
          if (version < 2) {
              enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
-@@ -136,6 +141,16 @@ public class TenseiConfig {
-         if (version < 2) {
+@@ -134,6 +139,16 @@ public class TenseiConfig {
              barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
+             beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
          }
 +        itemCompostable.clear();
 +        getMap("settings.blocks.composter.compostable", net.minecraft.world.level.block.ComposterBlock.composterBlockItem()).forEach((item, value) -> {

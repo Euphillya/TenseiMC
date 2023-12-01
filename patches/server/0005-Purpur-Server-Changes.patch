@@ -1,0 +1,965 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: William Blake Galbreath <blake.galbreath@gmail.com>
+Date: Sun, 21 May 2023 00:08:44 +0200
+Subject: [PATCH] Purpur Server Changes
+
+Patch List :
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0010-Barrels-and-enderchests-6-rows.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0017-PlayerSetSpawnerTypeWithEggEvent.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0018-Anvil-API.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0051-Implement-infinite-liquids.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0052-Make-lava-flow-speed-configurable.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0116-Option-for-chests-to-open-even-with-a-solid-block-on.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0157-Config-to-change-max-number-of-bees.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0160-Configurable-piston-push-limit.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0176-Beacon-Activation-Range-Configurable.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0168-Add-config-change-multiplier-critical-damage-value.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0173-Bee-can-work-when-raining-or-at-night.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0175-Config-MobEffect-by-world.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0181-Allow-player-join-full-server-by-permission.patch
+https://github.com/PurpurMC/Purpur/blob/ver/1.20.2/patches/server/0199-Add-Option-for-disable-observer-clocks.patch
+
+diff --git a/src/main/java/net/minecraft/server/players/PlayerList.java b/src/main/java/net/minecraft/server/players/PlayerList.java
+index 7edaa7558e40942f94c459e9b480ef640146ec6b..64c2daf4e84fe93f5eb65227a4812db10239565f 100644
+--- a/src/main/java/net/minecraft/server/players/PlayerList.java
++++ b/src/main/java/net/minecraft/server/players/PlayerList.java
+@@ -839,7 +839,7 @@ public abstract class PlayerList {
+             event.disallow(PlayerLoginEvent.Result.KICK_BANNED, io.papermc.paper.adventure.PaperAdventure.asAdventure(ichatmutablecomponent)); // Paper - Adventure
+         } else {
+             // return this.players.size() >= this.maxPlayers && !this.canBypassPlayerLimit(gameprofile) ? IChatBaseComponent.translatable("multiplayer.disconnect.server_full") : null;
+-            if (this.getTotalConnections() >= this.maxPlayers && !this.canBypassPlayerLimit(gameprofile)) { // Folia - region threading - we control connection state here now async, not player list size
++            if (this.getTotalConnections() >= this.maxPlayers && !((player.hasPermission("tenseimc.joinfullserver") || player.hasPermission("purpur.joinfullserver")) || this.canBypassPlayerLimit(gameprofile))) { // Folia - region threading - we control connection state here now async, not player list size // TenseiMC
+                 event.disallow(PlayerLoginEvent.Result.KICK_FULL, net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacySection().deserialize(org.spigotmc.SpigotConfig.serverFullMessage)); // Spigot // Paper - Adventure
+             }
+         }
+@@ -1265,6 +1265,27 @@ public abstract class PlayerList {
+         player.getBukkitEntity().recalculatePermissions(); // CraftBukkit
+         this.server.getCommands().sendCommands(player);
+         } // Paper
++
++        // TenseiMC start
++        if (org.purpurmc.purpur.PurpurConfig.enderChestSixRows && org.purpurmc.purpur.PurpurConfig.enderChestPermissionRows) {
++            org.bukkit.craftbukkit.entity.CraftHumanEntity bukkit = player.getBukkitEntity();
++            if (bukkit.hasPermission("tenseimc.enderchest.rows.six") || bukkit.hasPermission("purpur.enderchest.rows.six")) {
++                player.sixRowEnderChestSlotCount = 54;
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.five") || bukkit.hasPermission("purpur.enderchest.rows.five")) {
++                player.sixRowEnderChestSlotCount = 45;
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.four") || bukkit.hasPermission("purpur.enderchest.rows.four")) {
++                player.sixRowEnderChestSlotCount = 36;
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.three") || bukkit.hasPermission("purpur.enderchest.rows.three")) {
++                player.sixRowEnderChestSlotCount = 27;
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.two") || bukkit.hasPermission("purpur.enderchest.rows.two")) {
++                player.sixRowEnderChestSlotCount = 18;
++            } else if (bukkit.hasPermission("tenseimc.enderchest.rows.one") || bukkit.hasPermission("purpur.enderchest.rows.one")) {
++                player.sixRowEnderChestSlotCount = 9;
++            }
++        } else {
++            player.sixRowEnderChestSlotCount = -1;
++        }
++        // TenseiMC stop
+     }
+ 
+     public boolean isWhiteListed(GameProfile profile) {
+diff --git a/src/main/java/net/minecraft/world/effect/HungerMobEffect.java b/src/main/java/net/minecraft/world/effect/HungerMobEffect.java
+index 3aad6bd0a1fb7bb3f9b7dab2c10c875864900750..33383b45e641369bb3574b86fedfd06e542f86ca 100644
+--- a/src/main/java/net/minecraft/world/effect/HungerMobEffect.java
++++ b/src/main/java/net/minecraft/world/effect/HungerMobEffect.java
+@@ -15,7 +15,7 @@ class HungerMobEffect extends MobEffect {
+         if (entity instanceof Player) {
+             Player entityhuman = (Player) entity;
+ 
+-            entityhuman.causeFoodExhaustion(0.005F * (float) (amplifier + 1), org.bukkit.event.entity.EntityExhaustionEvent.ExhaustionReason.HUNGER_EFFECT); // CraftBukkit - EntityExhaustionEvent
++            entityhuman.causeFoodExhaustion(entity.level().purpurConfig.humanHungerExhaustionAmount * (float) (amplifier + 1), org.bukkit.event.entity.EntityExhaustionEvent.ExhaustionReason.HUNGER_EFFECT); // CraftBukkit - EntityExhaustionEvent // TenseiMC
+         }
+ 
+     }
+diff --git a/src/main/java/net/minecraft/world/effect/PoisonMobEffect.java b/src/main/java/net/minecraft/world/effect/PoisonMobEffect.java
+index f8a8b825d21a7223a9839abda20825702985b7ad..ed1e00f880fde947158ebe1ef337e42fea6e1316 100644
+--- a/src/main/java/net/minecraft/world/effect/PoisonMobEffect.java
++++ b/src/main/java/net/minecraft/world/effect/PoisonMobEffect.java
+@@ -11,8 +11,8 @@ class PoisonMobEffect extends MobEffect {
+     @Override
+     public void applyEffectTick(LivingEntity entity, int amplifier) {
+         super.applyEffectTick(entity, amplifier);
+-        if (entity.getHealth() > 1.0F) {
+-            entity.hurt(entity.damageSources().poison, 1.0F);  // CraftBukkit - DamageSource.MAGIC -> CraftEventFactory.POISON
++        if (entity.getHealth() > entity.level().tenseiWorldConfig.entityMinimalHealthPoison) { // TenseiMC
++            entity.hurt(entity.damageSources().poison, entity.level().purpurConfig.entityPoisonDegenerationAmount);  // CraftBukkit - DamageSource.MAGIC -> CraftEventFactory.POISON // TenseiMC
+         }
+ 
+     }
+diff --git a/src/main/java/net/minecraft/world/effect/RegenerationMobEffect.java b/src/main/java/net/minecraft/world/effect/RegenerationMobEffect.java
+index 551b20f86347aeca4824b7a424ad7de7c0ff072e..6babe8ea1450863da390fab8251224b6501eae1e 100644
+--- a/src/main/java/net/minecraft/world/effect/RegenerationMobEffect.java
++++ b/src/main/java/net/minecraft/world/effect/RegenerationMobEffect.java
+@@ -12,7 +12,7 @@ class RegenerationMobEffect extends MobEffect {
+     public void applyEffectTick(LivingEntity entity, int amplifier) {
+         super.applyEffectTick(entity, amplifier);
+         if (entity.getHealth() < entity.getMaxHealth()) {
+-            entity.heal(1.0F, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.MAGIC_REGEN); // CraftBukkit
++            entity.heal(entity.level().purpurConfig.entityHealthRegenAmount, org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason.MAGIC_REGEN); // CraftBukkit // TenseiMC
+         }
+ 
+     }
+diff --git a/src/main/java/net/minecraft/world/effect/SaturationMobEffect.java b/src/main/java/net/minecraft/world/effect/SaturationMobEffect.java
+index b994ae09621934df2cdd6a83a7d8ecb44649fb16..4eeb258f3bd76e19a7fc99ffcc5d6889cf0f6503 100644
+--- a/src/main/java/net/minecraft/world/effect/SaturationMobEffect.java
++++ b/src/main/java/net/minecraft/world/effect/SaturationMobEffect.java
+@@ -23,7 +23,7 @@ class SaturationMobEffect extends InstantenousMobEffect {
+             int oldFoodLevel = entityhuman.getFoodData().foodLevel;
+             org.bukkit.event.entity.FoodLevelChangeEvent event = CraftEventFactory.callFoodLevelChangeEvent(entityhuman, amplifier + 1 + oldFoodLevel);
+             if (!event.isCancelled()) {
+-                entityhuman.getFoodData().eat(event.getFoodLevel() - oldFoodLevel, 1.0F);
++                entityhuman.getFoodData().eat(event.getFoodLevel() - oldFoodLevel, entity.level().purpurConfig.humanSaturationRegenAmount); // TenseiMC
+             }
+ 
+             ((CraftPlayer) entityhuman.getBukkitEntity()).sendHealthUpdate();
+diff --git a/src/main/java/net/minecraft/world/effect/WitherMobEffect.java b/src/main/java/net/minecraft/world/effect/WitherMobEffect.java
+index 1f9e0c139988c4c44a26552881647d36965aa4fa..a82375935eaa334afa7ae9e770a853ef2e6d2ed7 100644
+--- a/src/main/java/net/minecraft/world/effect/WitherMobEffect.java
++++ b/src/main/java/net/minecraft/world/effect/WitherMobEffect.java
+@@ -10,7 +10,7 @@ class WitherMobEffect extends MobEffect {
+     @Override
+     public void applyEffectTick(LivingEntity entity, int amplifier) {
+         super.applyEffectTick(entity, amplifier);
+-        entity.hurt(entity.damageSources().wither(), 1.0F);
++        entity.hurt(entity.damageSources().wither(), entity.level().purpurConfig.entityWitherDegenerationAmount); // TenseiMC
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/minecraft/world/entity/EntityType.java b/src/main/java/net/minecraft/world/entity/EntityType.java
+index 3f3494c20cd15a721090f1b36293562a6b834b14..ce7178000f78a9bd1b94779e5b10dc8b861564c6 100644
+--- a/src/main/java/net/minecraft/world/entity/EntityType.java
++++ b/src/main/java/net/minecraft/world/entity/EntityType.java
+@@ -314,6 +314,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+         return (EntityType) Registry.register(BuiltInRegistries.ENTITY_TYPE, id, (EntityType<T>) type.build(id)); // CraftBukkit - decompile error
+     }
+ 
++    // TenseiMC start
++    public static EntityType<?> getFromBukkitType(org.bukkit.entity.EntityType bukkitType) {
++        return getFromKey(new ResourceLocation(bukkitType.getKey().toString()));
++    }
++
++    public static EntityType<?> getFromKey(ResourceLocation location) {
++        return BuiltInRegistries.ENTITY_TYPE.get(location);
++    }
++    // TenseiMC end
++
+     public static ResourceLocation getKey(EntityType<?> type) {
+         return BuiltInRegistries.ENTITY_TYPE.getKey(type);
+     }
+@@ -542,6 +552,16 @@ public class EntityType<T extends Entity> implements FeatureElement, EntityTypeT
+         return this.category;
+     }
+ 
++    // TenseiMC start
++    public String getName() {
++        return BuiltInRegistries.ENTITY_TYPE.getKey(this).getPath();
++    }
++
++    public String getTranslatedName() {
++        return getDescription().getString();
++    }
++    // TenseiMC end
++
+     public String getDescriptionId() {
+         if (this.descriptionId == null) {
+             this.descriptionId = Util.makeDescriptionId("entity", BuiltInRegistries.ENTITY_TYPE.getKey(this));
+diff --git a/src/main/java/net/minecraft/world/entity/animal/Bee.java b/src/main/java/net/minecraft/world/entity/animal/Bee.java
+index 25fd3aea2d66503018637781ccb8b5690c02e57b..12e01b572ddfaa5284433ffb6df3fa4df4ad7fa1 100644
+--- a/src/main/java/net/minecraft/world/entity/animal/Bee.java
++++ b/src/main/java/net/minecraft/world/entity/animal/Bee.java
+@@ -348,7 +348,7 @@ public class Bee extends Animal implements NeutralMob, FlyingAnimal {
+ 
+     boolean wantsToEnterHive() {
+         if (this.stayOutOfHiveCountdown <= 0 && !this.beePollinateGoal.isPollinating() && !this.hasStung() && this.getTarget() == null) {
+-            boolean flag = this.isTiredOfLookingForNectar() || this.level().isRaining() || this.level().isNight() || this.hasNectar();
++            boolean flag = this.isTiredOfLookingForNectar() || (this.level().isRaining() && !this.level().purpurConfig.beeCanWorkInRain) || (this.level().isNight() && !this.level().purpurConfig.beeCanWorkAtNight) || this.hasNectar(); // TenseiMC
+ 
+             return flag && !this.isHiveNearFire();
+         } else {
+diff --git a/src/main/java/net/minecraft/world/entity/player/Player.java b/src/main/java/net/minecraft/world/entity/player/Player.java
+index 51c31ac3d54996a6e2d870d8215546fdcf5ee506..60688bb3abc77959ac1d2d54b6ce9d51791afbd6 100644
+--- a/src/main/java/net/minecraft/world/entity/player/Player.java
++++ b/src/main/java/net/minecraft/world/entity/player/Player.java
+@@ -188,6 +188,7 @@ public abstract class Player extends LivingEntity {
+     public boolean affectsSpawning = true;
+     public net.kyori.adventure.util.TriState flyingFallDamage = net.kyori.adventure.util.TriState.NOT_SET;
+     // Paper end
++    public int sixRowEnderChestSlotCount = -1; // TenseiMC
+ 
+     // CraftBukkit start
+     public boolean fauxSleeping;
+@@ -1288,7 +1289,7 @@ public abstract class Player extends LivingEntity {
+                     flag2 = flag2 && !this.level().paperConfig().entities.behavior.disablePlayerCrits; // Paper
+                     flag2 = flag2 && !this.isSprinting();
+                     if (flag2) {
+-                        f *= 1.5F;
++                        f *= this.level().purpurConfig.playerCriticalDamageMultiplier; // TenseiMC
+                     }
+ 
+                     f += f1;
+diff --git a/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java b/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
+index f664da5a8413bb13cc95d2cf1604f11a5d285dae..898234efd3d9fb6a9a92bfcacba761a449c0b162 100644
+--- a/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/AbstractContainerMenu.java
+@@ -76,6 +76,7 @@ public abstract class AbstractContainerMenu {
+     @Nullable
+     private ContainerSynchronizer synchronizer;
+     private boolean suppressRemoteUpdates;
++    @javax.annotation.Nullable protected ItemStack activeQuickItem = null; // TenseiMC
+ 
+     // CraftBukkit start
+     public boolean checkReachable = true;
+diff --git a/src/main/java/net/minecraft/world/inventory/AnvilMenu.java b/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
+index f00638e9d7baf8b803dd610f2bf6250da34efab3..4349458fe6ca0bc243128da00eab8e1edb7f97d7 100644
+--- a/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/AnvilMenu.java
+@@ -23,6 +23,15 @@ import org.slf4j.Logger;
+ import org.bukkit.craftbukkit.inventory.CraftInventoryView;
+ // CraftBukkit end
+ 
++// TenseiMC start
++import net.minecraft.nbt.IntTag;
++import net.minecraft.network.protocol.game.ClientboundContainerSetDataPacket;
++import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
++import net.minecraft.server.level.ServerPlayer;
++import org.purpurmc.purpur.event.inventory.AnvilTakeResultEvent;
++import org.purpurmc.purpur.event.inventory.AnvilUpdateResultEvent;
++// TenseiMC end
++
+ public class AnvilMenu extends ItemCombinerMenu {
+ 
+     public static final int INPUT_SLOT = 0;
+@@ -51,6 +60,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+     public int maximumRepairCost = 40;
+     private CraftInventoryView bukkitEntity;
+     // CraftBukkit end
++    public boolean bypassCost = false, canDoUnsafeEnchants = false; // TenseiMC start
+ 
+     public AnvilMenu(int syncId, Inventory inventory) {
+         this(syncId, inventory, ContainerLevelAccess.NULL);
+@@ -78,13 +88,15 @@ public class AnvilMenu extends ItemCombinerMenu {
+ 
+     @Override
+     protected boolean mayPickup(Player player, boolean present) {
+-        return (player.getAbilities().instabuild || player.experienceLevel >= this.cost.get()) && this.cost.get() > AnvilMenu.DEFAULT_DENIED_COST && present; // CraftBukkit - allow cost 0 like a free item
++        return (player.getAbilities().instabuild || player.experienceLevel >= this.cost.get()) && (bypassCost || this.cost.get() > AnvilMenu.DEFAULT_DENIED_COST) && present; // CraftBukkit - allow cost 0 like a free item // TenseiMC
+     }
+ 
+     @Override
+     protected void onTake(Player player, ItemStack stack) {
++        ItemStack itemstack = activeQuickItem == null ? stack : activeQuickItem; // TenseiMC
++        if (AnvilTakeResultEvent.getHandlerList().getRegisteredListeners().length > 0) new AnvilTakeResultEvent(player.getBukkitEntity(), getBukkitView(), org.bukkit.craftbukkit.inventory.CraftItemStack.asCraftMirror(itemstack)).callEvent(); // TenseiMC
+         if (!player.getAbilities().instabuild) {
+-            player.giveExperienceLevels(-this.cost.get());
++            if (bypassCost) ((ServerPlayer) player).lastSentExp = -1; else player.giveExperienceLevels(-this.cost.get()); // TenseiMC
+         }
+ 
+         this.inputSlots.setItem(0, ItemStack.EMPTY);
+@@ -134,6 +146,11 @@ public class AnvilMenu extends ItemCombinerMenu {
+ 
+     @Override
+     public void createResult() {
++        // TenseiMC start
++        this.bypassCost = false;
++        this.canDoUnsafeEnchants = false;
++        if (AnvilUpdateResultEvent.getHandlerList().getRegisteredListeners().length > 0) new AnvilUpdateResultEvent(getBukkitView()).callEvent();
++        // TenseiMC
+         ItemStack itemstack = this.inputSlots.getItem(0);
+ 
+         this.cost.set(1);
+@@ -210,7 +227,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+                             int i2 = (Integer) map1.get(enchantment);
+ 
+                             i2 = l1 == i2 ? i2 + 1 : Math.max(i2, l1);
+-                            boolean flag3 = enchantment.canEnchant(itemstack);
++                            boolean flag3 = this.canDoUnsafeEnchants || enchantment.canEnchant(itemstack); // TenseiMC
+ 
+                             if (this.player.getAbilities().instabuild || itemstack.is(Items.ENCHANTED_BOOK)) {
+                                 flag3 = true;
+@@ -222,7 +239,7 @@ public class AnvilMenu extends ItemCombinerMenu {
+                                 Enchantment enchantment1 = (Enchantment) iterator1.next();
+ 
+                                 if (enchantment1 != enchantment && !enchantment.isCompatibleWith(enchantment1)) {
+-                                    flag3 = false;
++                                    flag3 = this.canDoUnsafeEnchants; // TenseiMC
+                                     ++i;
+                                 }
+                             }
+@@ -293,6 +310,13 @@ public class AnvilMenu extends ItemCombinerMenu {
+                 this.cost.set(this.maximumRepairCost - 1); // CraftBukkit
+             }
+ 
++            // TenseiMC start
++            if (this.bypassCost && cost.get() >= this.maximumRepairCost) {
++                itemstack.addTagElement("Purpur.realCost", IntTag.valueOf(cost.get()));
++                cost.set(maximumRepairCost - 1);
++            }
++            // TenseiMC end
++
+             if (this.cost.get() >= this.maximumRepairCost && !this.player.getAbilities().instabuild) { // CraftBukkit
+                 itemstack1 = ItemStack.EMPTY;
+             }
+@@ -315,6 +339,12 @@ public class AnvilMenu extends ItemCombinerMenu {
+             org.bukkit.craftbukkit.event.CraftEventFactory.callPrepareAnvilEvent(this.getBukkitView(), itemstack1); // CraftBukkit
+             this.sendAllDataToRemote(); // CraftBukkit - SPIGOT-6686: Always send completed inventory to stay in sync with client
+             this.broadcastChanges();
++            // TenseiMC start
++            if (this.canDoUnsafeEnchants && itemstack1 != ItemStack.EMPTY) {
++                ((ServerPlayer) player).connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 2, itemstack1));
++                ((ServerPlayer) player).connection.send(new ClientboundContainerSetDataPacket(containerId, 0, cost.get()));
++            }
++            // TenseiMC end
+         }
+     }
+ 
+diff --git a/src/main/java/net/minecraft/world/inventory/ChestMenu.java b/src/main/java/net/minecraft/world/inventory/ChestMenu.java
+index 0dbfd23bbfc6ad203f048142f8c90ef741849fe1..07d7634482fc611b72ecbc5b8c280153569bf09c 100644
+--- a/src/main/java/net/minecraft/world/inventory/ChestMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/ChestMenu.java
+@@ -67,10 +67,30 @@ public class ChestMenu extends AbstractContainerMenu {
+         return new ChestMenu(MenuType.GENERIC_9x6, syncId, playerInventory, 6);
+     }
+ 
++    // TenseiMC start
++    public static ChestMenu oneRows(int syncId, Inventory playerInventory, Container inventory) {
++        return new ChestMenu(MenuType.GENERIC_9x1, syncId, playerInventory, inventory, 1);
++    }
++
++    public static ChestMenu twoRows(int syncId, Inventory playerInventory, Container inventory) {
++        return new ChestMenu(MenuType.GENERIC_9x2, syncId, playerInventory, inventory, 2);
++    }
++    // TenseiMC end
++
+     public static ChestMenu threeRows(int syncId, Inventory playerInventory, Container inventory) {
+         return new ChestMenu(MenuType.GENERIC_9x3, syncId, playerInventory, inventory, 3);
+     }
+ 
++    // TenseiMC Start
++    public static ChestMenu fourRows(int syncId, Inventory playerInventory, Container inventory) {
++        return new ChestMenu(MenuType.GENERIC_9x4, syncId, playerInventory, inventory, 4);
++    }
++
++    public static ChestMenu fiveRows(int syncId, Inventory playerInventory, Container inventory) {
++        return new ChestMenu(MenuType.GENERIC_9x5, syncId, playerInventory, inventory, 5);
++    }
++    // TenseiMC Stop
++
+     public static ChestMenu sixRows(int syncId, Inventory playerInventory, Container inventory) {
+         return new ChestMenu(MenuType.GENERIC_9x6, syncId, playerInventory, inventory, 6);
+     }
+diff --git a/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java b/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java
+index c2cf5a8e788637c6264cf43d712a5be223ff1cc5..15ef1d57b561eaef2f62d19de3c0c0c2f05badd1 100644
+--- a/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java
++++ b/src/main/java/net/minecraft/world/inventory/ItemCombinerMenu.java
+@@ -178,7 +178,9 @@ public abstract class ItemCombinerMenu extends AbstractContainerMenu {
+                 return ItemStack.EMPTY;
+             }
+ 
++            this.activeQuickItem = itemstack; // TenseiMC
+             slot1.onTake(player, itemstack1);
++            this.activeQuickItem = null; // TenseiMC
+         }
+ 
+         return itemstack;
+diff --git a/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java b/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java
+index 4703f23316f82a1a942907b46d2d6dcb7d70ec37..23d9eb42cdd5b2c4cc0696048865087ab0b27691 100644
+--- a/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java
++++ b/src/main/java/net/minecraft/world/inventory/PlayerEnderChestContainer.java
+@@ -30,11 +30,18 @@ public class PlayerEnderChestContainer extends SimpleContainer {
+     }
+ 
+     public PlayerEnderChestContainer(Player owner) {
+-        super(27);
++        super(org.purpurmc.purpur.PurpurConfig.enderChestSixRows ? 54 : 27); // TenseiMC
+         this.owner = owner;
+         // CraftBukkit end
+     }
+ 
++    // TenseiMC start
++    @Override
++    public int getContainerSize() {
++        return owner.sixRowEnderChestSlotCount < 0 ? super.getContainerSize() : owner.sixRowEnderChestSlotCount;
++    }
++    // TenseiMC end
++
+     public void setActiveChest(EnderChestBlockEntity blockEntity) {
+         this.activeChest = blockEntity;
+     }
+diff --git a/src/main/java/net/minecraft/world/item/SpawnEggItem.java b/src/main/java/net/minecraft/world/item/SpawnEggItem.java
+index 741719301e6fc91a598e74342810c4185e6fde26..3e805c9d97c768bee8968a15bc07f521e11fd503 100644
+--- a/src/main/java/net/minecraft/world/item/SpawnEggItem.java
++++ b/src/main/java/net/minecraft/world/item/SpawnEggItem.java
+@@ -68,6 +68,15 @@ public class SpawnEggItem extends Item {
+                     SpawnerBlockEntity tileentitymobspawner = (SpawnerBlockEntity) tileentity;
+                     EntityType<?> entitytypes = this.getType(itemstack.getTag());
+ 
++                    // TenseiMC start
++                    org.bukkit.block.Block bukkitBlock = world.getWorld().getBlockAt(blockposition.getX(), blockposition.getY(), blockposition.getZ());
++                    org.purpurmc.purpur.event.PlayerSetSpawnerTypeWithEggEvent event = new  org.purpurmc.purpur.event.PlayerSetSpawnerTypeWithEggEvent((org.bukkit.entity.Player) context.getPlayer().getBukkitEntity(), bukkitBlock, (org.bukkit.block.CreatureSpawner) bukkitBlock.getState(), org.bukkit.entity.EntityType.fromName(entitytypes.getName()));
++                    if (!event.callEvent()) {
++                        return InteractionResult.FAIL;
++                    }
++                    entitytypes = EntityType.getFromBukkitType(event.getEntityType());
++                    // TenseiMC end
++
+                     tileentitymobspawner.setEntityId(entitytypes, world.getRandom());
+                     tileentity.setChanged();
+                     world.sendBlockUpdated(blockposition, iblockdata, iblockdata, 3);
+diff --git a/src/main/java/net/minecraft/world/level/block/ChestBlock.java b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
+index af6e245b02d5fb78764d2db0ac200056277b212a..071748b59af2c0a549c765832bd47ec413e94ccf 100644
+--- a/src/main/java/net/minecraft/world/level/block/ChestBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ChestBlock.java
+@@ -355,6 +355,7 @@ public class ChestBlock extends AbstractChestBlock<ChestBlockEntity> implements
+     }
+ 
+     private static boolean isBlockedChestByBlock(BlockGetter world, BlockPos pos) {
++        if (world instanceof Level level && level.purpurConfig.chestOpenWithBlockOnTop) return false; // TenseiMC
+         BlockPos blockposition1 = pos.above();
+ 
+         return world.getBlockState(blockposition1).isRedstoneConductor(world, blockposition1);
+diff --git a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
+index 7385e91f32f070e86a4e0fd3d214f55d832c7979..30f23280d1450e6f47570a6b6bf82e171a442a9c 100644
+--- a/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/EnderChestBlock.java
+@@ -85,6 +85,32 @@ public class EnderChestBlock extends AbstractChestBlock<EnderChestBlockEntity> i
+                 EnderChestBlockEntity enderChestBlockEntity = (EnderChestBlockEntity)blockEntity;
+                 playerEnderChestContainer.setActiveChest(enderChestBlockEntity);
+                 player.openMenu(new SimpleMenuProvider((syncId, inventory, playerx) -> {
++                    // TenseiMC start
++                    if (org.purpurmc.purpur.PurpurConfig.enderChestSixRows) {
++                        org.bukkit.craftbukkit.entity.CraftHumanEntity bukkitPlayer = player.getBukkitEntity();
++                        if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.six") || bukkitPlayer.hasPermission("purpur.enderchest.rows.six")) {
++                            player.sixRowEnderChestSlotCount = 54;
++                            return ChestMenu.sixRows(syncId, inventory, playerEnderChestContainer);
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.five") || bukkitPlayer.hasPermission("purpur.enderchest.rows.five")) {
++                            player.sixRowEnderChestSlotCount = 45;
++                            return ChestMenu.fiveRows(syncId, inventory, playerEnderChestContainer);
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.four") || bukkitPlayer.hasPermission("purpur.enderchest.rows.four")) {
++                            player.sixRowEnderChestSlotCount = 36;
++                            return ChestMenu.fourRows(syncId, inventory, playerEnderChestContainer);
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.three") || bukkitPlayer.hasPermission("purpur.enderchest.rows.three")) {
++                            player.sixRowEnderChestSlotCount = 27;
++                            return ChestMenu.threeRows(syncId, inventory, playerEnderChestContainer);
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.two") || bukkitPlayer.hasPermission("purpur.enderchest.rows.two")) {
++                            player.sixRowEnderChestSlotCount = 18;
++                            return ChestMenu.twoRows(syncId, inventory, playerEnderChestContainer);
++                        } else if (bukkitPlayer.hasPermission("tenseimc.enderchest.rows.one") || bukkitPlayer.hasPermission("purpur.enderchest.rows.one")) {
++                            player.sixRowEnderChestSlotCount = 9;
++                            return ChestMenu.oneRows(syncId, inventory, playerEnderChestContainer);
++                        }
++                        player.sixRowEnderChestSlotCount = -1;
++                        return ChestMenu.sixRows(syncId, inventory, playerEnderChestContainer);
++                    }
++                    // TenseiMC end
+                     return ChestMenu.threeRows(syncId, inventory, playerEnderChestContainer);
+                 }, CONTAINER_TITLE));
+                 player.awardStat(Stats.OPEN_ENDERCHEST);
+diff --git a/src/main/java/net/minecraft/world/level/block/ObserverBlock.java b/src/main/java/net/minecraft/world/level/block/ObserverBlock.java
+index 7b45d6b9a005036ca5051d089a7be792eb87012f..3836ee4965d9803eea0639aad6bc6473ee1173b9 100644
+--- a/src/main/java/net/minecraft/world/level/block/ObserverBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/ObserverBlock.java
+@@ -64,7 +64,12 @@ public class ObserverBlock extends DirectionalBlock {
+     @Override
+     public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+         if (state.getValue(ObserverBlock.FACING) == direction && !(Boolean) state.getValue(ObserverBlock.POWERED)) {
++            // TenseiMC start
++            if (world.getMinecraftWorld().purpurConfig.disableObserverClocks ||
++                    !(neighborState.getBlock() instanceof ObserverBlock) ||
++                    neighborState.getValue(DirectionalBlock.FACING).getOpposite() != direction) {
+             this.startSignal(world, pos);
++            } // TenseiMC end
+         }
+ 
+         return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
+index 416aa989ebb18a8741cc9d605a1180ab830f6643..89c637babe8e0b47ffd86e3a0c239f1691347774 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BarrelBlockEntity.java
+@@ -67,7 +67,7 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
+ 
+     public BarrelBlockEntity(BlockPos pos, BlockState state) {
+         super(BlockEntityType.BARREL, pos, state);
+-        this.items = NonNullList.withSize(27, ItemStack.EMPTY);
++        this.items = NonNullList.withSize(org.purpurmc.purpur.PurpurConfig.barrelRows*9, ItemStack.EMPTY); // TenseiMC start
+         this.openersCounter = new ContainerOpenersCounter() {
+             @Override
+             protected void onOpen(Level world, BlockPos pos, BlockState state) {
+@@ -118,7 +118,7 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
+ 
+     @Override
+     public int getContainerSize() {
+-        return 27;
++        return org.purpurmc.purpur.PurpurConfig.barrelRows*9; // TenseiMC start
+     }
+ 
+     @Override
+@@ -138,7 +138,16 @@ public class BarrelBlockEntity extends RandomizableContainerBlockEntity {
+ 
+     @Override
+     protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
+-        return ChestMenu.threeRows(syncId, playerInventory, this);
++        // TenseiMC Start
++        return switch (org.purpurmc.purpur.PurpurConfig.barrelRows) {
++            case 6 -> ChestMenu.sixRows(syncId, playerInventory, this);
++            case 5 -> ChestMenu.fiveRows(syncId, playerInventory, this);
++            case 4 -> ChestMenu.fourRows(syncId, playerInventory, this);
++            case 2 -> ChestMenu.twoRows(syncId, playerInventory, this);
++            case 1 -> ChestMenu.oneRows(syncId, playerInventory, this);
++            default -> ChestMenu.threeRows(syncId, playerInventory, this);
++        };
++        // TenseiMC end
+     }
+ 
+     @Override
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
+index 9c3a271f98e723f1d8bf3badd3fca7a19fdc6d13..3ff48acdf99e9aca2109f19cd893aece56031f05 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BeaconBlockEntity.java
+@@ -88,6 +88,17 @@ public class BeaconBlockEntity extends BlockEntity implements MenuProvider, Name
+ 
+     public double getEffectRange() {
+         if (this.effectRange < 0) {
++            // TenseiMC start
++            if (this.level != null) {
++                return switch (this.levels) {
++                    case 1 -> this.level.purpurConfig.beaconLevelOne;
++                    case 2 -> this.level.purpurConfig.beaconLevelTwo;
++                    case 3 -> this.level.purpurConfig.beaconLevelThree;
++                    case 4 -> this.level.purpurConfig.beaconLevelFour;
++                    default -> this.levels * 10 + 10;
++                };
++            }
++            // TenseiMC end
+             return this.levels * 10 + 10;
+         } else {
+             return effectRange;
+diff --git a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
+index cf09525efd2d53bf884cd6ec3b0b9229715895eb..0d314dde5bcf273e4ba30b9265666c4446e3551a 100644
+--- a/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
++++ b/src/main/java/net/minecraft/world/level/block/entity/BeehiveBlockEntity.java
+@@ -43,7 +43,7 @@ public class BeehiveBlockEntity extends BlockEntity {
+     private final List<BeehiveBlockEntity.BeeData> stored = Lists.newArrayList();
+     @Nullable
+     public BlockPos savedFlowerPos;
+-    public int maxBees = 3; // CraftBukkit - allow setting max amount of bees a hive can hold
++    public int maxBees = org.purpurmc.purpur.PurpurConfig.beeInsideBeeHive; // CraftBukkit - allow setting max amount of bees a hive can hold // TenseiMC
+ 
+     public BeehiveBlockEntity(BlockPos pos, BlockState state) {
+         super(BlockEntityType.BEEHIVE, pos, state);
+@@ -203,7 +203,7 @@ public class BeehiveBlockEntity extends BlockEntity {
+     }
+ 
+     private static boolean releaseBee(Level world, BlockPos blockposition, BlockState iblockdata, BeehiveBlockEntity.BeeData tileentitybeehive_hivebee, @Nullable List<Entity> list, BeehiveBlockEntity.BeeReleaseStatus tileentitybeehive_releasestatus, @Nullable BlockPos blockposition1, boolean force) {
+-        if (!force && (world.isNight() || world.isRaining()) && tileentitybeehive_releasestatus != BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY) {
++        if (!force && ((world.isNight() && !world.purpurConfig.beeCanWorkAtNight) || (world.isRaining() && !world.purpurConfig.beeCanWorkInRain)) && tileentitybeehive_releasestatus != BeehiveBlockEntity.BeeReleaseStatus.EMERGENCY) { // TenseiMC
+             // CraftBukkit end
+             return false;
+         } else {
+diff --git a/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java b/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java
+index 744d91546d1a810f60a43c15ed74b4158f341a4a..e6cb76e2bc25d555db087a986f5a8938af10869b 100644
+--- a/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java
++++ b/src/main/java/net/minecraft/world/level/block/piston/PistonStructureResolver.java
+@@ -86,7 +86,7 @@ public class PistonStructureResolver {
+             return true;
+         } else {
+             int i = 1;
+-            if (i + this.toPush.size() > 12) {
++            if (i + this.toPush.size() > this.level.purpurConfig.pistonBlockPushLimit) { // TenseiMC
+                 return false;
+             } else {
+                 while(isSticky(blockState)) {
+@@ -98,7 +98,7 @@ public class PistonStructureResolver {
+                     }
+ 
+                     ++i;
+-                    if (i + this.toPush.size() > 12) {
++                    if (i + this.toPush.size() > this.level.purpurConfig.pistonBlockPushLimit) { // TenseiMC
+                         return false;
+                     }
+                 }
+@@ -142,7 +142,7 @@ public class PistonStructureResolver {
+                         return true;
+                     }
+ 
+-                    if (this.toPush.size() >= 12) {
++                    if (this.toPush.size() >= this.level.purpurConfig.pistonBlockPushLimit) { // TenseiMC
+                         return false;
+                     }
+ 
+diff --git a/src/main/java/net/minecraft/world/level/material/FlowingFluid.java b/src/main/java/net/minecraft/world/level/material/FlowingFluid.java
+index e21f4c5aff3a8e97101f6efc1349fbecf326b5ea..2059c7e22440ef90e2798d89d3855c66852fff06 100644
+--- a/src/main/java/net/minecraft/world/level/material/FlowingFluid.java
++++ b/src/main/java/net/minecraft/world/level/material/FlowingFluid.java
+@@ -218,7 +218,7 @@ public abstract class FlowingFluid extends Fluid {
+             }
+         }
+ 
+-        if (this.canConvertToSource(world) && j >= 2) {
++        if (this.canConvertToSource(world) && j >= getRequiredSources(world)) { // TenseiMC
+             BlockState iblockdata2 = world.getBlockState(pos.below());
+             FluidState fluid1 = iblockdata2.getFluidState();
+ 
+@@ -302,6 +302,12 @@ public abstract class FlowingFluid extends Fluid {
+ 
+     protected abstract boolean canConvertToSource(Level world);
+ 
++    // TenseiMC start
++    protected int getRequiredSources(Level world) {
++        return 2;
++    }
++    // TenseiMC end
++
+     protected void spreadTo(LevelAccessor world, BlockPos pos, BlockState state, Direction direction, FluidState fluidState) {
+         if (state.getBlock() instanceof LiquidBlockContainer) {
+             ((LiquidBlockContainer) state.getBlock()).placeLiquid(world, pos, state, fluidState);
+diff --git a/src/main/java/net/minecraft/world/level/material/LavaFluid.java b/src/main/java/net/minecraft/world/level/material/LavaFluid.java
+index c3f8e1e2dd89c168b8b4a15b589109db486bc8d7..33ee9fc9ea82799d2a15dcd3fd8f3438cbe074b4 100644
+--- a/src/main/java/net/minecraft/world/level/material/LavaFluid.java
++++ b/src/main/java/net/minecraft/world/level/material/LavaFluid.java
+@@ -180,7 +180,7 @@ public abstract class LavaFluid extends FlowingFluid {
+ 
+     @Override
+     public int getTickDelay(LevelReader world) {
+-        return world.dimensionType().ultraWarm() ? 10 : 30;
++        return world.dimensionType().ultraWarm() ? world.getWorldBorder().world.purpurConfig.lavaSpeedNether : world.getWorldBorder().world.purpurConfig.lavaSpeedNotNether; // TenseiMC
+     }
+ 
+     @Override
+@@ -198,6 +198,13 @@ public abstract class LavaFluid extends FlowingFluid {
+         world.levelEvent(1501, pos, 0);
+     }
+ 
++    // TenseiMC start
++    @Override
++    protected int getRequiredSources(Level world) {
++        return world.purpurConfig.lavaInfiniteRequiredSources;
++    }
++    // TenseiMC end
++
+     @Override
+     protected boolean canConvertToSource(Level world) {
+         return world.getGameRules().getBoolean(GameRules.RULE_LAVA_SOURCE_CONVERSION);
+diff --git a/src/main/java/net/minecraft/world/level/material/WaterFluid.java b/src/main/java/net/minecraft/world/level/material/WaterFluid.java
+index d280c98aed5262c4ce39526c917de884f25a8584..2ae9f50b7d52b9d4e2659a882c33a82bf08ece08 100644
+--- a/src/main/java/net/minecraft/world/level/material/WaterFluid.java
++++ b/src/main/java/net/minecraft/world/level/material/WaterFluid.java
+@@ -64,6 +64,13 @@ public abstract class WaterFluid extends FlowingFluid {
+         return world.getGameRules().getBoolean(GameRules.RULE_WATER_SOURCE_CONVERSION);
+     }
+ 
++    // TenseiMC start
++    @Override
++    protected int getRequiredSources(Level world) {
++        return world.purpurConfig.waterInfiniteRequiredSources;
++    }
++    // TenseiMC end
++
+     // Paper start
+     @Override
+     protected void beforeDestroyingBlock(LevelAccessor world, BlockPos pos, BlockState state,  BlockPos source) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
+index b4bd318d61834d70d666577073f18e4c49ded113..1f4c4d04d23c55502330417a82b5cac8d2f48b5e 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftContainer.java
+@@ -181,8 +181,23 @@ public class CraftContainer extends AbstractContainerMenu {
+             case PLAYER:
+             case CHEST:
+             case ENDER_CHEST:
++                // TenseiMC start
++                this.delegate = new ChestMenu(org.purpurmc.purpur.PurpurConfig.enderChestSixRows ?
++                        MenuType.GENERIC_9x6 : MenuType.GENERIC_9x3, windowId, bottom, top, top.getContainerSize() / 9);
++
++                break;
++                // TenseiMC end
+             case BARREL:
+-                this.delegate = new ChestMenu(MenuType.GENERIC_9x3, windowId, bottom, top, top.getContainerSize() / 9);
++                // TenseiMC start
++                this.delegate = new ChestMenu(switch (org.purpurmc.purpur.PurpurConfig.barrelRows) {
++                    case 6 -> MenuType.GENERIC_9x6;
++                    case 5 -> MenuType.GENERIC_9x5;
++                    case 4 -> MenuType.GENERIC_9x4;
++                    case 2 -> MenuType.GENERIC_9x2;
++                    case 1 -> MenuType.GENERIC_9x1;
++                    default -> MenuType.GENERIC_9x3;
++                }, windowId, bottom, top, top.getContainerSize() / 9);
++                // TenseiMC end
+                 break;
+             case DISPENSER:
+             case DROPPER:
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+index 471ae4458e7ea7c29d7551b32cec98180fbccd4e..698d64c9a44fc2c62d13072741351119241bd334 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventory.java
+@@ -83,7 +83,7 @@ public class CraftInventory implements Inventory {
+ 
+     @Override
+     public void setContents(ItemStack[] items) {
+-        Preconditions.checkArgument(items.length <= this.getSize(), "Invalid inventory size (%s); expected %s or less", items.length, this.getSize());
++        //Preconditions.checkArgument(items.length <= this.getSize(), "Invalid inventory size (%s); expected %s or less", items.length, this.getSize()); // TenseiMC
+ 
+         for (int i = 0; i < this.getSize(); i++) {
+             if (i >= items.length) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java
+index 9ee14589d63bbfc0880f2eee5e924fe946ee0035..6e26e2c172492ec6c1bd3ed45635ff4ec4e99703 100644
+--- a/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java
++++ b/src/main/java/org/bukkit/craftbukkit/inventory/CraftInventoryAnvil.java
+@@ -9,7 +9,7 @@ import org.bukkit.inventory.AnvilInventory;
+ public class CraftInventoryAnvil extends CraftResultInventory implements AnvilInventory {
+ 
+     private final Location location;
+-    private final AnvilMenu container;
++    public final AnvilMenu container; // TenseiMC - private -> public
+ 
+     public CraftInventoryAnvil(Location location, Container inventory, Container resultInventory, AnvilMenu container) {
+         super(inventory, resultInventory);
+@@ -57,4 +57,26 @@ public class CraftInventoryAnvil extends CraftResultInventory implements AnvilIn
+         Preconditions.checkArgument(levels >= 0, "Maximum repair cost must be positive (or 0)");
+         this.container.maximumRepairCost = levels;
+     }
++
++    // TenseiMC start
++    @Override
++    public boolean canBypassCost() {
++        return container.bypassCost;
++    }
++
++    @Override
++    public void setBypassCost(boolean bypassCost) {
++        container.bypassCost = bypassCost;
++    }
++
++    @Override
++    public boolean canDoUnsafeEnchants() {
++        return container.canDoUnsafeEnchants;
++    }
++
++    @Override
++    public void setDoUnsafeEnchants(boolean canDoUnsafeEnchants) {
++        container.canDoUnsafeEnchants = canDoUnsafeEnchants;
++    }
++    // TenseiMC end
+ }
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurConfig.java b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+index 4c27b3a153df97dafa206de44b005780f0353986..caaf029022a647f1ec6ae4120e10f98f493b09ea 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurConfig.java
+@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
+ // import net.kyori.adventure.text.minimessage.MiniMessage; // TenseiMC - not implemented
+ // import net.minecraft.core.registries.BuiltInRegistries; // TenseiMC - not implemented
+ // import net.minecraft.resources.ResourceLocation; // TenseiMC - not implemented
++import fr.euphilia.tenseimc.TenseiConfig;
+ import net.minecraft.server.MinecraftServer;
+ // import net.minecraft.world.effect.MobEffect; // TenseiMC - not implemented
+ // import net.minecraft.world.effect.MobEffectInstance; // TenseiMC - not implemented
+@@ -172,4 +173,35 @@ public class PurpurConfig {
+         }
+         return builder.build();
+     }
++
++    public static int barrelRows = 3;
++    public static int beeInsideBeeHive = 3;
++    public static boolean enderChestSixRows = false;
++    public static boolean enderChestPermissionRows = false;
++    private static void blockSettings() {
++        if (fr.euphilia.tenseimc.TenseiConfig.version < 2) {
++            barrelRows = fr.euphilia.tenseimc.TenseiConfig.barrelRows;
++            set("settings.blocks.barrel.rows", barrelRows);
++        }
++        barrelRows = getInt("settings.blocks.barrel.rows", barrelRows);
++        if (barrelRows < 1 || barrelRows > 6) {
++            Bukkit.getLogger().severe("settings.blocks.barrel.rows must be 1-6, resetting to default");
++            barrelRows = 3;
++        }
++        org.bukkit.event.inventory.InventoryType.BARREL.setDefaultSize(barrelRows*9);
++        if (fr.euphilia.tenseimc.TenseiConfig.version < 2) {
++            enderChestSixRows = fr.euphilia.tenseimc.TenseiConfig.enderChestSixRows;
++            set("settings.blocks.ender_chest.six-rows", enderChestSixRows);
++            enderChestPermissionRows = fr.euphilia.tenseimc.TenseiConfig.enderChestPermissionRows;
++            set("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
++        }
++        enderChestSixRows = getBoolean("settings.blocks.ender_chest.six-rows", enderChestSixRows);
++        org.bukkit.event.inventory.InventoryType.ENDER_CHEST.setDefaultSize(enderChestSixRows ? 54 : 27);
++        enderChestPermissionRows = getBoolean("settings.blocks.ender_chest.use-permissions-for-rows", enderChestPermissionRows);
++        if (fr.euphilia.tenseimc.TenseiConfig.version < 2) {
++            beeInsideBeeHive = fr.euphilia.tenseimc.TenseiConfig.beeInsideBeeHive;
++            set("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
++        }
++        beeInsideBeeHive = getInt("settings.blocks.beehive.max-bees-inside", beeInsideBeeHive);
++    }
+ }
+\ No newline at end of file
+diff --git a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+index 89d8dd14823ca57c3338790bcb23690151e13ff9..eaf72d43c450965b0c1547628570742ea64839e1 100644
+--- a/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
++++ b/src/main/java/org/purpurmc/purpur/PurpurWorldConfig.java
+@@ -17,15 +17,14 @@ package org.purpurmc.purpur;
+ // import org.purpurmc.purpur.tool.Waxable; // TenseiMC - not implemented
+ // import org.purpurmc.purpur.tool.Weatherable; // TenseiMC - not implemented
+ // import org.apache.commons.lang.BooleanUtils; // TenseiMC - not implemented
+-import org.bukkit.ChatColor;
++import fr.euphilia.tenseimc.TenseiConfig;
++import fr.euphilia.tenseimc.TenseiWorldConfig;
+ import org.bukkit.World;
+ import org.bukkit.configuration.ConfigurationSection;
+-import java.util.ArrayList;
+-import java.util.HashMap;
++
+ import java.util.List;
+ import java.util.Map;
+-import java.util.function.Predicate;
+-import java.util.logging.Level;
++
+ import static org.purpurmc.purpur.PurpurConfig.log;
+ 
+ @SuppressWarnings("unused")
+@@ -33,10 +32,12 @@ public class PurpurWorldConfig {
+ 
+     private final String worldName;
+     private final World.Environment environment;
++    private final TenseiWorldConfig tenseiWorldConfig; // TenseiMC
+ 
+-    public PurpurWorldConfig(String worldName, World.Environment environment) {
++    public PurpurWorldConfig(String worldName, World.Environment environment, TenseiWorldConfig tenseiWorldConfig) { // TenseiMC
+         this.worldName = worldName;
+         this.environment = environment;
++        this.tenseiWorldConfig = tenseiWorldConfig;
+         init();
+     }
+ 
+@@ -89,4 +90,133 @@ public class PurpurWorldConfig {
+         final Map<String, Object> value = PurpurConfig.getMap("world-settings." + worldName + "." + path, null);
+         return value.isEmpty() ? fallback : value;
+     }
++
++    public boolean disableObserverClocks = false;
++    private void observerSettings() {
++        // TenseiMC rework start
++        if (TenseiConfig.version < 2) {
++            disableObserverClocks = this.tenseiWorldConfig.disableObserverClocks;
++            set("blocks.observer.disable-clock", disableObserverClocks);
++        }
++        // TenseiMC rework end
++        disableObserverClocks = getBoolean("blocks.observer.disable-clock", disableObserverClocks);
++    }
++
++    public int pistonBlockPushLimit = 12;
++    private void pistonSettings() {
++        // TenseiMC rework start
++        if (TenseiConfig.version < 2) {
++            pistonBlockPushLimit = this.tenseiWorldConfig.pistonBlockPushLimit;
++            set("blocks.piston.block-push-limit", pistonBlockPushLimit);
++        }
++        pistonBlockPushLimit = getInt("blocks.piston.block-push-limit", pistonBlockPushLimit);
++    }
++
++    public int beaconLevelOne = 20;
++    public int beaconLevelTwo = 30;
++    public int beaconLevelThree = 40;
++    public int beaconLevelFour = 50;
++    private void beaconSettings() {
++        if (TenseiConfig.version < 2) {
++            beaconLevelOne = this.tenseiWorldConfig.beaconLevelOne;
++            beaconLevelTwo = this.tenseiWorldConfig.beaconLevelTwo;
++            beaconLevelThree = this.tenseiWorldConfig.beaconLevelThree;
++            beaconLevelFour = this.tenseiWorldConfig.beaconLevelFour;
++            set("blocks.beacon.effect-range.level-1", beaconLevelOne);
++            set("blocks.beacon.effect-range.level-2", beaconLevelTwo);
++            set("blocks.beacon.effect-range.level-3", beaconLevelThree);
++            set("blocks.beacon.effect-range.level-4", beaconLevelFour);
++        }
++        beaconLevelOne = getInt("blocks.beacon.effect-range.level-1", beaconLevelOne);
++        beaconLevelTwo = getInt("blocks.beacon.effect-range.level-2", beaconLevelTwo);
++        beaconLevelThree = getInt("blocks.beacon.effect-range.level-3", beaconLevelThree);
++        beaconLevelFour = getInt("blocks.beacon.effect-range.level-4", beaconLevelFour);
++    }
++
++    public boolean beeCanWorkAtNight = false;
++    public boolean beeCanWorkInRain = false;
++    private void beeSettings() {
++        if (TenseiConfig.version < 2) {
++            beeCanWorkAtNight = this.tenseiWorldConfig.beeCanWorkAtNight;
++            beeCanWorkInRain = this.tenseiWorldConfig.beeCanWorkInRain;
++            set("mobs.bee.can-work-at-night", beeCanWorkAtNight);
++            set("mobs.bee.can-work-in-rain", beeCanWorkInRain);
++        }
++        beeCanWorkAtNight = getBoolean("mobs.bee.can-work-at-night", beeCanWorkAtNight);
++        beeCanWorkInRain = getBoolean("mobs.bee.can-work-in-rain", beeCanWorkInRain);
++    }
++
++    public boolean chestOpenWithBlockOnTop = false;
++    private void chestSettings() {
++        if (TenseiConfig.version < 2) {
++            chestOpenWithBlockOnTop = this.tenseiWorldConfig.chestOpenWithBlockOnTop;
++            set("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
++        }
++        chestOpenWithBlockOnTop = getBoolean("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
++    }
++
++    public float entityMinimalHealthPoison = 1.0F;
++    public float entityHealthRegenAmount = 1.0F;
++    public float entityPoisonDegenerationAmount = 1.0F;
++    public float entityWitherDegenerationAmount = 1.0F;
++    public float humanHungerExhaustionAmount = 0.005F;
++    public float humanSaturationRegenAmount = 1.0F;
++    private void effectSettings() {
++        if (TenseiConfig.version < 2) {
++            entityHealthRegenAmount = this.tenseiWorldConfig.entityHealthRegenAmount;
++            entityMinimalHealthPoison = this.tenseiWorldConfig.entityMinimalHealthPoison;
++            entityPoisonDegenerationAmount = this.tenseiWorldConfig.entityPoisonDegenerationAmount;
++            entityWitherDegenerationAmount = this.tenseiWorldConfig.entityWitherDegenerationAmount;
++            humanHungerExhaustionAmount = this.tenseiWorldConfig.humanHungerExhaustionAmount;
++            humanSaturationRegenAmount = this.tenseiWorldConfig.humanSaturationRegenAmount;
++            set("gameplay-mechanics.mob-effects.health-regen-amount", entityHealthRegenAmount);
++            set("gameplay-mechanics.mob-effects.minimal-health-poison-amount", entityMinimalHealthPoison);
++            set("gameplay-mechanics.mob-effects.poison-degeneration-amount", entityPoisonDegenerationAmount);
++            set("gameplay-mechanics.mob-effects.wither-degeneration-amount", entityWitherDegenerationAmount);
++            set("gameplay-mechanics.mob-effects.hunger-exhaustion-amount", humanHungerExhaustionAmount);
++            set("gameplay-mechanics.mob-effects.saturation-regen-amount", humanSaturationRegenAmount);
++        }
++        entityHealthRegenAmount = (float) getDouble("gameplay-mechanics.mob-effects.health-regen-amount", entityHealthRegenAmount);
++        entityMinimalHealthPoison = (float) getDouble("gameplay-mechanics.mob-effects.minimal-health-poison-amount", entityMinimalHealthPoison);
++        entityPoisonDegenerationAmount = (float) getDouble("gameplay-mechanics.mob-effects.poison-degeneration-amount", entityPoisonDegenerationAmount);
++        entityWitherDegenerationAmount = (float) getDouble("gameplay-mechanics.mob-effects.wither-degeneration-amount", entityWitherDegenerationAmount);
++        humanHungerExhaustionAmount = (float) getDouble("gameplay-mechanics.mob-effects.hunger-exhaustion-amount", humanHungerExhaustionAmount);
++        humanSaturationRegenAmount = (float) getDouble("gameplay-mechanics.mob-effects.saturation-regen-amount", humanSaturationRegenAmount);
++    }
++
++    public int lavaInfiniteRequiredSources = 2;
++    public int lavaSpeedNether = 10;
++    public int lavaSpeedNotNether = 30;
++    private void lavaSettings() {
++        if (TenseiConfig.version < 2) {
++            lavaInfiniteRequiredSources = this.tenseiWorldConfig.lavaInfiniteRequiredSources;
++        }
++        lavaInfiniteRequiredSources = getInt("blocks.lava.infinite-required-sources", lavaInfiniteRequiredSources);
++        if (TenseiConfig.version < 2) {
++            lavaSpeedNether = this.tenseiWorldConfig.lavaSpeedNether;
++            lavaSpeedNotNether = this.tenseiWorldConfig.lavaSpeedNotNether;
++            set("blocks.lava.speed.nether", lavaSpeedNether);
++            set("blocks.lava.speed.not-nether", lavaSpeedNotNether);
++        }
++        lavaSpeedNether = getInt("blocks.lava.speed.nether", lavaSpeedNether);
++        lavaSpeedNotNether = getInt("blocks.lava.speed.not-nether", lavaSpeedNotNether);
++    }
++
++    public double playerCriticalDamageMultiplier = 1.5D;
++    private void playerSettings() {
++        if (TenseiConfig.version < 2) {
++            playerCriticalDamageMultiplier = this.tenseiWorldConfig.playerCriticalDamageMultiplier;
++            set("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
++        }
++        playerCriticalDamageMultiplier = getDouble("gameplay-mechanics.player.critical-damage-multiplier", playerCriticalDamageMultiplier);
++    }
++
++    public int waterInfiniteRequiredSources = 2;
++    private void waterSources() {
++        if (TenseiConfig.version < 2) {
++            waterInfiniteRequiredSources = this.tenseiWorldConfig.waterInfiniteRequiredSources;
++            set("blocks.water.infinite-required-sources", waterInfiniteRequiredSources);
++        }
++        waterInfiniteRequiredSources = getInt("blocks.water.infinite-required-sources", waterInfiniteRequiredSources);
++    }
+ }
+\ No newline at end of file

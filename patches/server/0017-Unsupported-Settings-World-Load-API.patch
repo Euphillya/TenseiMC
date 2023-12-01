@@ -5,10 +5,10 @@ Subject: [PATCH] Unsupported Settings : World Load API
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-index 081cbd20e0cfb78ed1678447f1da3943cbccd543..60f14a5a88fefef303820e93d8922955a0a0d50a 100644
+index 52a0928bf3341bf37bf335d34007a6eb045315d8..2d7e40fd2addf0ffa353f7710d692b4f56c79bbb 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiConfig.java
-@@ -166,8 +166,10 @@ public class TenseiConfig {
+@@ -160,8 +160,10 @@ public class TenseiConfig {
          }
      }
  
@@ -43,7 +43,7 @@ index 87835b23e8e58b310da972c76dd620ac5908903e..d6e1e399008cdb8d0337d484012731bf
                  world.registryAccess().registry(Registries.CONFIGURED_FEATURE).flatMap((iregistry) -> {
                      return iregistry.getHolder(MiscOverworldFeatures.BONUS_CHEST);
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index 93615a058fc0ae501ea3850d540f4dfc0045c239..45e12d2d23dd6d2031d1de1bad5509c1589cbcc0 100644
+index ba73eac33bcfba0f3534f6d2119a3f77ccbb924a..368a2055061b215af92d932b7acf3f42832ed5fd 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 @@ -1298,7 +1298,7 @@ public final class CraftServer implements Server {

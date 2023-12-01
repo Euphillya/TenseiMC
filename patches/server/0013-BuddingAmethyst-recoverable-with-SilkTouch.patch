@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Fri, 1 Dec 2023 21:38:04 +0100
+Subject: [PATCH] BuddingAmethyst recoverable with SilkTouch
+
+
+diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+index c263726c91d9658924480c77b12b2b227f2d2e6e..ac3644ff03b891266f853372df641db0aa9bd7d7 100644
+--- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
++++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
+@@ -78,10 +78,12 @@ public class TenseiWorldConfig {
+     }
+ 
+     public boolean chestOpenWithBlockOnTop = false;
++    public boolean buddingAmethystBreakWithSilkTouch = false;
+     private void blockSettings() {
+         if (TenseiConfig.version < 2) {
+             chestOpenWithBlockOnTop = getBoolean("blocks.chest.open-with-solid-block-on-top", chestOpenWithBlockOnTop);
+         }
++        buddingAmethystBreakWithSilkTouch = getBoolean("blocks.budding_amethyst.break.silk_touch", buddingAmethystBreakWithSilkTouch);
+     }
+ 
+     public float entityMinimalHealthPoison = 1.0F;
+diff --git a/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java b/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java
+index 2548244c089dff583c8c424dcaa5504caedf3f10..f6fd7035fe2d837c345bb169fc9df20b278de2ab 100644
+--- a/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java
++++ b/src/main/java/net/minecraft/world/level/block/BuddingAmethystBlock.java
+@@ -53,4 +53,14 @@ public class BuddingAmethystBlock extends AmethystBlock {
+     public static boolean canClusterGrowAtState(BlockState state) {
+         return state.isAir() || state.is(Blocks.WATER) && state.getFluidState().getAmount() == 8;
+     }
++
++    // TenseiMC start
++    @Override
++    public void playerDestroy(net.minecraft.world.level.Level world, net.minecraft.world.entity.player.Player player, BlockPos pos, BlockState state, @javax.annotation.Nullable net.minecraft.world.level.block.entity.BlockEntity blockEntity, net.minecraft.world.item.ItemStack tool) {
++        if (world.tenseiWorldConfig.buddingAmethystBreakWithSilkTouch && net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(net.minecraft.world.item.enchantment.Enchantments.SILK_TOUCH, tool) > 0) {
++            popResource(world, pos, net.minecraft.world.item.Items.BUDDING_AMETHYST.getDefaultInstance());
++        }
++        super.playerDestroy(world, player, pos, state, blockEntity, tool);
++    }
++    // TenseiMC end
+ }

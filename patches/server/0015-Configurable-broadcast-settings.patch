@@ -1,14 +1,14 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Bierque Jason <bierquejason@gmail.com>
-Date: Wed, 27 Sep 2023 00:16:23 +0200
+Date: Fri, 1 Dec 2023 21:47:51 +0100
 Subject: [PATCH] Configurable broadcast settings
 
 
 diff --git a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-index 243755164cdfe687410d4eb602fc8c686bf7efe1..867416f23802003f3012d9e64376a9c262b04de0 100644
+index 494ed94beab7dc2cae2fbaf7d87f545df3c2f81e..3a08fbab8d6737152be0ac76b24560f03b657962 100644
 --- a/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
 +++ b/src/main/java/fr/euphilia/tenseimc/TenseiWorldConfig.java
-@@ -108,10 +108,14 @@ public class TenseiWorldConfig {
+@@ -138,10 +138,14 @@ public class TenseiWorldConfig {
      }
  
      public double playerCriticalDamageMultiplier = 1.5D;
@@ -37,7 +37,7 @@ index e38e2e5a7ddba9c140f362021b6be0b0974f7cd1..c1149705fa8de5397ec6455975b5005c
                      }
  
 diff --git a/src/main/java/net/minecraft/server/level/ServerPlayer.java b/src/main/java/net/minecraft/server/level/ServerPlayer.java
-index 62a98ba81cbe89622dd6a545146ff52aa57de880..4a0188469f8bd9d29059e300890691f443d086dc 100644
+index 97bfb92e52c3c5ef1cd22afe2b97c204eb45025a..a7b72f2c35aece747a50ba18cfd1447482d4597b 100644
 --- a/src/main/java/net/minecraft/server/level/ServerPlayer.java
 +++ b/src/main/java/net/minecraft/server/level/ServerPlayer.java
 @@ -1093,7 +1093,7 @@ public class ServerPlayer extends Player {
