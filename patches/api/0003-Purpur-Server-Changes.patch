@@ -1,0 +1,481 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Bierque Jason <bierquejason@gmail.com>
+Date: Thu, 2 Nov 2023 15:36:16 +0100
+Subject: [PATCH] Purpur Server Changes
+
+
+diff --git a/src/main/java/org/bukkit/Bukkit.java b/src/main/java/org/bukkit/Bukkit.java
+index b7e1c8bd8dd38e1a9e74925740b22dad61a75f49..5ccc354a170a2fb7694f1f36abb4364af9780ea0 100644
+--- a/src/main/java/org/bukkit/Bukkit.java
++++ b/src/main/java/org/bukkit/Bukkit.java
+@@ -2836,6 +2836,16 @@ public final class Bukkit {
+     }
+     // Folia end - region threading API
+ 
++    // Purpur start
++    /**
++     * Get the name of this server
++     * @return the name of the server
++     */
++    @NotNull
++    public static String getServerName() {
++        return server.getServerName();
++    }
++    // Purpur end
+     @NotNull
+     public static Server.Spigot spigot() {
+         return server.spigot();
+diff --git a/src/main/java/org/bukkit/Server.java b/src/main/java/org/bukkit/Server.java
+index d56ce86527179537e7c92ba8d8fbbdd68b1b662c..7abfcfdebec9c27e4e90cd02dc2094b7517186c2 100644
+--- a/src/main/java/org/bukkit/Server.java
++++ b/src/main/java/org/bukkit/Server.java
+@@ -2195,6 +2195,16 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+         public org.bukkit.configuration.file.YamlConfiguration getTenseiConfig()  {
+             throw new UnsupportedOperationException("Not supported yet");
+         }
++
++        @NotNull
++        public org.bukkit.configuration.file.YamlConfiguration getPurpurConfig()  {
++            throw new UnsupportedOperationException("Not supported yet");
++        }
++
++        @NotNull
++        public java.util.Properties getServerProperties()  {
++            throw new UnsupportedOperationException("Not supported yet");
++        }
+         // TenseiMC end
+ 
+         /**
+@@ -2480,6 +2490,16 @@ public interface Server extends PluginMessageRecipient, net.kyori.adventure.audi
+      */
+     boolean isOwnedByCurrentRegion(@NotNull Entity entity);
+     // Paper end - Folia region threading API
++
++    // Purpur start
++    /**
++     * Get the name of this server
++     * @return the name of the server
++     */
++    @NotNull
++    String getServerName();
++    // Purpur end
++
+     // Folia start - region threading API
+     /**
+      * Returns whether the current thread is ticking the global region.
+diff --git a/src/main/java/org/bukkit/command/SimpleCommandMap.java b/src/main/java/org/bukkit/command/SimpleCommandMap.java
+index ac9a28922f8a556944a4c3649d74c32c622f0cb0..6ff7fd927bd3d084435583bbe219b40d98da9121 100644
+--- a/src/main/java/org/bukkit/command/SimpleCommandMap.java
++++ b/src/main/java/org/bukkit/command/SimpleCommandMap.java
+@@ -143,6 +143,19 @@ public class SimpleCommandMap implements CommandMap {
+             return false;
+         }
+ 
++        // TenseiMC start
++        String[] parsedArgs = Arrays.copyOfRange(args, 1, args.length);
++        org.purpurmc.purpur.event.ExecuteCommandEvent event = new org.purpurmc.purpur.event.ExecuteCommandEvent(sender, target, sentCommandLabel, parsedArgs);
++        if (!event.callEvent()) {
++            return true; // cancelled
++        }
++
++        sender = event.getSender();
++        target = event.getCommand();
++        sentCommandLabel = event.getLabel();
++        parsedArgs = event.getArgs();
++        // TenseiMC end
++
+         // Paper start - Plugins do weird things to workaround normal registration
+         if (target.timings == null) {
+             target.timings = co.aikar.timings.TimingsManager.getCommandTiming(null, target);
+@@ -152,7 +165,7 @@ public class SimpleCommandMap implements CommandMap {
+         try {
+             try (co.aikar.timings.Timing ignored = target.timings.startTiming()) { // Paper - use try with resources
+             // Note: we don't return the result of target.execute as thats success / failure, we return handled (true) or not handled (false)
+-            target.execute(sender, sentCommandLabel, Arrays.copyOfRange(args, 1, args.length));
++                target.execute(sender, sentCommandLabel, parsedArgs); // TenseiMC
+             } // target.timings.stopTiming(); // Spigot // Paper
+         } catch (CommandException ex) {
+             server.getPluginManager().callEvent(new com.destroystokyo.paper.event.server.ServerExceptionEvent(new com.destroystokyo.paper.exception.ServerCommandException(ex, target, sender, args))); // Paper
+diff --git a/src/main/java/org/bukkit/event/inventory/InventoryType.java b/src/main/java/org/bukkit/event/inventory/InventoryType.java
+index cbce826add9dc2b3187c7bea00c27b785d7517df..27a6880acc61a9327007460b2b1bacab5d9ed460 100644
+--- a/src/main/java/org/bukkit/event/inventory/InventoryType.java
++++ b/src/main/java/org/bukkit/event/inventory/InventoryType.java
+@@ -151,7 +151,7 @@ public enum InventoryType {
+     SMITHING_NEW(4, "Upgrade Gear"),
+     ;
+ 
+-    private final int size;
++    private int size; public void setDefaultSize(int size) { this.size = size; } // Purpur
+     private final String title;
+     private final boolean isCreatable;
+ 
+diff --git a/src/main/java/org/bukkit/inventory/AnvilInventory.java b/src/main/java/org/bukkit/inventory/AnvilInventory.java
+index c60be4fd24c7fdf65251dd6169e5e1ac3b588d95..7a310781648d4c37bc336eb19303fd972f107bd8 100644
+--- a/src/main/java/org/bukkit/inventory/AnvilInventory.java
++++ b/src/main/java/org/bukkit/inventory/AnvilInventory.java
+@@ -123,4 +123,14 @@ public interface AnvilInventory extends Inventory {
+         setItem(2, result);
+     }
+     // Paper end
++
++    // TenseiMC start
++    boolean canBypassCost();
++
++    void setBypassCost(boolean bypassCost);
++
++    boolean canDoUnsafeEnchants();
++
++    void setDoUnsafeEnchants(boolean canDoUnsafeEnchants);
++    // TenseiMC end
+ }
+diff --git a/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java b/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java
+index c704b742c627589de92322707ef46a21ed9b8100..20a65e2b8f4e9ea916ef0fbf9d90e4f7d091cf84 100644
+--- a/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java
++++ b/src/main/java/org/bukkit/util/permissions/TenseiMCPermissions.java
+@@ -16,6 +16,17 @@ public class TenseiMCPermissions {
+ 
+         // Add Permissions here
+ 
++        // Enderchest Permissions Purpur
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.six", "Gives the user six rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.five", "Gives the user five rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.four", "Gives the user four rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.three", "Gives the user three rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.two", "Gives the user two rows of enderchest space.", PermissionDefault.FALSE, tenseimc);
++        DefaultPermissions.registerPermission("purpur." + "enderchest.rows.one", "Gives the user one row of enderchest space.", PermissionDefault.FALSE, tenseimc);
++
++        // Other
++        DefaultPermissions.registerPermission("purpur." + "joinfullserver", "Allows the user to join a full server.", PermissionDefault.OP, tenseimc);
++
+         tenseimc.recalculatePermissibles();
+ 
+         return tenseimc;
+diff --git a/src/main/java/org/purpurmc/purpur/event/ExecuteCommandEvent.java b/src/main/java/org/purpurmc/purpur/event/ExecuteCommandEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..a59f43f57e0e58cd403e6d3e9e7380785914f849
+--- /dev/null
++++ b/src/main/java/org/purpurmc/purpur/event/ExecuteCommandEvent.java
+@@ -0,0 +1,130 @@
++package org.purpurmc.purpur.event;
++
++import com.google.common.base.Preconditions;
++import org.bukkit.command.Command;
++import org.bukkit.command.CommandSender;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.Event;
++import org.bukkit.event.HandlerList;
++import org.jetbrains.annotations.NotNull;
++import org.jetbrains.annotations.Nullable;
++
++/**
++ * This event is called whenever someone runs a command
++ */
++public class ExecuteCommandEvent extends Event implements Cancellable {
++    private static final HandlerList handlers = new HandlerList();
++    private boolean cancel = false;
++    private CommandSender sender;
++    private Command command;
++    private String label;
++    private String[] args;
++
++    public ExecuteCommandEvent(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @Nullable String[] args) {
++        this.sender = sender;
++        this.command = command;
++        this.label = label;
++        this.args = args;
++    }
++
++    /**
++     * Gets the command that the player is attempting to execute.
++     *
++     * @return Command the player is attempting to execute
++     */
++    @NotNull
++    public Command getCommand() {
++        return command;
++    }
++
++    /**
++     * Sets the command that the player will execute.
++     *
++     * @param command New command that the player will execute
++     * @throws IllegalArgumentException if command is null or empty
++     */
++    public void setCommand(@NotNull Command command) throws IllegalArgumentException {
++        Preconditions.checkArgument(command != null, "Command cannot be null");
++        this.command = command;
++    }
++
++    /**
++     * Gets the sender that this command will be executed as.
++     *
++     * @return Sender this command will be executed as
++     */
++    @NotNull
++    public CommandSender getSender() {
++        return sender;
++    }
++
++    /**
++     * Sets the sender that this command will be executed as.
++     *
++     * @param sender New sender which this event will execute as
++     * @throws IllegalArgumentException if the sender provided is null
++     */
++    public void setSender(@NotNull final CommandSender sender) throws IllegalArgumentException {
++        Preconditions.checkArgument(sender != null, "Sender cannot be null");
++        this.sender = sender;
++    }
++
++    /**
++     * Get the label used to execute this command
++     *
++     * @return Label used to execute this command
++     */
++    @NotNull
++    public String getLabel() {
++        return label;
++    }
++
++    /**
++     * Set the label used to execute this command
++     *
++     * @param label Label used
++     */
++    public void setLabel(@NotNull String label) {
++        this.label = label;
++    }
++
++    /**
++     * Get the args passed to the command
++     *
++     * @return Args passed to the command
++     */
++    @NotNull
++    public String[] getArgs() {
++        return args;
++    }
++
++    /**
++     * Set the args passed to the command
++     *
++     * @param args Args passed to the command
++     */
++    public void setArgs(@NotNull String[] args) {
++        this.args = args;
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return cancel;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel) {
++        this.cancel = cancel;
++    }
++
++    @NotNull
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/purpurmc/purpur/event/PlayerSetSpawnerTypeWithEggEvent.java b/src/main/java/org/purpurmc/purpur/event/PlayerSetSpawnerTypeWithEggEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..519809eab5d926dc7b0a7bad5d446d0defc099dc
+--- /dev/null
++++ b/src/main/java/org/purpurmc/purpur/event/PlayerSetSpawnerTypeWithEggEvent.java
+@@ -0,0 +1,85 @@
++package org.purpurmc.purpur.event;
++
++import org.bukkit.block.Block;
++import org.bukkit.block.CreatureSpawner;
++import org.bukkit.entity.EntityType;
++import org.bukkit.entity.Player;
++import org.bukkit.event.Cancellable;
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.player.PlayerEvent;
++import org.jetbrains.annotations.NotNull;
++
++public class PlayerSetSpawnerTypeWithEggEvent extends PlayerEvent implements Cancellable {
++    private static final HandlerList handlers = new HandlerList();
++    private final Block block;
++    private final CreatureSpawner spawner;
++    private EntityType type;
++    private boolean cancel;
++
++    public PlayerSetSpawnerTypeWithEggEvent(@NotNull Player player, @NotNull Block block, @NotNull CreatureSpawner spawner, @NotNull EntityType type) {
++        super(player);
++        this.block = block;
++        this.spawner = spawner;
++        this.type = type;
++    }
++
++    /**
++     * Get the spawner Block in the world
++     *
++     * @return Spawner Block
++     */
++    @NotNull
++    public Block getBlock() {
++        return block;
++    }
++
++    /**
++     * Get the spawner state
++     *
++     * @return Spawner state
++     */
++    @NotNull
++    public CreatureSpawner getSpawner() {
++        return spawner;
++    }
++
++    /**
++     * Gets the EntityType being set on the spawner
++     *
++     * @return EntityType being set
++     */
++    @NotNull
++    public EntityType getEntityType() {
++        return type;
++    }
++
++    /**
++     * Sets the EntityType being set on the spawner
++     *
++     * @param type EntityType to set
++     */
++    public void setEntityType(@NotNull EntityType type) {
++        this.type = type;
++    }
++
++    @Override
++    public boolean isCancelled() {
++        return cancel;
++    }
++
++    @Override
++    public void setCancelled(boolean cancel) {
++        this.cancel = cancel;
++    }
++
++    @Override
++    @NotNull
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+diff --git a/src/main/java/org/purpurmc/purpur/event/inventory/AnvilTakeResultEvent.java b/src/main/java/org/purpurmc/purpur/event/inventory/AnvilTakeResultEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..e6cfdf721cbc0db27816d58858b799253de0c605
+--- /dev/null
++++ b/src/main/java/org/purpurmc/purpur/event/inventory/AnvilTakeResultEvent.java
+@@ -0,0 +1,52 @@
++package org.purpurmc.purpur.event.inventory;
++
++import org.bukkit.entity.HumanEntity;
++import org.bukkit.entity.Player;
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.inventory.InventoryEvent;
++import org.bukkit.inventory.AnvilInventory;
++import org.bukkit.inventory.InventoryView;
++import org.bukkit.inventory.ItemStack;
++import org.jetbrains.annotations.NotNull;
++
++/**
++ * Called when a player takes the result item out of an anvil
++ */
++public class AnvilTakeResultEvent extends InventoryEvent {
++    private static final HandlerList handlers = new HandlerList();
++    private final Player player;
++    private final ItemStack result;
++
++    public AnvilTakeResultEvent(@NotNull HumanEntity player, @NotNull InventoryView view, @NotNull ItemStack result) {
++        super(view);
++        this.player = (Player) player;
++        this.result = result;
++    }
++
++    @NotNull
++    public Player getPlayer() {
++        return player;
++    }
++
++    @NotNull
++    public ItemStack getResult() {
++        return result;
++    }
++
++    @NotNull
++    @Override
++    public AnvilInventory getInventory() {
++        return (AnvilInventory) super.getInventory();
++    }
++
++    @NotNull
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+\ No newline at end of file
+diff --git a/src/main/java/org/purpurmc/purpur/event/inventory/AnvilUpdateResultEvent.java b/src/main/java/org/purpurmc/purpur/event/inventory/AnvilUpdateResultEvent.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..0b8978c5b54ab4d9786256d749a89abc1648519d
+--- /dev/null
++++ b/src/main/java/org/purpurmc/purpur/event/inventory/AnvilUpdateResultEvent.java
+@@ -0,0 +1,35 @@
++package org.purpurmc.purpur.event.inventory;
++
++import org.bukkit.event.HandlerList;
++import org.bukkit.event.inventory.InventoryEvent;
++import org.bukkit.inventory.AnvilInventory;
++import org.bukkit.inventory.InventoryView;
++import org.jetbrains.annotations.NotNull;
++
++/**
++ * Called when anvil slots change, triggering the result slot to be updated
++ */
++public class AnvilUpdateResultEvent extends InventoryEvent {
++    private static final HandlerList handlers = new HandlerList();
++
++    public AnvilUpdateResultEvent(@NotNull InventoryView view) {
++        super(view);
++    }
++
++    @NotNull
++    @Override
++    public AnvilInventory getInventory() {
++        return (AnvilInventory) super.getInventory();
++    }
++
++    @NotNull
++    @Override
++    public HandlerList getHandlers() {
++        return handlers;
++    }
++
++    @NotNull
++    public static HandlerList getHandlerList() {
++        return handlers;
++    }
++}
+\ No newline at end of file
